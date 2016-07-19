@@ -32,7 +32,8 @@ class StateAnalyzer:
         self.data = np.fromfile('773logtest2_TEST.log', int, -1, "\t")
         self.columns=39#------------------------------------------------------------------------------------------------- I actually went and counted the number of columns in the output data
         self.data=np.reshape(self.data,(np.size(self.data)/self.columns,self.columns))#---------------------------------- to reshape the newly aqcuired dataset to represent the output data
-        
+        self.time=COLUMN(self.data,1)#----------------------------------------------------------------------------------- the data columns IS 1 because 0 in the output refers to the unit's serial number.
+        self.time_easy=self.time-min(self.time)
         
     def StateIdentifier(self):
         self.number_of_data=7 #------------------------------------------------------------------------------------------ this is the number of columns of data per barrel.
@@ -64,17 +65,19 @@ class StateAnalyzer:
         for barrel_number in range(self.number_of_barrels):#-------------------------------------------------------------- this will go through the data recorded and get the phase stuff.
             DEF=np.append(DEF,[None])
             REF=np.append(REF,[None])
-            for i in range(np.size(FRZ_Columns[barrel_number],0):
+            for i in range(np.size(FRZ_Columns[barrel_number],0)):
                 if FRZ_Columns[barrel_number][i-1]!=8 or FRZ_Columns[barrel_number][i+1]!=8:#----------------------------- this will basically run through the data and ONLY record the beginnings and ends of each freezedown.
-                    REF[barrel_number]=np.append(REF[barrel_number],i)
-                if DEF_Columns[barrel_number][i-1]!=11 or DEF_Columns[barrel_number][i+1]!=11:
-                    DEF[barrel_number]=np.append(DEF[barrel_number],i)
+                    REF[barrel_number]=np.append(REF[barrel_number],[self.time[i],self.time_easy[i]])
+                if THAW_Columns[barrel_number][i-1]!=11 or THAW_Columns[barrel_number][i+1]!=11:
+                    DEF[barrel_number]=np.append(DEF[barrel_number],[self.time[i],self.time_easy[i]])
         
         #for barrel_number in range(self.number_of_barrels):
-        for i in range(np.size(REF[barrel_number],0):#--------------------------------------------------------------------- HERE will be the IPD finder.
+        for i in range(np.size(REF[barrel_number],0)):#--------------------------------------------------------------------- HERE will be the IPD finder.
             if REF[:][i-1] or REF[:][i+1]!=4:#----------------------------------------------------------------------------- how this is supposed to work: if all barrels have the 4, record as an IPD.
                 IPD=np.append(IPD,i)
         phase_data=[IPD,DEF,REF]
+        
+        
         return phase_data
             
 
@@ -96,7 +99,9 @@ print Data
 print np.shape(Data[0][1])
 print Data[0][1][1:2000]
 ''''''#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    * OLD ITERATION. 19 July 2016 16:49
-'''       
+'''
+States=s.StateIdentifier()
+print States       
         
         
         
