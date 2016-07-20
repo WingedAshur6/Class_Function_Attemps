@@ -29,31 +29,34 @@ class StateAnalyzer:
             # for i in line.split():
                 # self.data[-1].append(int(i))
         
-        self.data = np.fromfile('773logtest2_TEST.log', int, -1, "\t")
-        self.columns=39#------------------------------------------------------------------------------------------------- I actually went and counted the number of columns in the output data
-        self.data=np.reshape(self.data,(np.size(self.data)/self.columns,self.columns))#---------------------------------- to reshape the newly aqcuired dataset to represent the output data
-        self.time=COLUMN(self.data,1)#----------------------------------------------------------------------------------- the data columns IS 1 because 0 in the output refers to the unit's serial number.
+        self.data = np.fromfile(log_file, int, -1, "\t")
+        self.columns=39#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- I actually went and counted the number of columns in the output data
+        self.data=np.reshape(self.data,(np.size(self.data)/self.columns,self.columns))#-------------------------------------------------------------------------------------------------------------------------- to reshape the newly aqcuired dataset to represent the output data
+        self.time=COLUMN(self.data,1)#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- the data columns IS 1 because 0 in the output refers to the unit's serial number.
         self.time_easy=self.time-min(self.time)
         
-    def StateIdentifier(self):
-        self.number_of_data=7 #------------------------------------------------------------------------------------------ this is the number of columns of data per barrel.
-        self.number_of_barrels=(np.size(self.data,1)-11)/self.number_of_data
-        
-        #---------------------------------------------------------------------------------------------------------------- vvvvvvvvvvvv Sizing the array to correctly represent input data
+    def StateIdentifier(self,num_barr):
+        self.number_of_data=7 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- this is the number of columns of data per barrel.
+        #self.number_of_barrels=(np.size(self.data,1)-11)/self.number_of_data
+        self.true_data=self.number_of_data*num_barr
+        self.number_of_barrels=self.true_data/self.number_of_data
+        #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- vvvvvvvvvvvv Sizing the array to correctly represent input data
         FRZ_Columns=np.array([None,None,None,None],dtype=object)
         THAW_Columns=np.array([None,None,None,None],dtype=object)
+        SMRT_STATE=np.array([None,None,None,None],dtype=object)
+        ENG_STATE=np.array([None,None,None,None],dtype=object)
         FRZ_Columns=FRZ_Columns[0:self.number_of_barrels]
         THAW_Columns=THAW_Columns[0:self.number_of_barrels]
-        SMPL_FRZ=np.array([None,None,None,None],dtype=object)
-        SMPL_THAW=np.array([None,None,None,None],dtype=object)
-        SMPL_FRZ=SMPL_FRZ[0:self.number_of_barrels]
-        SMPL_THAW=SMPL_THAW[0:self.number_of_barrels]
-        #---------------------------------------------------------------------------------------------------------------- ^^^^^^^^^^^^ Sizing the array to correctly represent input data
+        SMRT_STATE=SMRT_STATE[0:self.number_of_barrels]#-------------------------------------------------------------------------------------------------------------------------------------------------------- this is supposed to combine the freeze and defrost into a single array instead of two seperate ones.
+        ENG_STATE=ENG_STATE[0:self.number_of_barrels]#---------------------------------------------------------------------------------------------------------------------------------------------------------- this is supposed to combine the freeze and defrost into a single array instead of two seperate ones.
+
+        #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ^^^^^^^^^^^^ Sizing the array to correctly represent input data
         
         
-        #---------------------------------------------------------------------------------------------------------------- vvvvvvvvvvvv "Simplifying" states
-        SIMPLE_STATES={0:"(/)",4:"(/)",3:"(/)",5:"(/)",9:"(/)",7:"(/)",8:3,11:2,777:1}#---------------------------------- Meaning: actual state 8: freezedown (3), actual state 11: defrost (2), SPECIAL STATE(777): IPD (1), all other states (0,4,3,5,7,9): Ignore ("(/)") 
-        #---------------------------------------------------------------------------------------------------------------- ^^^^^^^^^^^^ "Simplifying" states
+        #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- vvvvvvvvvvvv "Simplifying" states
+        SIMPLE_STATES={0:0,4:0,3:0,5:0,9:0,7:0,10:0,8:3,11:2,777:1}#-------------------------------------------------------------------------------------------------------------------------------------------- Meaning: actual state 8: freezedown (3), actual state 11: defrost (2), SPECIAL STATE(777): IPD (1), all other states (0,4,3,5,7,9,10): Ignore (0) 
+        INENGLISH_STATES={0:"IDLE",4:"IDLE",3:"IDLE",5:"IDLE",9:"IDLE",7:"IDLE",10:"IDLE",8:"FRZDWN",11:"DEFRST",777:"IPD"}
+        #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ^^^^^^^^^^^^ "Simplifying" states
         
         
         for i in range(np.size(self.time,0)):
@@ -63,11 +66,19 @@ class StateAnalyzer:
 
                 FRZ_Columns[barrel]=SIMPLE_STATES[COLUMN(self.data,10+5+7*barrel)[i]]#COLUMN(self.data,10+5+7*barrel)[i]#np.append(FRZ_Columns[barrel],COLUMN(self.data,10+5+7*barrel))
                 THAW_Columns[barrel]=SIMPLE_STATES[COLUMN(self.data,10+6+7*barrel)[i]]#COLUMN(self.data,10+6+7*barrel)[i]#np.append(THAW_Columns[barrel],COLUMN(self.data,10+6+7*barrel))
-            print [FRZ_Columns,THAW_Columns]
+                #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- this is supposed to be a test implementation of the smartstate array
+                if FRZ_Columns[barrel] !=0:
+                    SMRT_STATE[barrel]=FRZ_Columns[barrel]
+                    ENG_STATE[barrel]=INENGLISH_STATES[COLUMN(self.data,10+5+7*barrel)[i]]
+                if FRZ_Columns[barrel] ==0:
+                    SMRT_STATE[barrel]=THAW_Columns[barrel]
+                    ENG_STATE[barrel]=INENGLISH_STATES[COLUMN(self.data,10+6+7*barrel)[i]]
+                #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- this is supposed to be a test implementation of the smartstate array    
+            print "Freeze Array: ",FRZ_Columns," Defrost Array : ",THAW_Columns," \"Smart\" Array: ",SMRT_STATE," Action Array: ",ENG_STATE
        
         FRZ_Columns=np.transpose(FRZ_Columns)
         THAW_Columns=np.transpose(THAW_Columns)
-        state_columns=(["Actual States: ",FRZ_Columns, THAW_Columns,"Processed States: ", ])#---------------------------------------------------------------------- this gets all the number of barrels and puts them together format:[bbl1,bbl2,bbl3,bbl4],[simplebbl1,simplebbl2,simpebbl3,simplebbl4].
+        state_columns=(["Actual States: ",FRZ_Columns, THAW_Columns,"Processed States: ", ])#--------------------------------------------------------------------------------------------------------------------- this gets all the number of barrels and puts them together format:[bbl1,bbl2,bbl3,bbl4],[simplebbl1,simplebbl2,simpebbl3,simplebbl4].
         
         '''#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    * OLD ITERATION. 19 July 2016 18:34
         IPD=np.array([],dtype=object)#------------------------------------------------------------------------------------ this will be IPD[barrel1][freezedown1,2,3,4], IPD[barrel2][freezedown1,2,3,4],etc.
@@ -105,7 +116,7 @@ class StateAnalyzer:
         
        
         
-s=StateAnalyzer('773logtest2_TEST.log')        
+s=StateAnalyzer('773logtest2_TEST_double.log')        
         
 #print s.data
 #print np.shape(s.data)      
@@ -116,7 +127,7 @@ print np.shape(Data[0][1])
 print Data[0][1][1:2000]
 ''''''#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    * OLD ITERATION. 19 July 2016 16:49
 '''
-States=s.StateIdentifier()
+States=s.StateIdentifier(1)
 #print States       
         
         
