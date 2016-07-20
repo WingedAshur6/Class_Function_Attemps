@@ -66,14 +66,32 @@ class StateAnalyzer:
 
                 FRZ_Columns[barrel]=SIMPLE_STATES[COLUMN(self.data,10+5+7*barrel)[i]]#COLUMN(self.data,10+5+7*barrel)[i]#np.append(FRZ_Columns[barrel],COLUMN(self.data,10+5+7*barrel))
                 THAW_Columns[barrel]=SIMPLE_STATES[COLUMN(self.data,10+6+7*barrel)[i]]#COLUMN(self.data,10+6+7*barrel)[i]#np.append(THAW_Columns[barrel],COLUMN(self.data,10+6+7*barrel))
-                #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- this is supposed to be a test implementation of the smartstate array
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                #-------------------------------------------------------------------------------SUCCESS--------------------------------------------------------------------------------------------------------- this is supposed to be a test implementation of the smartstate array
                 if FRZ_Columns[barrel] !=0:
                     SMRT_STATE[barrel]=FRZ_Columns[barrel]
                     ENG_STATE[barrel]=INENGLISH_STATES[COLUMN(self.data,10+5+7*barrel)[i]]
                 if FRZ_Columns[barrel] ==0:
                     SMRT_STATE[barrel]=THAW_Columns[barrel]
                     ENG_STATE[barrel]=INENGLISH_STATES[COLUMN(self.data,10+6+7*barrel)[i]]
-                #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- this is supposed to be a test implementation of the smartstate array    
+                #-------------------------------------------------------------------------------SUCCESS--------------------------------------------------------------------------------------------------------- this is supposed to be a test implementation of the smartstate array    
+                '''#----------------------------------------------------------------------------SUCCESS--------------------------------------------------------------------------------------------------------- ATTEMPT TO CREATE IPD IDENTIFICATION
+                '''
+                if SMRT_STATE.all()==3:
+                    SMRT_STATE[:]=SIMPLE_STATES[777]
+                    ENG_STATE[:]=INENGLISH_STATES[777]
+                '''#----------------------------------------------------------------------------SUCCESS--------------------------------------------------------------------------------------------------------- ATTEMPT TO CREATE IPD IDENTIFICATION
+                '''            
+            
             print "Freeze Array: ",FRZ_Columns," Defrost Array : ",THAW_Columns," \"Smart\" Array: ",SMRT_STATE," Action Array: ",ENG_STATE
        
         FRZ_Columns=np.transpose(FRZ_Columns)
@@ -127,7 +145,7 @@ print np.shape(Data[0][1])
 print Data[0][1][1:2000]
 ''''''#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    * OLD ITERATION. 19 July 2016 16:49
 '''
-States=s.StateIdentifier(1)
+States=s.StateIdentifier(2)
 #print States       
         
         
