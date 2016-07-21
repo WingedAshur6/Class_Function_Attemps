@@ -23,13 +23,13 @@ def COLUMN(matrix, i):
         
         
 class State:
-    def __init__(self):
-        self.start_time = nil
-        self.end_time   = nil
-        self.barrel     = nil
-        self.state_name = nil
+    def __init__(self,name,start,end,state):
+        self.start_time = start
+        self.end_time   = end
+        self.barrel     = name
+        self.state_name = state
     def __str__(self):
-        return "<State> : "+self.name
+        return self.barrel
         
     
 
@@ -139,51 +139,48 @@ class StateAnalyzer:
 
         #print timecap
         #return
-        
-            
-        statetimes={}
-        for barrel in range(num_barr):#------------------------------------------------------------------------ initializes the time recording.
-            statetimes[barrel]={}
-            print "Barrel: ",barrel,"\n"
-            for state in (["IPD","Defrosting","Freezing","Other"]):
-                print "        State: ",state
-                statetimes[barrel][state]={}
-                for timer in (["Start","End"]):
-                        print "            Time Values: ",timer
-                        statetimes[barrel][state][timer]={}
-                print "\n"
-        time.sleep(10)
+
+        #time.sleep(10)
         #print Data[0][0],time.sleep(5)
+        statingrun={}
+        for i in range(num_barr):
+            statingrun[i]={}
         data_analysis_states=self.get_dataset(num_barr)
                
         for row in self.state_data:
             row_state = self.analysis_state(row,num_barr)
          
             for barrel, barrel_state in enumerate(row_state):
+                statingrun[barrel] =State(barrel,None,None,None)  
                 if data_analysis_states[barrel] != barrel_state:
-                    if barrel_state != "Other":
-                        print barrel, barrel_state
-                        print barrel,barrel_state
-                        print statetimes[0]
-                        statetimes[barrel][state]["Start"]=[Data[0][0]]
-                    print "State transition"  
+                    #if barrel_state != "Other":
+                    
+                    print "State transition"
+                
                     #timecap[barrel][barrel_state]=[Data[0][0]]
                 # Let's say that we're transitioning from an IPD state to another state
                 # Per our definition the IPD continues until all barrels have existed
                 # the freeze state - so we need to only change the barrel state when
                 # all of the barrels are no longer in IPD
                 if data_analysis_states[barrel] == "IPD":
+                    statingrun[barrel].start_time=row[0]
+                    statingrun[barrel].barrel=barrel
+                    statingrun[barrel].state_name=data_analysis_states[barrel]
+                    break
                     # any other barrels still freezing?
                     if "Freezing" in row_state:
+                        
                         pass # Don't modify the currently stored analysis state
                     else:
                         # At this point all barrels will have existed the IPD state
                         data_analysis_states[barrel] = barrel_state
+                    
                 else:
                     data_analysis_states[barrel] = barrel_state
-         
+
             print row , row_state ,data_analysis_states
-        print statetimes
+        for x in range(num_barr):
+            print "Barrel: ",statingrun[x].barrel," Time: ",statingrun[x].start_time," State: ",statingrun[x].state_name
 '''------------------------------------------------------------------------------------------------------- WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta.   
     def get_dataset(self,num_barr):
     
@@ -224,7 +221,7 @@ s=StateAnalyzer('774LABTEST.log')
 num_barr=s.bar_counter() 
 print num_barr   
 num_barr=4
-num_barr_to_use=1
+num_barr_to_use=4
 s.StatePopulator(num_barr_to_use)#_to_use)
 print np.shape(s)
 print (s.state_data[1019:1079])
