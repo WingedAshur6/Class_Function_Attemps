@@ -77,7 +77,7 @@ class StateAnalyzer:
         #print self.state_data
         #print np.shape(self.state_data)
         #print self.state_data
-        return self.state_data
+
     
     def analysis_state(self,row,num_barr):#------------------------------------------------------------------------ GARY'S MODIFIED-FOR-MY-CLASS STATE MACHINE ---------------------------------------------------------------------------------- this will take in itself and analyze its states.
         IPDtrack=["IPD","IPD","IPD","IPD"]
@@ -89,14 +89,10 @@ class StateAnalyzer:
             rowtrack=[row[1],row[3],row[5]]
         if num_barr==4:
             rowtrack=[row[1],row[3],row[5],row[7]]
-        #rowtrack=row[1:-1]
-        
-        #print np.shape(Data)
-
         IPDtrack=IPDtrack[0:num_barr]
-        #print rowtrack
+        
 
-        if np.all(np.equal(rowtrack,8)):#, row[3] == 8,row[5]==8,row[7]==8]):
+        if np.all(np.equal(rowtrack,8)):
             return IPDtrack
            
         barrel_cols = [ (1,2),(3,4),(5,6),(7,8)]
@@ -111,15 +107,80 @@ class StateAnalyzer:
                 output.append("Other")
         
         return output
-       
-    
+
     def get_dataset(self,num_barr):
     
         self.data_analysis_states = [ "Other", "Other","Other","Other" ]
         self.data_analysis_states=self.data_analysis_states[0:num_barr]
         return self.data_analysis_states
     
-    def analysis_of_states(self,Data,num_barr):     
+    def analysis_of_states(self,num_barr):
+        import time
+        import numpy as np        
+        print ["TIME", "BBL1 - FRZ", "BBL1DEF", "BBL2FRZ", "BBL2DEF","BBL1 row specific state",
+        "BBL2 row specific state", "BBL1 Data Analysis State", "BBL2 Data Analysis State"]
+        # timecap={}
+        # for i in range(num_barr):#--------------------------------------------------------------------------- there are n amount of barrels to keep track of, per the input parameter.
+            # timecap[i]={}
+            # for j in range(3):#------------------------------------------------------------------------------ there are 3 states to keep track of
+                # timecap[i][j]=["Start","Finish"]
+
+        #print timecap
+        #return
+        
+            
+        statetimes={}
+        for barrel in range(num_barr):#------------------------------------------------------------------------ initializes the time recording.
+            statetimes[barrel]={}
+            print "Barrel: ",barrel,"\n"
+            for state in (["IPD","Defrosting","Freezing","Other"]):
+                print "        State: ",state
+                statetimes[barrel][state]={}
+                for timer in (["Start","End"]):
+                        print "            Time Values: ",timer
+                        statetimes[barrel][state][timer]={}
+                print "\n"
+        time.sleep(10)
+        #print Data[0][0],time.sleep(5)
+        data_analysis_states=self.get_dataset(num_barr)
+               
+        for row in self.state_data:
+            row_state = self.analysis_state(row,num_barr)
+         
+            for barrel, barrel_state in enumerate(row_state):
+                if data_analysis_states[barrel] != barrel_state:
+                    if barrel_state != "Other":
+                        print barrel, barrel_state
+                        print barrel,barrel_state
+                        print statetimes[0]
+                        statetimes[barrel][state]["Start"]=[Data[0][0]]
+                    print "State transition"  
+                    #timecap[barrel][barrel_state]=[Data[0][0]]
+                # Let's say that we're transitioning from an IPD state to another state
+                # Per our definition the IPD continues until all barrels have existed
+                # the freeze state - so we need to only change the barrel state when
+                # all of the barrels are no longer in IPD
+                if data_analysis_states[barrel] == "IPD":
+                    # any other barrels still freezing?
+                    if "Freezing" in row_state:
+                        pass # Don't modify the currently stored analysis state
+                    else:
+                        # At this point all barrels will have existed the IPD state
+                        data_analysis_states[barrel] = barrel_state
+                else:
+                    data_analysis_states[barrel] = barrel_state
+         
+            print row , row_state ,data_analysis_states
+        print statetimes
+'''------------------------------------------------------------------------------------------------------- WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta.   
+    def get_dataset(self,num_barr):
+    
+        self.data_analysis_states = [ "Other", "Other","Other","Other" ]
+        self.data_analysis_states=self.data_analysis_states[0:num_barr]
+        return self.data_analysis_states
+    
+    def analysis_of_states(self,Data,num_barr):
+        import time    
         print ["TIME", "BBL1 - FRZ", "BBL1DEF", "BBL2FRZ", "BBL2DEF","BBL1 row specific state",
         "BBL2 row specific state", "BBL1 Data Analysis State", "BBL2 Data Analysis State"]
         data_analysis_states=self.get_dataset(num_barr)        
@@ -128,7 +189,7 @@ class StateAnalyzer:
          
             for barrel, barrel_state in enumerate(row_state):
                 if data_analysis_states[barrel] != barrel_state:
-                    print "State transition"   
+                    print "State transition"  
                     
                 # Let's say that we're transitioning from an IPD state to another state
                 # Per our definition the IPD continues until all barrels have existed
@@ -145,17 +206,18 @@ class StateAnalyzer:
                     data_analysis_states[barrel] = barrel_state
          
             print row , row_state ,data_analysis_states
-    
-s=StateAnalyzer('773logtest2_TEST.log')        
+''''''------------------------------------------------------------------------------------------------------- WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta.  
+'''    
+s=StateAnalyzer('774LABTEST.log')        
 num_barr=s.bar_counter() 
 print num_barr   
 num_barr=4
-num_barr_to_use=3
-Data=s.StatePopulator(num_barr_to_use)#_to_use)
+num_barr_to_use=1
+s.StatePopulator(num_barr_to_use)#_to_use)
 print np.shape(Data)
 print (Data[1019:1079])
 
-test=s.analysis_of_states(Data,num_barr_to_use)   
+test=s.analysis_of_states(num_barr_to_use)   
 #print Data
 
 
