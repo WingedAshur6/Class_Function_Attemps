@@ -6,7 +6,9 @@
    # * Package up the collected data into State classes
    
 # Example:
+
 import numpy as np
+
 def is_number(s):
     try:
         int(s)
@@ -34,28 +36,128 @@ class StateAnalyzer:
         self.data=np.reshape(self.data,(np.size(self.data)/self.columns,self.columns))#-------------------------------------------------------------------------------------------------------------------------- to reshape the newly aqcuired dataset to represent the output data
         self.time=COLUMN(self.data,1)#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- the data columns IS 1 because 0 in the output refers to the unit's serial number.
         self.time_easy=self.time-min(self.time)
-        
-    def StateIdentifier(self,num_barr):
+    def bar_counter(self):
         self.number_of_data=7 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- this is the number of columns of data per barrel.
-        self.true_data=self.number_of_data*num_barr
-        self.number_of_barrels=self.true_data/self.number_of_data
         
-        self.state_data=np.array([None,None,None,None],dtype=object)
+        self.number_of_barrels=(np.size(self.data,1)-11)/self.number_of_data       
+        return self.number_of_barrels
+    
+    def StatePopulator(self,num_barr):
+        self.number_of_data=7 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- this is the number of columns of data per barrel.
+        self.number_of_barrels=4#--------------------------------------------------------------- CRITICAL HARDCODE VALUE. DO NOT CHANGE . -------------------------------------------------------------------------------------------------------- this is a CRITICAL HARDCODED VALUE. 
+        
+        self.state_data=self.data
         #self.state_data=np.append(self.state_data,self.time)
-        self.state_data=self.state_data[0:num_barr]
-        self.state_data=np.append(self.state_data,None)
-        for i in range (num_barr):#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ this will arrange the data we want for garys state machine
-            self.state_data[i+1]=[COLUMN(self.data,10+5*i),COLUMN(self.data,10+6*i)]
-            self.state_data[i+1]=np.transpose(self.state_data[i+1])
-        self.state_data[0]=np.transpose(self.time)
+        self.state_data=np.delete(self.state_data,0,axis=1)
+        self.state_data=np.delete(self.state_data,np.s_[1:14],axis=1)
+        #print self.state_data[1019:1023]
+        print self.number_of_barrels
+        import time
+        for i in range(self.number_of_barrels):
+            self.state_data=np.delete(self.state_data,np.s_[(3+2*i):(8+2*i)],axis=1)
+            #print np.transpose(self.state_data[1019:1020]),"-"*5
+            #time.sleep(3)
+           
+        for j in range((self.number_of_barrels-num_barr)*2):
+            self.state_data=np.delete(self.state_data,(-1),axis=1)
+            #print np.transpose(self.state_data[1019:1020])
+        return self.state_data
+        
+        
+        
+        
+        # for i in range (num_barr):
+            # for j in range(np.size(self.state_data,0)-2):#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ this will arrange the data we want for garys state machine
+                
+                # self.state_data[j+1]=np.transpose(COLUMN(self.data,10+5+7*i))
+                # self.state_data[j+2]=np.transpose(COLUMN(self.data,10+6+7*i))
+                # self.state_data[j+1]=np.transpose(self.state_data[i+1])
+                # self.state_data[j+2]=np.transpose(self.state_data[i+2])
+        # self.state_data[0]=np.transpose(self.time)
         #print self.state_data
-        print np.shape(self.state_data)
-        print np.shape(self.state_data[0])
-        print np.shape(self.state_data[1])
-        print np.shape(self.state_data[2])
-        print np.shape(self.state_data[3])
-        print self.state_data
-            
+        #print np.shape(self.state_data)
+        #print self.state_data
+        return self.state_data
+    
+    def analysis_state(self,row,num_barr):#------------------------------------------------------------------------ GARY'S MODIFIED-FOR-MY-CLASS STATE MACHINE ---------------------------------------------------------------------------------- this will take in itself and analyze its states.
+        IPDtrack=["IPD","IPD","IPD","IPD"]
+        if num_barr==1:
+            rowtrack=[row[1]]
+        if num_barr==2:
+            rowtrack=[row[1],row[3]]
+        if num_barr==3:
+            rowtrack=[row[1],row[3],row[5]]
+        if num_barr==4:
+            rowtrack=[row[1],row[3],row[5],row[7]]
+        #rowtrack=row[1:-1]
+        
+        #print np.shape(Data)
+
+        IPDtrack=IPDtrack[0:num_barr]
+        #print rowtrack
+
+        if np.all(np.equal(rowtrack,8)):#, row[3] == 8,row[5]==8,row[7]==8]):
+            return IPDtrack
+           
+        barrel_cols = [ (1,2),(3,4),(5,6),(7,8)]
+        barrel_cols=barrel_cols[0:num_barr]
+        output = []
+        for frz_col, def_col in barrel_cols:
+            if row[frz_col] == 8:
+                output.append("Freezing")
+            elif row[def_col] == 11:
+                output.append("Defrosting")
+            else:
+                output.append("Other")
+        
+        return output
+       
+    
+    def get_dataset(self,num_barr):
+    
+        self.data_analysis_states = [ "Other", "Other","Other","Other" ]
+        self.data_analysis_states=self.data_analysis_states[0:num_barr]
+        return self.data_analysis_states
+    
+    def analysis_of_states(self,Data,num_barr):     
+        print ["TIME", "BBL1 - FRZ", "BBL1DEF", "BBL2FRZ", "BBL2DEF","BBL1 row specific state",
+        "BBL2 row specific state", "BBL1 Data Analysis State", "BBL2 Data Analysis State"]
+        data_analysis_states=self.get_dataset(num_barr)        
+        for row in Data:
+            row_state = self.analysis_state(row,num_barr)
+         
+            for barrel, barrel_state in enumerate(row_state):
+                if data_analysis_states[barrel] != barrel_state:
+                    print "State transition"   
+                    
+                # Let's say that we're transitioning from an IPD state to another state
+                # Per our definition the IPD continues until all barrels have existed
+                # the freeze state - so we need to only change the barrel state when
+                # all of the barrels are no longer in IPD
+                if data_analysis_states[barrel] == "IPD":
+                    # any other barrels still freezing?
+                    if "Freezing" in row_state:
+                        pass # Don't modify the currently stored analysis state
+                    else:
+                        # At this point all barrels will have existed the IPD state
+                        data_analysis_states[barrel] = barrel_state
+                else:
+                    data_analysis_states[barrel] = barrel_state
+         
+            print row , row_state ,data_analysis_states
+    
+s=StateAnalyzer('773logtest2_TEST.log')        
+num_barr=s.bar_counter() 
+print num_barr   
+num_barr=4
+num_barr_to_use=3
+Data=s.StatePopulator(num_barr_to_use)#_to_use)
+print np.shape(Data)
+print (Data[1019:1079])
+
+test=s.analysis_of_states(Data,num_barr_to_use)   
+#print Data
+
 
         # #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- vvvvvvvvvvvv Sizing the arrays to correctly represent input data
         # FRZ_Columns=np.array([None,None,None,None],dtype=object)
@@ -177,17 +279,18 @@ class StateAnalyzer:
         # '''    
 
                 
-        '''
-        return state_columns#------------------------------------------------------------------------------------------------------------------------------------ this will return as: [State:1->2][Barrel:1->4][time:START->END]    * OLD ITERATION. 19 July 2016 16:49
-        '''
+        # '''
+        # return state_columns#------------------------------------------------------------------------------------------------------------------------------------ this will return as: [State:1->2][Barrel:1->4][time:START->END]    * OLD ITERATION. 19 July 2016 16:49
+        # '''
         
         
        
         
-s=StateAnalyzer('773logtest2_TEST_double.log')        
-        
-#print s.data
-#print np.shape(s.data)      
+# s=StateAnalyzer('773logtest2_TEST_double.log')        
+# num_barr=s.bar_counter()#------------------------------------------------------------------------------------------------------------------------------------------ this function works to count the number of barrels.     
+# print num_barr   
+# #print s.data
+# #print np.shape(s.data)      
 '''#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    * OLD ITERATION. 19 July 2016 16:49  
 Data=s.StateIdentifier()
 print Data
@@ -195,8 +298,11 @@ print np.shape(Data[0][1])
 print Data[0][1][1:2000]
 ''''''#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    * OLD ITERATION. 19 July 2016 16:49
 '''
-States=s.StateIdentifier(3)
-#print States       
+# Data=s.StatePopulator(num_barr)
+
+# print Data
+# #analysis=Data.analysis_state(num_barr)
+# #print States       
         
         
         
@@ -250,12 +356,35 @@ data = [
 [12,0,8,0,0],
 [13,0,11,0,0],
 [14,0,11,0,0]]
+
+
+data = [
+[1,0,0,0,0,8,0,0,0],
+[2,0,0,0,0,8,0,0,0],
+[3,0,0,8,0,8,0,0,0],
+[4,8,0,8,0,8,0,0,0],
+[5,8,0,8,0,8,0,8,0],
+[6,8,0,8,0,8,0,8,0],
+[8,8,0,0,0,0,11,8,0],
+[9,8,0,0,0,0,12,8,0],
+[10,0,8,0,0,0,4,8,0],
+[11,0,8,0,0,0,9,8,0],
+[12,0,8,0,0,0,0,8,0],
+[13,0,11,0,0,0,0,0,11],
+[14,0,11,0,0,0,0,0,11]]
  
 def analysis_state(row):
-    if all( [ row[1]==8, row[3] == 8]):
-        return ["IPD","IPD"]
+    IPDtrack=["IPD","IPD","IPD","IPD"]
+    rowtrack=[row[1],row[3],row[5],row[7]]
+    rowtrack=rowtrack[0:num_barr]
+    IPDtrack=IPDtrack[0:num_barr]
+    print rowtrack
+
+    if np.all(np.equal(rowtrack,8)):#, row[3] == 8,row[5]==8,row[7]==8]):
+        return IPDtrack
        
-    barrel_cols = [ (1,2),(3,4)]
+    barrel_cols = [ (1,2),(3,4),(5,6),(7,8)]
+    barrel_cols=barrel_cols[0:num_barr]
     output = []
     for frz_col, def_col in barrel_cols:
         if row[frz_col] == 8:
@@ -264,10 +393,11 @@ def analysis_state(row):
             output.append("Defrosting")
         else:
             output.append("Other")
+    
     return output
        
-data_analysis_states = [ "Other", "Other" ]
- 
+data_analysis_states = [ "Other", "Other","Other","Other" ]
+data_analysis_states=data_analysis_states[0:num_barr] 
 print ["TIME", "BBL1 - FRZ", "BBL1DEF", "BBL2FRZ", "BBL2DEF","BBL1 row specific state",
 "BBL2 row specific state", "BBL1 Data Analysis State", "BBL2 Data Analysis State"]
               
@@ -292,5 +422,12 @@ for row in data:
         else:
             data_analysis_states[barrel] = barrel_state
  
-    print row + row_state + data_analysis_states
+    print row + row_state +data_analysis_states
 '''
+#array=np.array([[1,2,3,4],[1,2,3,4],[4,3,2,1],[4,3,2,1],[5,6,7,8],[5,6,7,8],[8,7,6,5],[8,7,6,5]])
+# np.delete(array,2,axis=1)
+# the above deletes the third column.
+# np.delete(array,np.s_[0:2],axis=1)
+#the above deletes up to the third arrray from index 0
+# np.delete(array,[(0:1),3],axis=1)
+# above deletes the columns belonging to these indeces.
