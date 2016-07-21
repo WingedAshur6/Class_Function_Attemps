@@ -21,6 +21,18 @@ def make_time(unix_time):
 def COLUMN(matrix, i):
     return [row[i] for row in matrix]
         
+        
+class State:
+    def __init__(self):
+        self.start_time = nil
+        self.end_time   = nil
+        self.barrel     = nil
+        self.state_name = nil
+    def __str__(self):
+        return "<State> : "+self.name
+        
+    
+
 class StateAnalyzer:
     def __init__(self, log_file):
         #condition_data() # Sometimes there are data transmission errors in tera term so you'll need to detect and ignore invalid data
@@ -214,8 +226,8 @@ print num_barr
 num_barr=4
 num_barr_to_use=1
 s.StatePopulator(num_barr_to_use)#_to_use)
-print np.shape(Data)
-print (Data[1019:1079])
+print np.shape(s)
+print (s.state_data[1019:1079])
 
 test=s.analysis_of_states(num_barr_to_use)   
 #print Data
