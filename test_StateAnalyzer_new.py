@@ -164,7 +164,7 @@ class StateAnalyzer:
         #print Data[0][0],time.sleep(5)
         data_output=[] #<---------------------- IN THE FUTURE, USE THIS TO STORE ALL THE OUTPUT DATA FROM THE RECORDER. SO IT CAN BE ACCESSED MORE EASILY AND STORE DIFFERENT TYPES OF RECORD DATA. YOU WILL END UP SENDING THE RECORDED DATA INTO THE DATA_OUTPUT ARRAY.
         statingrun={}
-        statinginteration=0
+        statingiteration={}
         statingrunrec={}
         ipditeration=0
         ipdrun={}
@@ -177,7 +177,13 @@ class StateAnalyzer:
         for i in range(num_barr):
             statingrun[i]={}
             statingrunrec[i]=0
-            statingrun[i] =State(i,None,None,None)
+            statingiteration[i]=0
+            statingrun[i][statingiteration[i]]=State(statingiteration,None,None,None)
+                
+                
+                
+                
+                
         data_analysis_states=self.get_dataset(num_barr)
                
         for row in self.state_data:
@@ -198,17 +204,22 @@ class StateAnalyzer:
                         
                 if "Freezing" in row_state[barrel] and statingrunrec[barrel]==0 and not "IPD" in data_analysis_states:
                         #------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-                        statingrun[barrel].start_time=row[0]
-                        statingrun[barrel].barrel=barrel
-                        statingrun[barrel].state_name=row_state[barrel]
-                        print "\n\n capturing FRZ Start in "
+                        statingrun[barrel][statingiteration[barrel]].start_time=row[0]
+                        statingrun[barrel][statingiteration[barrel]].barrel=barrel
+                        statingrun[barrel][statingiteration[barrel]].state_name=row_state[barrel]
+                        print "\n\n capturing FRZ Start in Barrel: " ,barrel, "Time interval: ",statingiteration[barrel]," with time: ", row[0]
+                        time.sleep(3)
                         #------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
                         
                 if not "Freezing" in row_state[barrel] and statingrunrec[barrel]==1 and not "IPD" in data_analysis_states:
-                        statingrun[barrel].end_time=row[0]
+                        statingrun[barrel][statingiteration[barrel]].end_time=row[0]
                         statingrunrec[barrel]=10                    
-
-                
+                        print "\n\n capturing FRZ end in Barrel: " ,barrel, "Time interval: ",statingiteration[barrel]," with time: ", row[0]
+                        time.sleep(3)
+                        print "\n\n Time end for FRZ in barrel: ",barrel,"Creating new time interval in barrel to allow recording. OLD interval: ", statingiteration[barrel]
+                        statingiteration[barrel]+=1
+                        print "To: ",statingiteration[barrel]
+                        time.sleep(10)
                 
                 if not "IPD" in data_analysis_states and ipdtimerec==1:
                     '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
@@ -285,8 +296,9 @@ class StateAnalyzer:
 
 
                 if "Freezing" in row_state[barrel] and statingrunrec[barrel]==0 and not "IPD" in data_analysis_states:
+                    print "\n\n FRZ start time already recorded in barrel: ",barrel,"shifting staterunrecorder in barrel from: ", statingrunrec[barrel]," to 1 to allow a recording of end time."
                     statingrunrec[barrel]=1
-
+                    time.sleep(10)
 
 
             
