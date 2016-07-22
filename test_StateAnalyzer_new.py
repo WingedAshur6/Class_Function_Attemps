@@ -162,6 +162,9 @@ class StateAnalyzer:
         #print Data[0][0],time.sleep(5)
         statingrun={}
         endtimerec={}
+        ipditeration=0
+        ipdrun={}
+        ipdrun[ipditeration]=State(ipditeration,None,None,None)
         for i in range(num_barr):
             statingrun[i]={}
             endtimerec[i]=0
@@ -173,13 +176,28 @@ class StateAnalyzer:
                 
             for barrel, barrel_state in enumerate(row_state):
                 if "IPD" in row_state and endtimerec[barrel]==0:# row_state[barrel]=="IPD" and endtimerec[barrel]<1 :#------------------------------------------------------------------------------------------------------------------------------------- When it enters IPD state.
-                        
+                       
                         statingrun[barrel].start_time=row[0]
                         statingrun[barrel].barrel=barrel
                         statingrun[barrel].state_name=row_state[barrel]
-
+                        if ipditeration!=0:
+                            ipdrun[ipditeration]=State(ipditeration,ipditeration,row[0],None,row_state[barrel])
+                        ipdrun[ipditeration].start_time=row[0]
+                        ipdrun[ipditeration].state_name=row_state[barrel]
+                        
+                        
                 if not "IPD" in data_analysis_states and endtimerec[barrel]==1 :
                     statingrun[barrel].end_time=row[0]
+                    
+                    for x in range(ipditeration):
+                        ipdrun[x].end_time=row[0]
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     endtimerec[barrel]=10
                     
                     
@@ -226,6 +244,7 @@ class StateAnalyzer:
         for x in range(num_barr):
             print "Barrel: ",statingrun[x].barrel," Start Time: ",statingrun[x].start_time," End Time: ",statingrun[x].end_time," State: ",statingrun[x].state_name
             print endtimerec
+            print ipdrun
 '''------------------------------------------------------------------------------------------------------- WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta.   
     def get_dataset(self,num_barr):
     
