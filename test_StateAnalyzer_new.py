@@ -90,6 +90,24 @@ class StateAnalyzer:
         #print np.shape(self.state_data)
         #print self.state_data
 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
     def analysis_state(self,row,num_barr):#------------------------------------------------------------------------ GARY'S MODIFIED-FOR-MY-CLASS STATE MACHINE ---------------------------------------------------------------------------------- this will take in itself and analyze its states.
         IPDtrack=["IPD","IPD","IPD","IPD"]
@@ -143,18 +161,37 @@ class StateAnalyzer:
         #time.sleep(10)
         #print Data[0][0],time.sleep(5)
         statingrun={}
+        endtimerec={}
         for i in range(num_barr):
             statingrun[i]={}
+            endtimerec[i]=0
+            statingrun[i] =State(i,None,None,None)
         data_analysis_states=self.get_dataset(num_barr)
                
         for row in self.state_data:
             row_state = self.analysis_state(row,num_barr)
-         
+                
             for barrel, barrel_state in enumerate(row_state):
-                statingrun[barrel] =State(barrel,None,None,None)  
+                if "IPD" in row_state and endtimerec[barrel]==0:# row_state[barrel]=="IPD" and endtimerec[barrel]<1 :#------------------------------------------------------------------------------------------------------------------------------------- When it enters IPD state.
+                        
+                        statingrun[barrel].start_time=row[0]
+                        statingrun[barrel].barrel=barrel
+                        statingrun[barrel].state_name=row_state[barrel]
+
+                if not "IPD" in data_analysis_states and endtimerec[barrel]==1 :
+                    statingrun[barrel].end_time=row[0]
+                    endtimerec[barrel]=10
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                 if data_analysis_states[barrel] != barrel_state:
                     #if barrel_state != "Other":
-                    
+                    #if endtimerec[barrel]==1:
+                        #statingrun[barrel].end_time=row[0]                    
                     print "State transition"
                 
                     #timecap[barrel][barrel_state]=[Data[0][0]]
@@ -163,10 +200,12 @@ class StateAnalyzer:
                 # the freeze state - so we need to only change the barrel state when
                 # all of the barrels are no longer in IPD
                 if data_analysis_states[barrel] == "IPD":
-                    statingrun[barrel].start_time=row[0]
-                    statingrun[barrel].barrel=barrel
-                    statingrun[barrel].state_name=data_analysis_states[barrel]
-                    break
+                    # statingrun[barrel].start_time=row[0]
+
+                    # statingrun[barrel].barrel=barrel
+                    # statingrun[barrel].state_name=data_analysis_states[barrel]
+                    # endtimerec[barrel]=1
+                    
                     # any other barrels still freezing?
                     if "Freezing" in row_state:
                         
@@ -177,10 +216,16 @@ class StateAnalyzer:
                     
                 else:
                     data_analysis_states[barrel] = barrel_state
-
+                    
+                    
+                    
+                if "IPD" in row_state and endtimerec[barrel]==0:#----------------------------------------------------- CRITICAL IPD HARDCODE. DO NOT TOUCH. DO NOT MOVE. ---------------------------------------------------------- this must be here in order for the IPD recording to start.
+                    endtimerec[barrel]=1
+                    
             print row , row_state ,data_analysis_states
         for x in range(num_barr):
-            print "Barrel: ",statingrun[x].barrel," Time: ",statingrun[x].start_time," State: ",statingrun[x].state_name
+            print "Barrel: ",statingrun[x].barrel," Start Time: ",statingrun[x].start_time," End Time: ",statingrun[x].end_time," State: ",statingrun[x].state_name
+            print endtimerec
 '''------------------------------------------------------------------------------------------------------- WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta.   
     def get_dataset(self,num_barr):
     
