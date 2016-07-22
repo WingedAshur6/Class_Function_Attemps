@@ -187,9 +187,9 @@ class StateAnalyzer:
             refreeze[i][refreezeiteration[i]]=State(refreezeiteration[i],None,None,None)
             
             defrost[i]={}
-            refreezerunrec[i]=0
-            refreezeiteration[i]=0
-            defrost[i][refreezeiteration[i]]=State(refreezeiteration[i],None,None,None)            
+            defrostrunrec[i]=0
+            defrostiteration[i]=0
+            defrost[i][defrostiteration[i]]=State(defrostiteration[i],None,None,None)            
                 
                 
                 
@@ -200,7 +200,7 @@ class StateAnalyzer:
             row_state = self.analysis_state(row,num_barr)
                 
             for barrel, barrel_state in enumerate(row_state):
-
+##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                         
                 if "IPD" in row_state and  ipdtimerec==0:#------------------------------------------------------------------------------------------------------------------------------------- When it enters IPD state.
 
@@ -232,6 +232,58 @@ class StateAnalyzer:
                         refreeze[barrel][refreezeiteration[barrel]]=State(refreezeiteration[i],None,None,None)
                         #time.sleep(10)
                         refreezerunrec[barrel]=0
+                        
+                        
+                        
+                if "Defrosting" in row_state[barrel] and defrostrunrec[barrel]==0:
+                        #------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+                        defrost[barrel][defrostiteration[barrel]].start_time=row[0]
+                        defrost[barrel][defrostiteration[barrel]].barrel=barrel
+                        defrost[barrel][defrostiteration[barrel]].state_name=row_state[barrel]
+                        #print "\n\n capturing DEF Start in Barrel: " ,barrel, "Time interval: ",defrostiteration[barrel]," with time: ", row[0]
+                        #time.sleep(3)
+                        #------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+                        
+                if not "Defrosting" in row_state[barrel] and defrostrunrec[barrel]==1:
+                        defrost[barrel][defrostiteration[barrel]].end_time=row[0]
+                        defrostrunrec[barrel]=10                    
+                        #print "\n\n capturing DEF end in Barrel: " ,barrel, "Time interval: ",defrostiteration[barrel]," with time: ", row[0]
+                        #time.sleep(3)
+                        #print "\n\n Time end for DEF in barrel: ",barrel,"Creating new time interval in barrel to allow recording. OLD interval: ", defrostiteration[barrel]
+                        defrostiteration[barrel]+=1
+                        print "To: ",defrostiteration[barrel]
+                        defrost[barrel][defrostiteration[barrel]]=State(defrostiteration[i],None,None,None)
+                        #time.sleep(10)
+                        defrostrunrec[barrel]=0                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                 
                 if not "IPD" in data_analysis_states and ipdtimerec==1:
                     '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
@@ -311,7 +363,13 @@ class StateAnalyzer:
                     #print "\n\n FRZ start time already recorded in barrel: ",barrel,"shifting staterunrecorder in barrel from: ", refreezerunrec[barrel]," to 1 to allow a recording of end time."
                     refreezerunrec[barrel]=1
                     #time.sleep(10)
+                    
+                if "Defrosting" in row_state[barrel] and defrostrunrec[barrel]==0:
+                    #print "\n\n FRZ start time already recorded in barrel: ",barrel,"shifting staterunrecorder in barrel from: ", defrostrunrec[barrel]," to 1 to allow a recording of end time."
+                    defrostrunrec[barrel]=1
+                    #time.sleep(10)
 
+##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
             
@@ -325,14 +383,22 @@ class StateAnalyzer:
         '''
         
         print "\n\n"
-        for i in range((ipditeration)):
-            print ipdrun[i].start_time,ipdrun[i].end_time
+        # for i in range((ipditeration)):
+            # print ipdrun[i].start_time,ipdrun[i].end_time
         print "\n","-"*10,"\n"
         for i in range(num_barr):
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
+            for i in range(ipditeration):
+                print "     IPD Time Iteration: ",i
+                print "                                    IPD Start:      ",ipdrun[i].start_time,"\n                                    IPD End:        ",ipdrun[i].end_time   
+
             for j in range(refreezeiteration[i]):
                 print "     Refreeze Time Iteration: ",j
                 print "                                    Refreeze Start: ",refreeze[i][j].start_time,"\n                                    Refreeze End:   ",refreeze[i][j].end_time   
+            for k in range(defrostiteration[i]):
+                print "     Defrost Time Iteration: ",k
+                print "                                    Defrost Start:  ",defrost[i][k].start_time,"\n                                    Defrost End:    ",defrost[i][k].end_time   
+            print"\n"
         return ipdrun    
             
             
@@ -344,11 +410,11 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('774LABTEST.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
 print num_barr   
 num_barr=4
-num_barr_to_use=4
+num_barr_to_use=3
 s.StatePopulator(num_barr_to_use)#_to_use)
 print np.shape(s)
 print (s.state_data[1019:1079])
