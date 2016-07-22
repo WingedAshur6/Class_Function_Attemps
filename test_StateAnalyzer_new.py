@@ -164,7 +164,167 @@ class StateAnalyzer:
         endtimerec={}
         ipditeration=0
         ipdrun={}
+        ipdrun[ipditeration]={}
         ipdrun[ipditeration]=State(ipditeration,None,None,None)
+        ipdtimerec=0
+        for i in range(num_barr):
+            statingrun[i]={}
+            endtimerec[i]=0
+            statingrun[i] =State(i,None,None,None)
+        data_analysis_states=self.get_dataset(num_barr)
+               
+        for row in self.state_data:
+            row_state = self.analysis_state(row,num_barr)
+                
+            for barrel, barrel_state in enumerate(row_state):
+                if "IPD" in row_state and  ipdtimerec==0:#------------------------------------------------------------------------------------------------------------------------------------- When it enters IPD state.
+                        '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+                        statingrun[barrel].start_time=row[0]
+                        statingrun[barrel].barrel=barrel
+                        statingrun[barrel].state_name=row_state[barrel]
+                        ''''''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+                        '''
+                        
+                        print"\n\n capturing ipd START in IPD interval: ", ipdrun[ipditeration].barrel
+                        #time.sleep(5)
+                        ipdrun[ipditeration].start_time=row[0]
+                        ipdrun[ipditeration].state_name=row_state[barrel]
+                    
+
+                
+                if not "IPD" in data_analysis_states and ipdtimerec==1:
+                    '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+                    statingrun[barrel].end_time=row[0]
+                    ''''''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+                    '''
+                    #ipdrun[0].end_time=row[0]
+                    print"\n\n capturing ipd END in IPD interval: ", ipdrun[ipditeration].barrel
+                    ipdrun[ipditeration].end_time=row[0]
+                    ipditeration+=1
+                    ipdrun[ipditeration]={}
+                    ipdrun[ipditeration]=State(ipditeration,None,None,None)
+                    ipdtimerec=0 
+                    print "\n\n new IPDrecorder created: ",ipdrun[ipditeration].barrel," Previous: ",ipdrun[ipditeration-1].barrel
+                    #time.sleep(5)
+                    #return
+
+                
+                    
+                    
+                    
+                if data_analysis_states[barrel] != barrel_state:
+                  
+                    print "State transition"
+                
+                    
+                # Let's say that we're transitioning from an IPD state to another state
+                # Per our definition the IPD continues until all barrels have existed
+                # the freeze state - so we need to only change the barrel state when
+                # all of the barrels are no longer in IPD
+                
+
+                if data_analysis_states[barrel] == "IPD":
+                    
+                    # any other barrels still freezing?
+                    if "Freezing" in row_state:
+                        
+                        pass # Don't modify the currently stored analysis state
+                    else:
+                        # At this point all barrels will have existed the IPD state
+                        data_analysis_states[barrel] = barrel_state
+                    
+                else:
+                    data_analysis_states[barrel] = barrel_state
+                    
+                    
+                    
+                if "IPD" in row_state and ipdtimerec==0:#----------------------------------------------------- CRITICAL IPD HARDCODE. DO NOT TOUCH. DO NOT MOVE. ---------------------------------------------------------- this must be here in order for the IPD recording to start.
+                    '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+                    endtimerec[barrel]=1
+                    ''''''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+                    '''
+
+                    #ipditeration+=1 #-----------------------------------------here is to say that the IPD recording phase has ended and a new one can start, IF the system enters ipd phase again.
+                    ipdtimerec=1
+                if not "IPD" in data_analysis_states and ipditeration!=0 and ipdtimerec!=0:
+                        print "\n\n IPD start time recorded already after new recorder made. State Transition found. recording END TIME."
+                        #time.sleep(3)
+                        ipdtimerec=0
+                        print"\n\n capturing ipd END in IPD interval: ", ipdrun[ipditeration].barrel
+                        ipdrun[ipditeration].end_time=row[0]
+                        ipditeration+=1
+                        ipdrun[ipditeration]={}
+                        ipdrun[ipditeration]=State(ipditeration,None,None,None)
+                        ipdtimerec=0 
+                        print "\n\n new IPDrecorder created: ",ipdrun[ipditeration].barrel," Previous: ",ipdrun[ipditeration-1].barrel
+                        #time.sleep(5)    
+                    
+                # if "IPD" in row_state and ipdtimerec==1 and ipditeration !=0:
+                    # ipdtimerec=0
+                   
+            #endtimerec[barrel]=0        
+            print row , row_state ,data_analysis_states
+        
+        '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+        for x in range(num_barr):
+            print "Barrel: ",statingrun[x].barrel," Start Time: ",statingrun[x].start_time," End Time: ",statingrun[x].end_time," State: ",statingrun[x].state_name
+            print endtimerec
+        ''''''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
+        '''
+        
+        print "\n\n"
+        for i in range((ipditeration)):
+            print ipdrun[i].start_time,ipdrun[i].end_time
+
+            
+            
+            
+            
+            
+            
+            
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
+            
+s=StateAnalyzer('773logtest2_TEST_double.log')#'774LABTEST.log')        
+num_barr=s.bar_counter() 
+print num_barr   
+num_barr=4
+num_barr_to_use=3
+s.StatePopulator(num_barr_to_use)#_to_use)
+print np.shape(s)
+print (s.state_data[1019:1079])
+
+test=s.analysis_of_states(num_barr_to_use)               
+##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.              
+            
+            
+            
+'''---------------------------------------------------------------------------------------------------------- TIMERECORDING PER BARRELS WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta. 
+    
+    def analysis_of_states(self,num_barr):
+        import time
+        import numpy as np        
+        print ["TIME", "BBL1 - FRZ", "BBL1DEF", "BBL2FRZ", "BBL2DEF","BBL1 row specific state",
+        "BBL2 row specific state", "BBL1 Data Analysis State", "BBL2 Data Analysis State"]
+        # timecap={}
+        # for i in range(num_barr):#--------------------------------------------------------------------------- there are n amount of barrels to keep track of, per the input parameter.
+            # timecap[i]={}
+            # for j in range(3):#------------------------------------------------------------------------------ there are 3 states to keep track of
+                # timecap[i][j]=["Start","Finish"]
+
+        #print timecap
+        #return
+
+        #time.sleep(10)
+        #print Data[0][0],time.sleep(5)
+        statingrun={}
+        endtimerec={}
         for i in range(num_barr):
             statingrun[i]={}
             endtimerec[i]=0
@@ -176,28 +336,13 @@ class StateAnalyzer:
                 
             for barrel, barrel_state in enumerate(row_state):
                 if "IPD" in row_state and endtimerec[barrel]==0:# row_state[barrel]=="IPD" and endtimerec[barrel]<1 :#------------------------------------------------------------------------------------------------------------------------------------- When it enters IPD state.
-                       
+                        
                         statingrun[barrel].start_time=row[0]
                         statingrun[barrel].barrel=barrel
                         statingrun[barrel].state_name=row_state[barrel]
-                        if ipditeration!=0:
-                            ipdrun[ipditeration]=State(ipditeration,ipditeration,row[0],None,row_state[barrel])
-                        ipdrun[ipditeration].start_time=row[0]
-                        ipdrun[ipditeration].state_name=row_state[barrel]
-                        
-                        
+
                 if not "IPD" in data_analysis_states and endtimerec[barrel]==1 :
                     statingrun[barrel].end_time=row[0]
-                    
-                    for x in range(ipditeration):
-                        ipdrun[x].end_time=row[0]
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                     endtimerec[barrel]=10
                     
                     
@@ -244,7 +389,17 @@ class StateAnalyzer:
         for x in range(num_barr):
             print "Barrel: ",statingrun[x].barrel," Start Time: ",statingrun[x].start_time," End Time: ",statingrun[x].end_time," State: ",statingrun[x].state_name
             print endtimerec
-            print ipdrun
+''''''------------------------------------------------------------------------------------------------------- TIMERECORDING PER BARRELS WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta.             
+'''            
+            
+            
+            
+            
+            
+            
+            
+            
+            
 '''------------------------------------------------------------------------------------------------------- WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta.   
     def get_dataset(self,num_barr):
     
@@ -281,16 +436,7 @@ class StateAnalyzer:
             print row , row_state ,data_analysis_states
 ''''''------------------------------------------------------------------------------------------------------- WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta.  
 '''    
-s=StateAnalyzer('774LABTEST.log')        
-num_barr=s.bar_counter() 
-print num_barr   
-num_barr=4
-num_barr_to_use=4
-s.StatePopulator(num_barr_to_use)#_to_use)
-print np.shape(s)
-print (s.state_data[1019:1079])
 
-test=s.analysis_of_states(num_barr_to_use)   
 #print Data
 
 
