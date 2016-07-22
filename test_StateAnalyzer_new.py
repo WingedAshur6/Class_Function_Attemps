@@ -388,17 +388,20 @@ class StateAnalyzer:
         print "\n","-"*10,"\n"
         for i in range(num_barr):
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
-            for i in range(ipditeration):
-                print "     IPD Time Iteration: ",i
-                print "                                    IPD Start:      ",ipdrun[i].start_time,"\n                                    IPD End:        ",ipdrun[i].end_time   
-
-            for j in range(refreezeiteration[i]):
-                print "     Refreeze Time Iteration: ",j
-                print "                                    Refreeze Start: ",refreeze[i][j].start_time,"\n                                    Refreeze End:   ",refreeze[i][j].end_time   
-            for k in range(defrostiteration[i]):
-                print "     Defrost Time Iteration: ",k
-                print "                                    Defrost Start:  ",defrost[i][k].start_time,"\n                                    Defrost End:    ",defrost[i][k].end_time   
-            print"\n"
+            if np.size(ipdrun.items())>0:
+                for i in range(ipditeration):
+                    print "     IPD Time Iteration: ",i
+                    print "                                    IPD Start:      ",ipdrun[i].start_time,"\n                                    IPD End:        ",ipdrun[i].end_time   
+            #print np.size(refreezeiteration.items())
+            if np.size(refreezeiteration.items())>2:
+                for j in range(refreezeiteration[i]):
+                    print "     Refreeze Time Iteration: ",j
+                    print "                                    Refreeze Start: ",refreeze[i][j].start_time,"\n                                    Refreeze End:   ",refreeze[i][j].end_time   
+            if np.size(defrostiteration.items())>2:
+                for k in range(defrostiteration[i]):
+                    print "     Defrost Time Iteration: ",k
+                    print "                                    Defrost Start:  ",defrost[i][k].start_time,"\n                                    Defrost End:    ",defrost[i][k].end_time   
+                print"\n"
         return ipdrun    
             
             
@@ -414,7 +417,7 @@ s=StateAnalyzer('773logtest2_TEST.log')#'774LABTEST.log')
 num_barr=s.bar_counter() 
 print num_barr   
 num_barr=4
-num_barr_to_use=3
+num_barr_to_use=1
 s.StatePopulator(num_barr_to_use)#_to_use)
 print np.shape(s)
 print (s.state_data[1019:1079])
