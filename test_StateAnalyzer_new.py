@@ -322,7 +322,7 @@ class StateAnalyzer:
             print "Barrel Number: ",i
             for j in range(statingiteration[i]):
                 print "     Refreeze Time Iteration: ",j
-                print "                                    Refreeze Start: ",statingrun[i][j].start_time,"\n                        Refreeze End:   ",statingrun[i][j].end_time   
+                print "                                    Refreeze Start: ",statingrun[i][j].start_time,"\n                                    Refreeze End:   ",statingrun[i][j].end_time   
         return ipdrun    
             
             
