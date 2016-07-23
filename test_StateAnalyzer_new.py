@@ -163,9 +163,7 @@ class StateAnalyzer:
 
         #time.sleep(10)
         #print Data[0][0],time.sleep(5)
-        data_output=[] #<---------------------- IN THE FUTURE, USE THIS TO STORE ALL THE OUTPUT DATA FROM THE RECORDER. SO IT CAN BE ACCESSED MORE EASILY AND STORE DIFFERENT TYPES OF RECORD DATA. YOU WILL END UP SENDING THE RECORDED DATA INTO THE DATA_OUTPUT ARRAY.
 
-        
         ipditeration=0
         ipdrun={}
         ipdrun[ipditeration]={}
@@ -208,24 +206,24 @@ class StateAnalyzer:
                         
                         #print"\n\n capturing ipd START in IPD interval: ", ipdrun[ipditeration].barrel
                         #time.sleep(5)
-                        ipdrun[ipditeration].start_time=row[0]
+                        ipdrun[ipditeration].start_time=row[0]-self.state_data[0][0]
                         ipdrun[ipditeration].state_name=row_state[barrel]
                         
                         
                         
                 if "Freezing" in row_state[barrel] and refreezerunrec[barrel]==0 and not "IPD" in data_analysis_states:
                         #------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-                        refreeze[barrel][refreezeiteration[barrel]].start_time=row[0]
+                        refreeze[barrel][refreezeiteration[barrel]].start_time=row[0]-self.state_data[0][0]
                         refreeze[barrel][refreezeiteration[barrel]].barrel=barrel
                         refreeze[barrel][refreezeiteration[barrel]].state_name=row_state[barrel]
-                        #print "\n\n capturing FRZ Start in Barrel: " ,barrel, "Time interval: ",refreezeiteration[barrel]," with time: ", row[0]
+                        #print "\n\n capturing FRZ Start in Barrel: " ,barrel, "Time interval: ",refreezeiteration[barrel]," with time: ", row[0]-self.state_data[0][0]
                         #time.sleep(3)
                         #------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
                         
                 if not "Freezing" in row_state[barrel] and refreezerunrec[barrel]==1 and not "IPD" in data_analysis_states:
-                        refreeze[barrel][refreezeiteration[barrel]].end_time=row[0]
+                        refreeze[barrel][refreezeiteration[barrel]].end_time=row[0]-self.state_data[0][0]
                         refreezerunrec[barrel]=10                    
-                        #print "\n\n capturing FRZ end in Barrel: " ,barrel, "Time interval: ",refreezeiteration[barrel]," with time: ", row[0]
+                        #print "\n\n capturing FRZ end in Barrel: " ,barrel, "Time interval: ",refreezeiteration[barrel]," with time: ", row[0]-self.state_data[0][0]
                         #time.sleep(3)
                         #print "\n\n Time end for FRZ in barrel: ",barrel,"Creating new time interval in barrel to allow recording. OLD interval: ", refreezeiteration[barrel]
                         refreezeiteration[barrel]+=1
@@ -238,17 +236,17 @@ class StateAnalyzer:
                         
                 if "Defrosting" in row_state[barrel] and defrostrunrec[barrel]==0:
                         #------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-                        defrost[barrel][defrostiteration[barrel]].start_time=row[0]
+                        defrost[barrel][defrostiteration[barrel]].start_time=row[0]-self.state_data[0][0]
                         defrost[barrel][defrostiteration[barrel]].barrel=barrel
                         defrost[barrel][defrostiteration[barrel]].state_name=row_state[barrel]
-                        #print "\n\n capturing DEF Start in Barrel: " ,barrel, "Time interval: ",defrostiteration[barrel]," with time: ", row[0]
+                        #print "\n\n capturing DEF Start in Barrel: " ,barrel, "Time interval: ",defrostiteration[barrel]," with time: ", row[0]-self.state_data[0][0]
                         #time.sleep(3)
                         #------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
                         
                 if not "Defrosting" in row_state[barrel] and defrostrunrec[barrel]==1:
-                        defrost[barrel][defrostiteration[barrel]].end_time=row[0]
+                        defrost[barrel][defrostiteration[barrel]].end_time=row[0]-self.state_data[0][0]
                         defrostrunrec[barrel]=10                    
-                        #print "\n\n capturing DEF end in Barrel: " ,barrel, "Time interval: ",defrostiteration[barrel]," with time: ", row[0]
+                        #print "\n\n capturing DEF end in Barrel: " ,barrel, "Time interval: ",defrostiteration[barrel]," with time: ", row[0]-self.state_data[0][0]
                         #time.sleep(3)
                         #print "\n\n Time end for DEF in barrel: ",barrel,"Creating new time interval in barrel to allow recording. OLD interval: ", defrostiteration[barrel]
                         defrostiteration[barrel]+=1
@@ -287,13 +285,10 @@ class StateAnalyzer:
                         
                 
                 if not "IPD" in data_analysis_states and ipdtimerec==1:
-                    '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-                    refreeze[barrel].end_time=row[0]
-                    ''''''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-                    '''
+
                    
                     #print"\n\n capturing ipd END in IPD interval: ", ipdrun[ipditeration].barrel
-                    ipdrun[ipditeration].end_time=row[0]
+                    ipdrun[ipditeration].end_time=row[0]-self.state_data[0][0]
                     ipditeration+=1
                     ipdrun[ipditeration]={}
                     ipdrun[ipditeration]=State(ipditeration,None,None,None)
@@ -333,10 +328,7 @@ class StateAnalyzer:
                     
                     
                 if "IPD" in row_state and ipdtimerec==0:#----------------------------------------------------- CRITICAL IPD HARDCODE. DO NOT TOUCH. DO NOT MOVE. ---------------------------------------------------------- this must be here in order for the IPD recording to start.
-                    '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-                    refreezerunrec[barrel]=1
-                    ''''''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-                    '''
+
 
                     #ipditeration+=1 #-----------------------------------------here is to say that the IPD recording phase has ended and a new one can start, IF the system enters ipd phase again.
                     ipdtimerec=1
@@ -345,7 +337,7 @@ class StateAnalyzer:
                         #time.sleep(3)
                         ipdtimerec=0
                         #print"\n\n capturing ipd END in IPD interval: ", ipdrun[ipditeration].barrel
-                        ipdrun[ipditeration].end_time=row[0]
+                        ipdrun[ipditeration].end_time=row[0]-self.state_data[0][0]
                         ipditeration+=1
                         ipdrun[ipditeration]={}
                         ipdrun[ipditeration]=State(ipditeration,None,None,None)
@@ -373,7 +365,7 @@ class StateAnalyzer:
 
 
             
-            #print row , row_state ,data_analysis_states
+            print row , row_state ,data_analysis_states
 ##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
         self.ipd=ipdrun
@@ -386,7 +378,7 @@ class StateAnalyzer:
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
             if np.size(ipdrun.items())>0:
                 for l in range(ipditeration):#-----------debug
-                    print "     IPD Time Iteration: ",l
+                    print "     IPD Time Iteration:      ",l
                     print "                                    IPD Start:      ",ipdrun[l].start_time,"\n                                    IPD End:        ",ipdrun[l].end_time,"\n                                    IPD Length:     ",ipdrun[l].length()   
             if np.size(refreezeiteration.items())>2:
                 for j in range(np.size(refreezeiteration[i])):
@@ -394,7 +386,7 @@ class StateAnalyzer:
                     print "                                    Refreeze Start: ",refreeze[i][j].start_time,"\n                                    Refreeze End:   ",refreeze[i][j].end_time,"\n                                    Refreeze Length:",refreeze[i][j].length()   
             if np.size(defrostiteration.items())>2:
                 for k in range(np.size(defrostiteration[i])):
-                    print "     Defrost Time Iteration: ",k
+                    print "     Defrost Time Iteration:  ",k
                     print "                                    Defrost Start:  ",defrost[i][k].start_time,"\n                                    Defrost End:    ",defrost[i][k].end_time,"\n                                    Defrost Length: ",defrost[i][k].length()   
                 print"\n"
         ''''''
@@ -409,14 +401,14 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('774LABTEST.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
-print num_barr   
+# print num_barr   
 num_barr=4
-num_barr_to_use=4
+num_barr_to_use=3
 s.StatePopulator(num_barr_to_use)#_to_use)
-print np.shape(s)
-print (s.state_data[1019:1079])
+# print np.shape(s)
+# print (s.state_data[1019:1079])
 
 s.analysis_of_states(num_barr_to_use)
 #s.ipd[0].start_time
@@ -424,7 +416,7 @@ s.analysis_of_states(num_barr_to_use)
 # state hierarchy: IPD: number of iterations --> [ .start_time, .end_time]  --------------------------------------------------->>>>>> object.ipd[iteration number].start_time or object.ipd[barrel].end_time
                  # Refreeze and Defrost: barrel -->number of iterations --> [ .start_time, .end_time]-------------------------->>>>>> object.refreeze/defrost[barrel][iteration number].start_time or .end_time
 
-
+print s.refreeze[0][0].start_time
 
 
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
