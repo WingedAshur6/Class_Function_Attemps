@@ -373,34 +373,34 @@ class StateAnalyzer:
 
 
             
-            print row , row_state ,data_analysis_states
+            #print row , row_state ,data_analysis_states
 ##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
-    # self.ipd=ipdrun
-    # self.refreeze=refreeze
-    # self.defrost=defrost
-        #print "\n",self.ipd[0].length()
-        print "\n\n"
+        self.ipd=ipdrun
+        self.refreeze=refreeze
+        self.defrost=defrost
 
-        print "\n","-"*10,"\n"
+                
+        ''''''
         for i in range(num_barr):
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
             if np.size(ipdrun.items())>0:
-                for i in range(ipditeration):
-                    print "     IPD Time Iteration: ",i
-                    print "                                    IPD Start:      ",ipdrun[i].start_time,"\n                                    IPD End:        ",ipdrun[i].end_time,"\n                                    IPD Length:     ",ipdrun[i].length()   
+                for l in range(ipditeration):#-----------debug
+                    print "     IPD Time Iteration: ",l
+                    print "                                    IPD Start:      ",ipdrun[l].start_time,"\n                                    IPD End:        ",ipdrun[l].end_time,"\n                                    IPD Length:     ",ipdrun[l].length()   
             if np.size(refreezeiteration.items())>2:
-                for j in range(refreezeiteration[i]):
+                for j in range(np.size(refreezeiteration[i])):
                     print "     Refreeze Time Iteration: ",j
                     print "                                    Refreeze Start: ",refreeze[i][j].start_time,"\n                                    Refreeze End:   ",refreeze[i][j].end_time,"\n                                    Refreeze Length:",refreeze[i][j].length()   
             if np.size(defrostiteration.items())>2:
-                for k in range(defrostiteration[i]):
+                for k in range(np.size(defrostiteration[i])):
                     print "     Defrost Time Iteration: ",k
                     print "                                    Defrost Start:  ",defrost[i][k].start_time,"\n                                    Defrost End:    ",defrost[i][k].end_time,"\n                                    Defrost Length: ",defrost[i][k].length()   
                 print"\n"
+        ''''''
         return  
             
-            
+        
             
             
             
