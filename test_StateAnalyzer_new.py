@@ -31,7 +31,8 @@ class State:
     def __str__(self):
         return self.barrel
         
-    
+    def length(self):
+        return self.end_time - self.start_time    
 
 class StateAnalyzer:
     def __init__(self, log_file):
@@ -369,40 +370,35 @@ class StateAnalyzer:
                     defrostrunrec[barrel]=1
                     #time.sleep(10)
 
-##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
             
             print row , row_state ,data_analysis_states
+##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        '''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-        for x in range(num_barr):
-            print "Barrel: ",refreeze[x].barrel," Start Time: ",refreeze[x].start_time," End Time: ",refreeze[x].end_time," State: ",refreeze[x].state_name
-            print refreezerunrec
-        ''''''#------------------------------------------------------------------------------------------------------- CRITICAL TEST CODE FOR THE FUTURE. DO NOT TOUCH. ---------------------------------------------------------------- THIS IS A TEST TO RECORD BARREL IPD TIMES THAT WILL BE USED FOR OTHER STATES. DONT TOUCH.
-        '''
-        
+    # self.ipd=ipdrun
+    # self.refreeze=refreeze
+    # self.defrost=defrost
+        #print "\n",self.ipd[0].length()
         print "\n\n"
-        # for i in range((ipditeration)):
-            # print ipdrun[i].start_time,ipdrun[i].end_time
+
         print "\n","-"*10,"\n"
         for i in range(num_barr):
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
             if np.size(ipdrun.items())>0:
                 for i in range(ipditeration):
                     print "     IPD Time Iteration: ",i
-                    print "                                    IPD Start:      ",ipdrun[i].start_time,"\n                                    IPD End:        ",ipdrun[i].end_time   
-            #print np.size(refreezeiteration.items())
+                    print "                                    IPD Start:      ",ipdrun[i].start_time,"\n                                    IPD End:        ",ipdrun[i].end_time,"\n                                    IPD Length:     ",ipdrun[i].length()   
             if np.size(refreezeiteration.items())>2:
                 for j in range(refreezeiteration[i]):
                     print "     Refreeze Time Iteration: ",j
-                    print "                                    Refreeze Start: ",refreeze[i][j].start_time,"\n                                    Refreeze End:   ",refreeze[i][j].end_time   
+                    print "                                    Refreeze Start: ",refreeze[i][j].start_time,"\n                                    Refreeze End:   ",refreeze[i][j].end_time,"\n                                    Refreeze Length:",refreeze[i][j].length()   
             if np.size(defrostiteration.items())>2:
                 for k in range(defrostiteration[i]):
                     print "     Defrost Time Iteration: ",k
-                    print "                                    Defrost Start:  ",defrost[i][k].start_time,"\n                                    Defrost End:    ",defrost[i][k].end_time   
+                    print "                                    Defrost Start:  ",defrost[i][k].start_time,"\n                                    Defrost End:    ",defrost[i][k].end_time,"\n                                    Defrost Length: ",defrost[i][k].length()   
                 print"\n"
-        return ipdrun    
+        return  
             
             
             
@@ -413,17 +409,24 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('774LABTEST.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
 print num_barr   
 num_barr=4
-num_barr_to_use=1
+num_barr_to_use=4
 s.StatePopulator(num_barr_to_use)#_to_use)
 print np.shape(s)
 print (s.state_data[1019:1079])
 
 s.analysis_of_states(num_barr_to_use)
-#print s.analysis_of_states(num_barr_to_use)[0].start_time#------------------------- HOW TO ACCESS THE ANALYSIS_OF_STATES OUTPUT DATA --------------------------------------------------------------------------------------------------------              
+#s.ipd[0].start_time
+#print s.ipd[0].start_time
+# state hierarchy: IPD: number of iterations --> [ .start_time, .end_time]  --------------------------------------------------->>>>>> object.ipd[iteration number].start_time or object.ipd[barrel].end_time
+                 # Refreeze and Defrost: barrel -->number of iterations --> [ .start_time, .end_time]-------------------------->>>>>> object.refreeze/defrost[barrel][iteration number].start_time or .end_time
+
+
+
+
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
