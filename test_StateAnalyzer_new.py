@@ -338,31 +338,117 @@ class StateAnalyzer:
         self.refreezeiteration=refreezeiteration
         self.defrostiteration=defrostiteration
         return  
-            
-        
-            
+    '''    
+    def thecleaners(self,num_barr):
+        self.newref={}
+        rearranger={}
+        import time
+        for barrel in range(num_barr):
+            self.newref[barrel]={}
+            rearranger[barrel]=0
+            self.newref[barrel][rearranger[barrel]]=State(None,None,None,None)
+            for instance in range(self.refreezeiteration[barrel]):# ------------------------------------------------------- cleaning the refreeze
+                if (self.refreeze[barrel][instance].start_time or self.refreeze[barrel][instance].end_time) <=self.ipd[barrel].end_time and (self.refreeze[barrel][instance].start_time or self.refreeze[barrel][instance].end_time) >=self.ipd[barrel].start_time or   not (self.refreeze[barrel][instance].end_time-self.refreeze[barrel][instance].start_time) >=20:
+
+                        print "There Was a REFREEZE iteration that did not meet criteria to be deemed a refreeze. removing from states."
+                        time.sleep(.1)
+                        self.newref[barrel][rearranger[barrel]]=State(self.refreeze[barrel][instance].barrel,self.refreeze[barrel][instance].start_time,self.refreeze[barrel][instance].end_time,self.refreeze[barrel][instance].state_name)
+                        self.newref[barrel][rearranger[barrel]].start_time=self.refreeze[barrel][instance].start_time
+                        self.newref[barrel][rearranger[barrel]].end_time=self.refreeze[barrel][instance].end_time
+                        self.refreeze[barrel].pop(instance)
+                        self.refreezeiteration[barrel]=rearranger[barrel]
+                rearranger[barrel]+=1
+
+        #self.refreeze=self.newref
+        print self.refreeze[0].viewkeys()
+        print self.refreeze[0][1].start_time
+    '''        
     def getdata(self,num_barr):
         ipdprops={}
         defprops={}
         ref_BTR={}
+        def_BTR={}
+        ipd_BTR={}
         for ipd_instance in range(np.size(self.ipd.items(),0)):
             ipdprops[ipd_instance]={}
         
         
         import time
+        
+        #------------------------------------------------------------------------------------------ REFREEZE ---------------------------------------------------------------------------------------------------------
         for ref_barrel in range(num_barr):
             ref_BTR[ref_barrel]={}
-            for ref_instance in range(np.size(self.refreeze[ref_barrel])):
-                #print np.size(self.refreezeiteration[ref_barrel]),"<---"
+            print self.refreezeiteration[ref_barrel]
+            for ref_instance in range((self.refreezeiteration[ref_barrel])):
+                print np.size(self.refreezeiteration[ref_barrel]),"<---"
                 #time.sleep(5)
                 #print "Barrel Number: ",ref_barrel," Refreeze Instance number: ",ref_instance
-                
+                #print ref_instance
+                #time.sleep(3)
                 ref_BTR[ref_barrel][ref_instance]={}
-                ref_BTR[ref_barrel][ref_instance]=self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]
-                ref_BTR[ref_barrel][ref_instance]=np.delete(ref_BTR[ref_barrel][ref_instance],np.s_[1:13*ref_barrel],axis=1)
+                ref_BTR[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
+                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[1:12*ref_barrel],axis=1)
+                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[2:],axis=1)   
+
         self.ref_BTR=ref_BTR        
         #print np.size(ref_BTR.items()) 
-            
+        #print self.ref_BTR
+        #----------------------------------------------------------------------------------------- DEFROST ----------------------------------------------------------------------------------------------------------
+
+
+        for def_barrel in range(num_barr):
+            def_BTR[def_barrel]={}
+            print self.defrostiteration[def_barrel]
+            for def_instance in range((self.defrostiteration[def_barrel])):
+                print np.size(self.defrostiteration[def_barrel]),"<---"
+                #time.sleep(5)
+                #print "Barrel Number: ",def_barrel," Refreeze Instance number: ",def_instance
+                #print def_instance
+                #time.sleep(3)
+                def_BTR[def_barrel][def_instance]={}
+                def_BTR[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
+                def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[1:12*def_barrel],axis=1)
+                def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[2:],axis=1)   
+
+        self.def_BTR=def_BTR    
+        #print self.def_BTR
+        #----------------------------------------------------------------------------------------- IPD --------------------------------------------------------------------------------------------------------------
+        
+        for ipd_barrel in range(num_barr):
+            ipd_BTR[ipd_barrel]={}
+            for ipd_instance in range(self.ipditeration):
+                ipd_BTR[ipd_barrel][ipd_instance]={}
+                print self.ipditeration
+                ipd_BTR[ipd_barrel][ipd_instance]={}
+                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[1:12*ipd_barrel],axis=1)
+                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                #ipd_BTR[ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time))
+
+        self.ipd_BTR=ipd_BTR
+        #print self.ipd_BTR
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
@@ -388,11 +474,12 @@ print np.size(s.ipd.items())
 print np.size(s.refreeze.items())
 print np.size(s.refreeze[0].items())
 
-print s.refreeze[0][1].start_time
-print np.size(s.refreeze[0].items())
-print dir(s.refreeze[0])
-print s.refreeze[0].viewitems()
-print np.size(s.refreeze[0].items(),0)
+# print s.refreeze[0][1].start_time
+# print np.size(s.refreeze[0].items())
+# print dir(s.refreeze[0])
+# print s.refreeze[0].viewitems()
+# print np.size(s.refreeze[0].items(),0)
+#s.thecleaners(num_barr_to_use)
 s.getdata(num_barr_to_use)
 
 #print s.refreeze[0].items(), np.size(s.refreeze[0].items(),0)
