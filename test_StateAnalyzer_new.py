@@ -34,6 +34,9 @@ class State:
     def length(self):
         return self.end_time - self.start_time    
 
+        
+        
+        
 class StateAnalyzer:
     def __init__(self, log_file):
         #condition_data() # Sometimes there are data transmission errors in tera term so you'll need to detect and ignore invalid data
@@ -78,38 +81,7 @@ class StateAnalyzer:
         
         
         
-        
-        # for i in range (num_barr):
-            # for j in range(np.size(self.state_data,0)-2):#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ this will arrange the data we want for garys state machine
-                
-                # self.state_data[j+1]=np.transpose(COLUMN(self.data,10+5+7*i))
-                # self.state_data[j+2]=np.transpose(COLUMN(self.data,10+6+7*i))
-                # self.state_data[j+1]=np.transpose(self.state_data[i+1])
-                # self.state_data[j+2]=np.transpose(self.state_data[i+2])
-        # self.state_data[0]=np.transpose(self.time)
-        #print self.state_data
-        #print np.shape(self.state_data)
-        #print self.state_data
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
     def analysis_state(self,row,num_barr):#------------------------------------------------------------------------ GARY'S MODIFIED-FOR-MY-CLASS STATE MACHINE ---------------------------------------------------------------------------------- this will take in itself and analyze its states.
         IPDtrack=["IPD","IPD","IPD","IPD"]
         if num_barr==1:
@@ -254,36 +226,7 @@ class StateAnalyzer:
                         defrost[barrel][defrostiteration[barrel]]=State(defrostiteration[i],None,None,None)
                         #time.sleep(10)
                         defrostrunrec[barrel]=0                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                
+
                 if not "IPD" in data_analysis_states and ipdtimerec==1:
 
                    
@@ -365,7 +308,7 @@ class StateAnalyzer:
 
 
             
-            print row , row_state ,data_analysis_states
+           # print row , row_state ,data_analysis_states
 ##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
         self.ipd=ipdrun
@@ -401,11 +344,11 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('774LABTEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
 # print num_barr   
 num_barr=4
-num_barr_to_use=3
+num_barr_to_use=4
 s.StatePopulator(num_barr_to_use)#_to_use)
 # print np.shape(s)
 # print (s.state_data[1019:1079])
@@ -416,14 +359,86 @@ s.analysis_of_states(num_barr_to_use)
 # state hierarchy: IPD: number of iterations --> [ .start_time, .end_time]  --------------------------------------------------->>>>>> object.ipd[iteration number].start_time or object.ipd[barrel].end_time
                  # Refreeze and Defrost: barrel -->number of iterations --> [ .start_time, .end_time]-------------------------->>>>>> object.refreeze/defrost[barrel][iteration number].start_time or .end_time
 
-print s.refreeze[0][0].start_time
+#print s.refreeze[0][0].start_time
 
 
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.              
-                      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
             
 '''---------------------------------------------------------------------------------------------------------- TIMERECORDING PER BARRELS WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta. 
     
