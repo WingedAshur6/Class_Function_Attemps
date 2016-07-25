@@ -28,6 +28,7 @@ class State:
         self.end_time   = end
         self.barrel     = name
         self.state_name = state
+        self.beater=0
     def __str__(self):
         return self.barrel
         
@@ -308,7 +309,7 @@ class StateAnalyzer:
 
 
             
-           # print row , row_state ,data_analysis_states
+            #print row , row_state ,data_analysis_states
 ##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
         self.ipd=ipdrun
@@ -324,20 +325,43 @@ class StateAnalyzer:
                     print "     IPD Time Iteration:      ",l
                     print "                                    IPD Start:      ",ipdrun[l].start_time,"\n                                    IPD End:        ",ipdrun[l].end_time,"\n                                    IPD Length:     ",ipdrun[l].length()   
             if np.size(refreezeiteration.items())>2:
-                for j in range(np.size(refreezeiteration[i])):
+                for j in range(refreezeiteration[i]):
                     print "     Refreeze Time Iteration: ",j
                     print "                                    Refreeze Start: ",refreeze[i][j].start_time,"\n                                    Refreeze End:   ",refreeze[i][j].end_time,"\n                                    Refreeze Length:",refreeze[i][j].length()   
             if np.size(defrostiteration.items())>2:
-                for k in range(np.size(defrostiteration[i])):
+                for k in range((defrostiteration[i])):
                     print "     Defrost Time Iteration:  ",k
                     print "                                    Defrost Start:  ",defrost[i][k].start_time,"\n                                    Defrost End:    ",defrost[i][k].end_time,"\n                                    Defrost Length: ",defrost[i][k].length()   
                 print"\n"
         ''''''
+        self.ipditeration=ipditeration
+        self.refreezeiteration=refreezeiteration
+        self.defrostiteration=defrostiteration
         return  
             
         
             
-            
+    def getdata(self,num_barr):
+        ipdprops={}
+        defprops={}
+        ref_BTR={}
+        for ipd_instance in range(np.size(self.ipd.items(),0)):
+            ipdprops[ipd_instance]={}
+        
+        
+        import time
+        for ref_barrel in range(num_barr):
+            ref_BTR[ref_barrel]={}
+            for ref_instance in range(np.size(self.refreeze[ref_barrel])):
+                #print np.size(self.refreezeiteration[ref_barrel]),"<---"
+                #time.sleep(5)
+                #print "Barrel Number: ",ref_barrel," Refreeze Instance number: ",ref_instance
+                
+                ref_BTR[ref_barrel][ref_instance]={}
+                ref_BTR[ref_barrel][ref_instance]=self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]
+                ref_BTR[ref_barrel][ref_instance]=np.delete(ref_BTR[ref_barrel][ref_instance],np.s_[1:13*ref_barrel],axis=1)
+        self.ref_BTR=ref_BTR        
+        #print np.size(ref_BTR.items()) 
             
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
@@ -348,7 +372,7 @@ s=StateAnalyzer('774LABTEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'
 num_barr=s.bar_counter() 
 # print num_barr   
 num_barr=4
-num_barr_to_use=4
+num_barr_to_use=2
 s.StatePopulator(num_barr_to_use)#_to_use)
 # print np.shape(s)
 # print (s.state_data[1019:1079])
@@ -360,8 +384,18 @@ s.analysis_of_states(num_barr_to_use)
                  # Refreeze and Defrost: barrel -->number of iterations --> [ .start_time, .end_time]-------------------------->>>>>> object.refreeze/defrost[barrel][iteration number].start_time or .end_time
 
 #print s.refreeze[0][0].start_time
+print np.size(s.ipd.items())
+print np.size(s.refreeze.items())
+print np.size(s.refreeze[0].items())
 
+print s.refreeze[0][1].start_time
+print np.size(s.refreeze[0].items())
+print dir(s.refreeze[0])
+print s.refreeze[0].viewitems()
+print np.size(s.refreeze[0].items(),0)
+s.getdata(num_barr_to_use)
 
+#print s.refreeze[0].items(), np.size(s.refreeze[0].items(),0)
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
