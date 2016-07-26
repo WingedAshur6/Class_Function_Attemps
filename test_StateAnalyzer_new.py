@@ -366,11 +366,37 @@ class StateAnalyzer:
     def getdata(self,num_barr):
         ipdprops={}
         defprops={}
+        refprops={}
+        
+        
+        
+        ref_RFG_hi={}
+        ref_RFG_lo={}
+        ref_V={}
+        ref_DC={}
+        ref_SUP={}
+        ref_RT={}
         ref_BTR={}
+        
+        
+        
+        def_RFG_hi={}
+        def_RFG_lo={}
+        def_V={}
+        def_DC={}
+        def_SUP={}
+        def_RT={}
         def_BTR={}
+        
+        
+        ipd_RFG_hi={}
+        ipd_RFG_lo={}
+        ipd_V={}
+        ipd_DC={}
+        ipd_SUP={}
+        ipd_RT={}
         ipd_BTR={}
-        for ipd_instance in range(np.size(self.ipd.items(),0)):
-            ipdprops[ipd_instance]={}
+
         
         
         import time
@@ -378,72 +404,356 @@ class StateAnalyzer:
         #------------------------------------------------------------------------------------------ REFREEZE ---------------------------------------------------------------------------------------------------------
         for ref_barrel in range(num_barr):
             ref_BTR[ref_barrel]={}
+            ref_RFG_lo[ref_barrel]={}
+            ref_RFG_hi[ref_barrel]={}
+            ref_V[ref_barrel]={}
+            ref_SUP[ref_barrel]={}
+            ref_RT[ref_barrel]={}
+            ref_DC[ref_barrel]={}
             #print self.refreezeiteration[ref_barrel]
             for ref_instance in range((self.refreezeiteration[ref_barrel])):
-                #print np.size(self.refreezeiteration[ref_barrel]),"<---"
-                #time.sleep(5)
-                #print "Barrel Number: ",ref_barrel," Refreeze Instance number: ",ref_instance
-                #print ref_instance
-                #time.sleep(3)
+                #--------------------------------------------------------------------------- RFG_Low ---------------------------------------------------------------------------------------------------------------------
+                ref_RFG_lo[ref_barrel][ref_instance]={}
+                ref_RFG_lo[ref_barrel][ref_instance]={}
+                ref_RFG_lo[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
+                ref_RFG_lo[ref_barrel][ref_instance]=np.delete((ref_RFG_lo[ref_barrel][ref_instance]),np.s_[1:4],axis=1)
+                ref_RFG_lo[ref_barrel][ref_instance]=np.delete((ref_RFG_lo[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- RFG_High ---------------------------------------------------------------------------------------------------------------------
+                ref_RFG_hi[ref_barrel][ref_instance]={}
+                ref_RFG_hi[ref_barrel][ref_instance]={}
+                ref_RFG_hi[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
+                ref_RFG_hi[ref_barrel][ref_instance]=np.delete((ref_RFG_hi[ref_barrel][ref_instance]),np.s_[1:5],axis=1)
+                ref_RFG_hi[ref_barrel][ref_instance]=np.delete((ref_RFG_hi[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- Voltage ---------------------------------------------------------------------------------------------------------------------
+                ref_V[ref_barrel][ref_instance]={}
+                ref_V[ref_barrel][ref_instance]={}
+                ref_V[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
+                ref_V[ref_barrel][ref_instance]=np.delete((ref_V[ref_barrel][ref_instance]),np.s_[1:6],axis=1)
+                ref_V[ref_barrel][ref_instance]=np.delete((ref_V[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- RTemp ---------------------------------------------------------------------------------------------------------------------
+                ref_RT[ref_barrel][ref_instance]={}
+                ref_RT[ref_barrel][ref_instance]={}
+                ref_RT[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
+                ref_RT[ref_barrel][ref_instance]=np.delete((ref_RT[ref_barrel][ref_instance]),np.s_[1:7],axis=1)
+                ref_RT[ref_barrel][ref_instance]=np.delete((ref_RT[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- SUPRHT ---------------------------------------------------------------------------------------------------------------------
+                ref_SUP[ref_barrel][ref_instance]={}
+                ref_SUP[ref_barrel][ref_instance]={}
+                ref_SUP[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
+                ref_SUP[ref_barrel][ref_instance]=np.delete((ref_SUP[ref_barrel][ref_instance]),np.s_[1:8],axis=1)
+                ref_SUP[ref_barrel][ref_instance]=np.delete((ref_SUP[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                
+                
+                
+                #--------------------------------------------------------------------------- DUTYCycles ---------------------------------------------------------------------------------------------------------------------
+                ref_DC[ref_barrel][ref_instance]={}
+                ref_DC[ref_barrel][ref_instance]={}
+                ref_DC[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
+                ref_DC[ref_barrel][ref_instance]=np.delete((ref_DC[ref_barrel][ref_instance]),np.s_[1:9],axis=1)
+                ref_DC[ref_barrel][ref_instance]=np.delete((ref_DC[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                
+                
+                
+                
+                #--------------------------------------------------------------------------- BTR ---------------------------------------------------------------------------------------------------------------------
+                ref_BTR[ref_barrel][ref_instance]={}
                 ref_BTR[ref_barrel][ref_instance]={}
                 ref_BTR[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
                 ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[1:12+7*ref_barrel],axis=1)
-                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[2:],axis=1)   
+                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[2:],axis=1)    
 
-        self.ref_BTR=ref_BTR        
-        #print np.size(ref_BTR.items()) 
-        #print self.ref_BTR
+        self.ref_BTR=ref_BTR
+        self.ref_RFG_lo=ref_RFG_lo
+        self.ref_RFG_hi=ref_RFG_hi
+        self.ref_V=ref_V
+        self.ref_RT=ref_RT
+        self.ref_SUP=ref_SUP
+        self.ref_DC=ref_DC        
+
+        #----------------------------------------------------------------------------------------- DEFROST ----------------------------------------------------------------------------------------------------------
+        #----------------------------------------------------------------------------------------- DEFROST ----------------------------------------------------------------------------------------------------------
+        #----------------------------------------------------------------------------------------- DEFROST ----------------------------------------------------------------------------------------------------------
         #----------------------------------------------------------------------------------------- DEFROST ----------------------------------------------------------------------------------------------------------
 
 
         for def_barrel in range(num_barr):
             def_BTR[def_barrel]={}
+            def_RFG_lo[def_barrel]={}
+            def_RFG_hi[def_barrel]={}
+            def_V[def_barrel]={}
+            def_SUP[def_barrel]={}
+            def_RT[def_barrel]={}
+            def_DC[def_barrel]={}
             #print self.defrostiteration[def_barrel]
             for def_instance in range((self.defrostiteration[def_barrel])):
-                #print np.size(self.defrostiteration[def_barrel]),"<---"
-                #time.sleep(5)
-                #print "Barrel Number: ",def_barrel," Refreeze Instance number: ",def_instance
-                #print def_instance
-                #time.sleep(3)
+                #--------------------------------------------------------------------------- RFG_Low ---------------------------------------------------------------------------------------------------------------------
+                def_RFG_lo[def_barrel][def_instance]={}
+                def_RFG_lo[def_barrel][def_instance]={}
+                def_RFG_lo[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
+                def_RFG_lo[def_barrel][def_instance]=np.delete((def_RFG_lo[def_barrel][def_instance]),np.s_[1:4],axis=1)
+                def_RFG_lo[def_barrel][def_instance]=np.delete((def_RFG_lo[def_barrel][def_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- RFG_High ---------------------------------------------------------------------------------------------------------------------
+                def_RFG_hi[def_barrel][def_instance]={}
+                def_RFG_hi[def_barrel][def_instance]={}
+                def_RFG_hi[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
+                def_RFG_hi[def_barrel][def_instance]=np.delete((def_RFG_hi[def_barrel][def_instance]),np.s_[1:5],axis=1)
+                def_RFG_hi[def_barrel][def_instance]=np.delete((def_RFG_hi[def_barrel][def_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- Voltage ---------------------------------------------------------------------------------------------------------------------
+                def_V[def_barrel][def_instance]={}
+                def_V[def_barrel][def_instance]={}
+                def_V[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
+                def_V[def_barrel][def_instance]=np.delete((def_V[def_barrel][def_instance]),np.s_[1:6],axis=1)
+                def_V[def_barrel][def_instance]=np.delete((def_V[def_barrel][def_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- RTemp ---------------------------------------------------------------------------------------------------------------------
+                def_RT[def_barrel][def_instance]={}
+                def_RT[def_barrel][def_instance]={}
+                def_RT[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
+                def_RT[def_barrel][def_instance]=np.delete((def_RT[def_barrel][def_instance]),np.s_[1:7],axis=1)
+                def_RT[def_barrel][def_instance]=np.delete((def_RT[def_barrel][def_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- SUPRHT ---------------------------------------------------------------------------------------------------------------------
+                def_SUP[def_barrel][def_instance]={}
+                def_SUP[def_barrel][def_instance]={}
+                def_SUP[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
+                def_SUP[def_barrel][def_instance]=np.delete((def_SUP[def_barrel][def_instance]),np.s_[1:8],axis=1)
+                def_SUP[def_barrel][def_instance]=np.delete((def_SUP[def_barrel][def_instance]),np.s_[2:],axis=1)
+                
+                
+                
+                #--------------------------------------------------------------------------- DUTYCycles ---------------------------------------------------------------------------------------------------------------------
+                def_DC[def_barrel][def_instance]={}
+                def_DC[def_barrel][def_instance]={}
+                def_DC[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
+                def_DC[def_barrel][def_instance]=np.delete((def_DC[def_barrel][def_instance]),np.s_[1:9],axis=1)
+                def_DC[def_barrel][def_instance]=np.delete((def_DC[def_barrel][def_instance]),np.s_[2:],axis=1)
+                
+                
+                
+                
+                #--------------------------------------------------------------------------- BTR ---------------------------------------------------------------------------------------------------------------------
+                def_BTR[def_barrel][def_instance]={}
                 def_BTR[def_barrel][def_instance]={}
                 def_BTR[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
                 def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[1:12+7*def_barrel],axis=1)
                 def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[2:],axis=1)   
 
-        self.def_BTR=def_BTR    
-        #print self.def_BTR
+        self.def_BTR=def_BTR
+        self.def_RFG_lo=def_RFG_lo
+        self.def_RFG_hi=def_RFG_hi
+        self.def_V=def_V
+        self.def_RT=def_RT
+        self.def_SUP=def_SUP
+        self.def_DC=def_DC   
+
         #----------------------------------------------------------------------------------------- IPD --------------------------------------------------------------------------------------------------------------
-        
+        #----------------------------------------------------------------------------------------- IPD --------------------------------------------------------------------------------------------------------------
+        #----------------------------------------------------------------------------------------- IPD --------------------------------------------------------------------------------------------------------------
+        #----------------------------------------------------------------------------------------- IPD --------------------------------------------------------------------------------------------------------------
+        #----------------------------------------------------------------------------------------- IPD --------------------------------------------------------------------------------------------------------------
         for ipd_barrel in range(num_barr):
             ipd_BTR[ipd_barrel]={}
+            ipd_RFG_lo[ipd_barrel]={}
+            ipd_RFG_hi[ipd_barrel]={}
+            ipd_V[ipd_barrel]={}
+            ipd_SUP[ipd_barrel]={}
+            ipd_DC[ipd_barrel]={}
+            ipd_RT[ipd_barrel]={}
             for ipd_instance in range(self.ipditeration):
+            
+                #--------------------------------------------------------------------------- RFG_Low ---------------------------------------------------------------------------------------------------------------------
+                ipd_RFG_lo[ipd_barrel][ipd_instance]={}
+                ipd_RFG_lo[ipd_barrel][ipd_instance]={}
+                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_lo[ipd_barrel][ipd_instance]),np.s_[1:4],axis=1)
+                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_lo[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- RFG_High ---------------------------------------------------------------------------------------------------------------------
+                ipd_RFG_hi[ipd_barrel][ipd_instance]={}
+                ipd_RFG_hi[ipd_barrel][ipd_instance]={}
+                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_hi[ipd_barrel][ipd_instance]),np.s_[1:5],axis=1)
+                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_hi[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- Voltage ---------------------------------------------------------------------------------------------------------------------
+                ipd_V[ipd_barrel][ipd_instance]={}
+                ipd_V[ipd_barrel][ipd_instance]={}
+                ipd_V[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_V[ipd_barrel][ipd_instance]=np.delete((ipd_V[ipd_barrel][ipd_instance]),np.s_[1:6],axis=1)
+                ipd_V[ipd_barrel][ipd_instance]=np.delete((ipd_V[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- RTemp ---------------------------------------------------------------------------------------------------------------------
+                ipd_RT[ipd_barrel][ipd_instance]={}
+                ipd_RT[ipd_barrel][ipd_instance]={}
+                ipd_RT[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_RT[ipd_barrel][ipd_instance]=np.delete((ipd_RT[ipd_barrel][ipd_instance]),np.s_[1:7],axis=1)
+                ipd_RT[ipd_barrel][ipd_instance]=np.delete((ipd_RT[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                
+                
+                #--------------------------------------------------------------------------- SUPRHT ---------------------------------------------------------------------------------------------------------------------
+                ipd_SUP[ipd_barrel][ipd_instance]={}
+                ipd_SUP[ipd_barrel][ipd_instance]={}
+                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((ipd_SUP[ipd_barrel][ipd_instance]),np.s_[1:8],axis=1)
+                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((ipd_SUP[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                
+                
+                
+                #--------------------------------------------------------------------------- DUTYCycles ---------------------------------------------------------------------------------------------------------------------
+                ipd_DC[ipd_barrel][ipd_instance]={}
+                ipd_DC[ipd_barrel][ipd_instance]={}
+                ipd_DC[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_DC[ipd_barrel][ipd_instance]=np.delete((ipd_DC[ipd_barrel][ipd_instance]),np.s_[1:9],axis=1)
+                ipd_DC[ipd_barrel][ipd_instance]=np.delete((ipd_DC[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                
+                
+                
+                
+                #--------------------------------------------------------------------------- BTR ---------------------------------------------------------------------------------------------------------------------
                 ipd_BTR[ipd_barrel][ipd_instance]={}
-                #print self.ipditeration
                 ipd_BTR[ipd_barrel][ipd_instance]={}
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[1:12+7*ipd_barrel],axis=1)
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
-                #ipd_BTR[ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time))
+
 
         self.ipd_BTR=ipd_BTR
-        #print self.ipd_BTR
+        self.ipd_RFG_lo=ipd_RFG_lo
+        self.ipd_RFG_hi=ipd_RFG_hi
+        self.ipd_V=ipd_V
+        self.ipd_RT=ipd_RT
+        self.ipd_SUP=ipd_SUP
+        self.ipd_DC=ipd_DC
 
 
 
+        for barrel in range(num_barr):
+            ipdprops[barrel]={}
+            defprops[barrel]={}
+            refprops[barrel]={}
+            for instance in range(self.ipditeration):
+                ipdprops[barrel][instance]={}
+                ipdprops[barrel][instance]={0:self.ipd_RFG_lo[barrel][instance]}
+                ipdprops[barrel][instance].update({1:self.ipd_RFG_hi[barrel][instance]})
+                ipdprops[barrel][instance].update({2:self.ipd_V[barrel][instance]})
+                ipdprops[barrel][instance].update({3:self.ipd_RT[barrel][instance]})
+                ipdprops[barrel][instance].update({4:self.ipd_SUP[barrel][instance]})
+                ipdprops[barrel][instance].update({5:self.ipd_DC[barrel][instance]})
+                ipdprops[barrel][instance].update({6:self.ipd_BTR[barrel][instance]})
 
+            for instance in range(self.refreezeiteration[barrel]):
+                refprops[barrel][instance]={0:self.ref_RFG_lo[barrel][instance]}
+                refprops[barrel][instance].update({1:self.ref_RFG_hi[barrel][instance]})
+                refprops[barrel][instance].update({2:self.ref_V[barrel][instance]})
+                refprops[barrel][instance].update({3:self.ref_RT[barrel][instance]})
+                refprops[barrel][instance].update({4:self.ref_SUP[barrel][instance]})
+                refprops[barrel][instance].update({5:self.ref_DC[barrel][instance]})
+                refprops[barrel][instance].update({6:self.ref_BTR[barrel][instance]})
+        
+            for instance in range(self.defrostiteration[barrel]):
+                defprops[barrel][instance]={}
+                defprops[barrel][instance]={0:self.def_RFG_lo[barrel][instance]}
+                defprops[barrel][instance].update({1:self.def_RFG_hi[barrel][instance]})
+                defprops[barrel][instance].update({2:self.def_V[barrel][instance]})
+                defprops[barrel][instance].update({3:self.def_RT[barrel][instance]})
+                defprops[barrel][instance].update({4:self.def_SUP[barrel][instance]})
+                defprops[barrel][instance].update({5:self.def_DC[barrel][instance]})
+                defprops[barrel][instance].update({6:self.def_BTR[barrel][instance]})
+                
+        
+        self.ipdprops=ipdprops
+        self.defprops=defprops
+        self.refprops=refprops
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+   
 
-    def display_plots(self,num_barr,state):
-        print "\n","-"*10,"< Initializing Plots >","-"*10
-        print "State: ",state.upper()
-        state=state.lower()
-        if state=="ipd":
-            #----------------------------------------------------------- Counting the number of times IPD is entered:
-            print "\n Number of IPD states: ",(self.ipditeration)
-            #----------------------------------------------------------- Counting the number of statistics that exist:
-            print "\n Number of statistics: ",1
-        # ----------------------------------------------------------------------------------- FILL IPD PLOTTING CODE HERE -------------------------------------------------------------------
-        elif state.contains("ref"):
-            print yuhh
+    # def display_plots(self,num_barr,state):
+        # '''
+        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # '''
+        # import matplotlib.pyplot as plt
+        # import matplotlib.dates as mdates
+        # import matplotlib.ticker as ticker
+        # import matplotlib
+        # from matplotlib.backends.backend_pdf import PdfPages
+        # from datetime import datetime as dt
+        # from datetime import timedelta
+        # '''
+        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # '''
+        
+        # print "\n","-"*10,"< Initializing Plots >","-"*10
+        # print "State: ",state.upper()
+        # state=state.lower()
+        # if state=="ipd":
+            # num_statisics=1 #------------------------------------------- replace this at some point with a piece of code that counts the number of statistics to be plotted. ask gary for what to keep track of.
+            # #----------------------------------------------------------- Possibly keep track of: HSP, LSP, V RTemp, SUPRHT, DTYCylcles, BTR in that order.
+            # ##----------------------------------------------------------- Alejandro's output is this: [RFGLow,RFGHigh, V, RTemp, SUPRHT, DTYCycles, BTRS]
+            
+            # #----------------------------------------------------------- Counting the number of times IPD is entered:
+            # print "\n Number of IPD states: ",(self.ipditeration)
+            # #----------------------------------------------------------- Counting the number of statistics that exist:
+            # print "\n Number of statistics: ",num_statistics
+            
+            
+            
+            
+            
+            
+            # if num_barr==1:
+                # numcols=1, numrows=1
+            # elif num_barr==2:
+                # numcols=2, numrows=1
+            # else:
+                # numcols=2, numrows=2
+            
+            # f,axarr=plt.subplots(int(numcols),int(numrows))
+            # barrel_labels=["BBL_1","BBL_2","BBL_3","BBL_4"]
+            
+            
+            
+            # for barrel in range(num_barr):
+                # axarr.plot(self.ipd[)
+                # for statnum in range(num_statistics):
+                
+        
+        # elif state.contains("ref"):
+            # print yuhh
             
 
 
@@ -466,11 +776,11 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('774LABTEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('773logtest2_TEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
 # print num_barr   
 num_barr=4
-num_barr_to_use=4
+num_barr_to_use=3 #------------------------------------------------------------------------ returns an error sometimes if the barrels used in anlysis dont match with barrels actually working.
 s.StatePopulator(num_barr_to_use)#_to_use)
 
 
@@ -481,12 +791,17 @@ s.analysis_of_states(num_barr_to_use)
 
 
 s.getdata(num_barr_to_use)
-print s.ipd_BTR[0][0]
+#print s.ipd_BTR[0][0]
 print s.ipd[0].length()
-print s.ref_BTR[0][1]
+#print s.ref_BTR[0][1]
 
 
-s.display_plots(num_barr_to_use,"ipd")
+
+# property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
+print s.ipdprops[0][0][0]
+
+
+#s.display_plots(num_barr_to_use,"ipd")
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
