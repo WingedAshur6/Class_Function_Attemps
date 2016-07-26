@@ -339,7 +339,7 @@ class StateAnalyzer:
         self.defrostiteration=defrostiteration
         return  
     '''    
-    def thecleaners(self,num_barr):
+    def thecleaners(self,num_barr):# ------------------------------------------------------------ NOT WORKING. IMPLEMENT AND FIX LATER. -------------------------------------------------------------------------------
         self.newref={}
         rearranger={}
         import time
@@ -700,68 +700,140 @@ class StateAnalyzer:
         
    
 
-    # def display_plots(self,num_barr,state):
-        # '''
-        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
-        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
-        # '''
-        # import matplotlib.pyplot as plt
-        # import matplotlib.dates as mdates
-        # import matplotlib.ticker as ticker
-        # import matplotlib
-        # from matplotlib.backends.backend_pdf import PdfPages
-        # from datetime import datetime as dt
-        # from datetime import timedelta
-        # '''
-        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
-        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
-        # '''
+    def display_plots(self,num_barr,state):
+        '''
+        # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        '''
+        import matplotlib.pyplot as plt
+        import matplotlib.dates as mdates
+        import matplotlib.ticker as ticker
+        import matplotlib
+        from matplotlib.backends.backend_pdf import PdfPages
+        from datetime import datetime as dt
+        from datetime import timedelta
+        '''
+        # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        '''
         
-        # print "\n","-"*10,"< Initializing Plots >","-"*10
-        # print "State: ",state.upper()
-        # state=state.lower()
-        # if state=="ipd":
-            # num_statisics=1 #------------------------------------------- replace this at some point with a piece of code that counts the number of statistics to be plotted. ask gary for what to keep track of.
-            # #----------------------------------------------------------- Possibly keep track of: HSP, LSP, V RTemp, SUPRHT, DTYCylcles, BTR in that order.
-            # ##----------------------------------------------------------- Alejandro's output is this: [RFGLow,RFGHigh, V, RTemp, SUPRHT, DTYCycles, BTRS]
-            
-            # #----------------------------------------------------------- Counting the number of times IPD is entered:
-            # print "\n Number of IPD states: ",(self.ipditeration)
-            # #----------------------------------------------------------- Counting the number of statistics that exist:
-            # print "\n Number of statistics: ",num_statistics
-            
-            
-            
-            
-            
-            
-            # if num_barr==1:
-                # numcols=1, numrows=1
-            # elif num_barr==2:
-                # numcols=2, numrows=1
-            # else:
-                # numcols=2, numrows=2
-            
-            # f,axarr=plt.subplots(int(numcols),int(numrows))
-            # barrel_labels=["BBL_1","BBL_2","BBL_3","BBL_4"]
-            
-            
-            
-            # for barrel in range(num_barr):
-                # axarr.plot(self.ipd[)
-                # for statnum in range(num_statistics):
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        Barrels=["BBL_1","BBL_2","BBL_3","BBL_4"]
+        States=["IPD","Defrost","Refreeze"]
+        stats=["RFGLow","RFGHigh", "V", "RTemp", "SUPRHT", "DTYCycles", "BTR%"]
+        
+        print "\n          ","---"*10,"< Initializing Plots >","---"*10
+        
+        print "State: ",state.upper()
+        state=state.lower()
+        if state=="ipd":
+        
+        
+            num_statistics=np.size(stats)            
+            #----------------------------------------------------------- Counting the number of times IPD is entered:
+            print "\n Number of IPD states: ",(self.ipditeration)
+            #----------------------------------------------------------- Counting the number of statistics that exist:
+            print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
+            print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
+            numcols=(num_statistics-1)/2
+            numrows=(num_statistics-1)/3
+            print numcols," columns, and ",numrows," rows."
+            for L in range(num_barr):
+             for K in range(self.ipditeration):
+             
+                x=np.array([],dtype=object)
+                y=np.array([],dtype=object)
+                x=[]
+                y=[]
+                BTRx=range(self.ipd[K].length())
+                BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
+                BTRy=BTRy_hold[:]
+                zip(BTRx,BTRy)
+                BTRfig=plt.figure()
+                #plots=zip(BTRx,BTRy)
+                plt.plot(np.transpose(BTRx),BTRy)
+                plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[0],stats[6],K))
+                plt.show()                
                 
-        
-        # elif state.contains("ref"):
-            # print yuhh
+               
+                
+                fig=plt.figure()
+                x=np.array([],dtype=object)
+                y=np.array([],dtype=object)
+                x=[]
+                y=[]
+                for J in range(num_statistics-1):
+                    title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
+                    print title
+                    x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
+                    x_hold=range(self.ipd[K].length())
+                    #x=np.array([],dtype=object)
+                    #x=np.append(x,x_hold[:])
+                    x.append(x_hold[:])
+                    #print x
+                    y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
+                    #y=np.array([],dtype=object)
+                    y.append(y_hold[:])
+                plots=zip(x,y)
+                axs={}
+                for idx,plot in enumerate(plots):
+                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                    axs[idx].plot(plot[0],plot[1])
+                    plt.title(title)
+                print np.shape(x)
+                plt.show()
+
+'''
+            for L in range(num_barr):
             
+            
+            
+             for K in range(self.ipditeration):
+                fig=plt.figure()
+                x=np.array([],dtype=object)
+                y=np.array([],dtype=object)
+                x=[]
+                y=[]
+                BTRfig=plt.figure()
+                BTRx=range(self.ipd[K].length())
+                BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
+                BTRy=BTRy_hold[:]
+                zip(BTRx,BTRy)
+                BTRfig=plt.figure()
+                plots=zip(BTRx,BTRy)
+                plt.plot(np.transpose(BTRx),BTRy)
+                plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[0],stats[6],K))
+                plt.show()
+                
+                for J in range(num_statistics-1):
+                    title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
+                    print title
+                    x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
+                    x_hold=range(self.ipd[K].length())
 
+                    x.append(x_hold[:])
 
+                    y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
 
+                    y.append(y_hold[:])
+                plots=zip(x,y)
+                axs={}
+                for idx,plot in enumerate(plots):
+                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                    axs[idx].plot(plot[0],plot[1])
+                    plt.title(title)
+                print np.shape(x)
+                plt.show()
 
-
-
-
+'''
 
 
 
@@ -792,20 +864,112 @@ s.analysis_of_states(num_barr_to_use)
 
 s.getdata(num_barr_to_use)
 #print s.ipd_BTR[0][0]
-print s.ipd[0].length()
+#print s.ipd[0].length()
 #print s.ref_BTR[0][1]
 
 
 
 # property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
-print s.ipdprops[0][0][0]
+#print s.ipdprops[0][0][0]
 
 
-#s.display_plots(num_barr_to_use,"ipd")
+s.display_plots(num_barr_to_use,"ipd")
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -842,63 +1006,7 @@ print s.ipdprops[0][0][0]
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.              
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-            
+           
 '''---------------------------------------------------------------------------------------------------------- TIMERECORDING PER BARRELS WORKING. DO NOT TOUCH .-------------------------------------------------------------------------------------- this works, duplicating for a beta. 
     
     def analysis_of_states(self,num_barr):
