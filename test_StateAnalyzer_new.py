@@ -378,16 +378,16 @@ class StateAnalyzer:
         #------------------------------------------------------------------------------------------ REFREEZE ---------------------------------------------------------------------------------------------------------
         for ref_barrel in range(num_barr):
             ref_BTR[ref_barrel]={}
-            print self.refreezeiteration[ref_barrel]
+            #print self.refreezeiteration[ref_barrel]
             for ref_instance in range((self.refreezeiteration[ref_barrel])):
-                print np.size(self.refreezeiteration[ref_barrel]),"<---"
+                #print np.size(self.refreezeiteration[ref_barrel]),"<---"
                 #time.sleep(5)
                 #print "Barrel Number: ",ref_barrel," Refreeze Instance number: ",ref_instance
                 #print ref_instance
                 #time.sleep(3)
                 ref_BTR[ref_barrel][ref_instance]={}
                 ref_BTR[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
-                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[1:12*ref_barrel],axis=1)
+                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[1:12+7*ref_barrel],axis=1)
                 ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[2:],axis=1)   
 
         self.ref_BTR=ref_BTR        
@@ -398,16 +398,16 @@ class StateAnalyzer:
 
         for def_barrel in range(num_barr):
             def_BTR[def_barrel]={}
-            print self.defrostiteration[def_barrel]
+            #print self.defrostiteration[def_barrel]
             for def_instance in range((self.defrostiteration[def_barrel])):
-                print np.size(self.defrostiteration[def_barrel]),"<---"
+                #print np.size(self.defrostiteration[def_barrel]),"<---"
                 #time.sleep(5)
                 #print "Barrel Number: ",def_barrel," Refreeze Instance number: ",def_instance
                 #print def_instance
                 #time.sleep(3)
                 def_BTR[def_barrel][def_instance]={}
                 def_BTR[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
-                def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[1:12*def_barrel],axis=1)
+                def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[1:12+7*def_barrel],axis=1)
                 def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[2:],axis=1)   
 
         self.def_BTR=def_BTR    
@@ -418,10 +418,10 @@ class StateAnalyzer:
             ipd_BTR[ipd_barrel]={}
             for ipd_instance in range(self.ipditeration):
                 ipd_BTR[ipd_barrel][ipd_instance]={}
-                print self.ipditeration
+                #print self.ipditeration
                 ipd_BTR[ipd_barrel][ipd_instance]={}
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
-                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[1:12*ipd_barrel],axis=1)
+                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[1:12+7*ipd_barrel],axis=1)
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
                 #ipd_BTR[ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time))
 
@@ -432,7 +432,19 @@ class StateAnalyzer:
 
 
 
-
+    def display_plots(self,num_barr,state):
+        print "\n","-"*10,"< Initializing Plots >","-"*10
+        print "State: ",state.upper()
+        state=state.lower()
+        if state=="ipd":
+            #----------------------------------------------------------- Counting the number of times IPD is entered:
+            print "\n Number of IPD states: ",(self.ipditeration)
+            #----------------------------------------------------------- Counting the number of statistics that exist:
+            print "\n Number of statistics: ",1
+        # ----------------------------------------------------------------------------------- FILL IPD PLOTTING CODE HERE -------------------------------------------------------------------
+        elif state.contains("ref"):
+            print yuhh
+            
 
 
 
@@ -458,31 +470,23 @@ s=StateAnalyzer('774LABTEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'
 num_barr=s.bar_counter() 
 # print num_barr   
 num_barr=4
-num_barr_to_use=2
+num_barr_to_use=4
 s.StatePopulator(num_barr_to_use)#_to_use)
-# print np.shape(s)
-# print (s.state_data[1019:1079])
+
 
 s.analysis_of_states(num_barr_to_use)
-#s.ipd[0].start_time
-#print s.ipd[0].start_time
+
 # state hierarchy: IPD: number of iterations --> [ .start_time, .end_time]  --------------------------------------------------->>>>>> object.ipd[iteration number].start_time or object.ipd[barrel].end_time
                  # Refreeze and Defrost: barrel -->number of iterations --> [ .start_time, .end_time]-------------------------->>>>>> object.refreeze/defrost[barrel][iteration number].start_time or .end_time
 
-#print s.refreeze[0][0].start_time
-print np.size(s.ipd.items())
-print np.size(s.refreeze.items())
-print np.size(s.refreeze[0].items())
 
-# print s.refreeze[0][1].start_time
-# print np.size(s.refreeze[0].items())
-# print dir(s.refreeze[0])
-# print s.refreeze[0].viewitems()
-# print np.size(s.refreeze[0].items(),0)
-#s.thecleaners(num_barr_to_use)
 s.getdata(num_barr_to_use)
+print s.ipd_BTR[0][0]
+print s.ipd[0].length()
+print s.ref_BTR[0][1]
 
-#print s.refreeze[0].items(), np.size(s.refreeze[0].items(),0)
+
+s.display_plots(num_barr_to_use,"ipd")
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
@@ -495,15 +499,34 @@ s.getdata(num_barr_to_use)
 
 
 
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##-------------------------------------------------------------------------------- CODE TEST DEBUG  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
+ 
+#print s.refreeze[0].items(), np.size(s.refreeze[0].items(),0)
 
+#print s.refreeze[0][0].start_time
+#print np.size(s.ipd.items())
+#print np.size(s.refreeze.items())
+#print np.size(s.refreeze[0].items())
 
+# print s.refreeze[0][1].start_time
+# print np.size(s.refreeze[0].items())
+# print dir(s.refreeze[0])
+# print s.refreeze[0].viewitems()
+# print np.size(s.refreeze[0].items(),0)
+#s.thecleaners(num_barr_to_use)
+# print np.shape(s)
+# print (s.state_data[1019:1079])
 
+#s.ipd[0].start_time
+#print s.ipd[0].start_time
 
-
-
-
-
-
+##-------------------------------------------------------------------------------- CODE TEST DEBUG -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
+##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.              
 
 
 
