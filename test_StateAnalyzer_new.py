@@ -6,7 +6,9 @@
    # * Package up the collected data into State classes
    
 # Example:
-
+import os
+absFilePath = os.path.abspath(__file__)
+os.chdir( os.path.dirname(absFilePath) )
 import numpy as np
 
 def is_number(s):
@@ -780,14 +782,15 @@ class StateAnalyzer:
                     y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
                     #y=np.array([],dtype=object)
                     y.append(y_hold[:])
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'b')
-                    plt.title(["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[idx],K)])
-                print np.shape(x)
-                plt.show()
+                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
+                    plots=zip(x,y)
+                    axs={}
+                    for idx,plot in enumerate(plots):
+                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                        axs[idx].plot(plot[0],plot[1],'b')
+                        plt.title(["%s" % (stats[idx])])
+                    print np.shape(x)
+                    plt.show()
 
         elif state=="refreeze":
             num_statistics=np.size(stats)            
@@ -835,14 +838,15 @@ class StateAnalyzer:
                     y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
                     #y=np.array([],dtype=object)
                     y.append(y_hold[:])
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'c')
-                    plt.title(["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[idx],K)])
-                print np.shape(x)
-                plt.show()
+                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
+                    plots=zip(x,y)
+                    axs={}
+                    for idx,plot in enumerate(plots):
+                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                        axs[idx].plot(plot[0],plot[1],'c')
+                        plt.title(["%s" % (stats[idx])])
+                    print np.shape(x)
+                    plt.show()
 
         elif state=="defrost":
             num_statistics=np.size(stats)            
@@ -890,15 +894,15 @@ class StateAnalyzer:
                     y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
                     #y=np.array([],dtype=object)
                     y.append(y_hold[:])
-                    
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'m')
-                    plt.title(["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[idx],K)])
-                print np.shape(x)
-                plt.show()
+                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
+                    plots=zip(x,y)
+                    axs={}
+                    for idx,plot in enumerate(plots):
+                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                        axs[idx].plot(plot[0],plot[1],'m')
+                        plt.title(["%s" % (stats[idx])])
+                    print np.shape(x)
+                    plt.show()
                 
         else:
             
@@ -947,69 +951,17 @@ class StateAnalyzer:
                         y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
                         #y=np.array([],dtype=object)
                         y.append(y_hold[:])
+                        plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
                     plots=zip(x,y)
                     axs={}
                     for idx,plot in enumerate(plots):
                         axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
                         axs[idx].plot(plot[0],plot[1],'b')
-                        plt.title(["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[idx],K)])
+                        plt.title(["%s" % (stats[idx])])
                     print np.shape(x)
                     plt.show()
                 
                 
-                num_statistics=np.size(stats)            
-                #----------------------------------------------------------- Counting the number of times IPD is entered:
-                print "\n Number of IPD states: ",(self.refreezeiteration)
-                #----------------------------------------------------------- Counting the number of statistics that exist:
-                print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-                print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-                numcols=(num_statistics-1)/2
-                numrows=(num_statistics-1)/3
-                print numcols," columns, and ",numrows," rows."
-                for L in range(num_barr):
-                 for K in range(self.refreezeiteration[L]):
-                 
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    BTRx=range(self.refreeze[L][K].length())
-                    BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
-                    BTRy=BTRy_hold[:]
-                    zip(BTRx,BTRy)
-                    BTRfig=plt.figure()
-                    #plots=zip(BTRx,BTRy)
-                    plt.plot(np.transpose(BTRx),BTRy,'c')
-                    plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[2],stats[6],K))
-                    plt.show()                
-                    
-                   
-                    
-                    fig=plt.figure()
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    for J in range(num_statistics-1):
-                        title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
-                        print title
-                        x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
-                        x_hold=range(self.refreeze[L][K].length())
-                        #x=np.array([],dtype=object)
-                        #x=np.append(x,x_hold[:])
-                        x.append(x_hold[:])
-                        #print x
-                        y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
-                        #y=np.array([],dtype=object)
-                        y.append(y_hold[:])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'c')
-                        plt.title(["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[idx],K)])
-                    print np.shape(x)
-                    plt.show()
                 
                 
                 
@@ -1058,12 +1010,13 @@ class StateAnalyzer:
                         y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
                         #y=np.array([],dtype=object)
                         y.append(y_hold[:])
+                        plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[2],K)])
                     plots=zip(x,y)
                     axs={}
                     for idx,plot in enumerate(plots):
                         axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
                         axs[idx].plot(plot[0],plot[1],'c')
-                        plt.title(["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[idx],K)])
+                        plt.title(["%s" % (stats[idx])])
                     print np.shape(x)
                     plt.show()
 
@@ -1113,13 +1066,13 @@ class StateAnalyzer:
                         y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
                         #y=np.array([],dtype=object)
                         y.append(y_hold[:])
-                        
+                        plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
                     plots=zip(x,y)
                     axs={}
                     for idx,plot in enumerate(plots):
                         axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
                         axs[idx].plot(plot[0],plot[1],'m')
-                        plt.title(["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[idx],K)])
+                        plt.title(["%s" % (stats[idx])])
                     print np.shape(x)
                     plt.show()
 
