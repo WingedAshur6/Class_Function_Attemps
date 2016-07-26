@@ -576,7 +576,7 @@ class StateAnalyzer:
             ipd_DC[ipd_barrel]={}
             ipd_RT[ipd_barrel]={}
             for ipd_instance in range(self.ipditeration):
-            
+            ## gary: dont use magic numbers or "hardcode numbers" so its easier to come back to when 
                 #--------------------------------------------------------------------------- RFG_Low ---------------------------------------------------------------------------------------------------------------------
                 ipd_RFG_lo[ipd_barrel][ipd_instance]={}
                 ipd_RFG_lo[ipd_barrel][ipd_instance]={}
@@ -685,23 +685,6 @@ class StateAnalyzer:
         self.refprops=refprops
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-   
-
     def display_plots(self,num_barr,state):
         '''
         # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
@@ -783,14 +766,14 @@ class StateAnalyzer:
                     #y=np.array([],dtype=object)
                     y.append(y_hold[:])
                     plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'b')
-                        plt.title(["%s" % (stats[idx])])
-                    print np.shape(x)
-                    plt.show()
+                plots=zip(x,y)
+                axs={}
+                for idx,plot in enumerate(plots):
+                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                    axs[idx].plot(plot[0],plot[1],'b')
+                    plt.title(["%s" % (stats[idx])])
+                print np.shape(x)
+                plt.show()
 
         elif state=="refreeze":
             num_statistics=np.size(stats)            
@@ -839,14 +822,14 @@ class StateAnalyzer:
                     #y=np.array([],dtype=object)
                     y.append(y_hold[:])
                     plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'c')
-                        plt.title(["%s" % (stats[idx])])
-                    print np.shape(x)
-                    plt.show()
+                plots=zip(x,y)
+                axs={}
+                for idx,plot in enumerate(plots):
+                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                    axs[idx].plot(plot[0],plot[1],'c')
+                    plt.title(["%s" % (stats[idx])])
+                print np.shape(x)
+                plt.show()
 
         elif state=="defrost":
             num_statistics=np.size(stats)            
@@ -895,14 +878,14 @@ class StateAnalyzer:
                     #y=np.array([],dtype=object)
                     y.append(y_hold[:])
                     plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'m')
-                        plt.title(["%s" % (stats[idx])])
-                    print np.shape(x)
-                    plt.show()
+                plots=zip(x,y)
+                axs={}
+                for idx,plot in enumerate(plots):
+                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                    axs[idx].plot(plot[0],plot[1],'m')
+                    plt.title(["%s" % (stats[idx])])
+                print np.shape(x)
+                plt.show()
                 
         else:
             
@@ -1076,7 +1059,100 @@ class StateAnalyzer:
                     print np.shape(x)
                     plt.show()
 
+                    
+                    
+    def initialize_Tolerances(self):
+        x=0#--------------------------------------------------------------------------- this is just to establish a variable.
+        ipd4_rfg_lo=-0.000000000000002536019852714590*x**6 + 0.000000000011345518669780900000*x**5 - 0.000000019752254909910200000000*x**4 + 0.000016647062974780200000000000*x**3 - 0.006724643990663730000000000000*x**2 + 0.991753248998366000000000000000*x** + 69.263097541421400000000000000000
+        ipd4_rfg_hi=-0.000000000000001671233289853280*x**6 + 0.000000000007514297902526400000*x**5 - 0.000000013484506343362200000000*x**4 + 0.000012254819312798500000000000*x**3 - 0.005808119933530340000000000000*x**2 + 1.228499637374680000000000000000*x** + 240.099692487351000000000000000000
+        ipd4_v=-0.000000010219440369231500000000*x**3 + 0.000024700546414517000000000000*x**2 - 0.014858082183449000000000000000*x** + 238.050304634121000000000000000000
+        ipd4_rt= 0.000000000000000097260347078284*x**6 - 0.000000000000241731002795525000*x**5 + 0.000000000011981237039428400000*x**4 + 0.000000320318298030740000000000*x**3 - 0.000137726912058843000000000000*x**2 - 0.108006301092735000000000000000*x** + 77.898679045042800000000000000000
+        ipd4_sup=0.000000000000001516325614899410*x**6 - 0.000000000006656995733620930000*x**5 + 0.000000011365805167973000000000*x**4 - 0.000009478706861795080000000000*x**3 + 0.003955392423357890000000000000*x**2 - 0.744093172564652000000000000000*x** + 53.833304436568700000000000000000
+        ipd4_duty=-0.000000000000001001447917092700*x**6 + 0.000000000005037361204350060000*x**5 - 0.000000009356582802864640000000*x**4 + 0.000007960175917340550000000000*x**3 - 0.002978503986445920000000000000*x**2 + 0.292399262081752000000000000000*x** + 57.074654001701300000000000000000
+        ipd4_btr=-0.000000000000006293026564938570*x**6 + 0.000000000022298969738444800000*x**5 - 0.000000029897702754689900000000*x**4 + 0.000018732264996368000000000000*x**3 - 0.005572228919906410000000000000*x**2 + 0.722294563958293000000000000000*x** + 970.402232083153000000000000000000
+        
+        def4_rfg_lo= 0.000000000000169630234525366000x6 - 0.000000000264559940319759000000x5 + 0.000000152741022428177000000000x4 - 0.000040266810662318000000000000x3 + 0.005127605811706850000000000000x2 - 0.320480089558662000000000000000x + 58.049560067062500000000000000000
+        def4_rfg_hi=-0.000000000000111489654494239000x6 + 0.000000000154856388067755000000x5 - 0.000000075844192432823600000000x4 + 0.000014449590893915500000000000x3 - 0.000061098402065685600000000000x2 - 0.293789953136097000000000000000x + 166.039483813293000000000000000000
+        def4_v= -0.000000000000071417005231571600x6 + 0.000000000110606165810637000000x5 - 0.000000064045949965768900000000x4 + 0.000017117426242530500000000000x3 - 0.002107542907468430000000000000x2 + 0.102855081920549000000000000000x + 238.335532635241000000000000000000
+        def4_rt= 0.000000000000104498603978258000x6 - 0.000000000180460800067288000000x5 + 0.000000119163508038836000000000x4 - 0.000038068998010193900000000000x3 + 0.006430314739112360000000000000x2 - 0.592449495670883000000000000000x + 44.991176778655100000000000000000
+        def4_sup=-0.000000000000042478977627734100x6 + 0.000000000049318072346225300000x5 - 0.000000014528726720366400000000x4 - 0.000002224315321154350000000000x3 + 0.001768248426005550000000000000x2 - 0.301809083148813000000000000000x + 22.589379319970500000000000000000
+        def4_duty=45
+        def4_btr= -0.000000000000343859157906408000x6 + 0.000000000617121691113187000000x5 - 0.000000440823775947578000000000x4 + 0.000160248668126755000000000000x3 - 0.031456657020291300000000000000x2 + 3.231869855277910000000000000000x + 894.552790322034000000000000000000
+        
+        ref4_rfg_lo=
+        ref4_rfg_hi=
+        ref4_v= 0.000000000001117280719558600000x6 - 0.000000001078157932992540000000x5 + 0.000000392142730854167000000000x4 - 0.000066087461160713500000000000x3 + 0.005205533817916290000000000000x2 - 0.187668351053867000000000000000x + 240.411758597448000000000000000000
+        ref4_rt=-0.000000000004182611997263700000x6 + 0.000000003834517253928300000000x5 - 0.000001384799531755310000000000x4 + 0.000249380187221947000000000000x3 - 0.023163315379454500000000000000x2 + 0.948853297752820000000000000000x + 0.905897125574326000000000000000
+        ref4_sup=
+        ref4_duty=
+        ref4_btr=
 
+
+
+
+
+
+
+
+        ipd3_rfg_lo=
+        ipd3_rfg_hi=
+        ipd3_v=
+        ipd3_rt=
+        ipd3_sup=
+        ipd3_duty=
+        ipd3_btr=    
+
+        def3_rfg_lo=
+        def3_rfg_hi=
+        def3_v=
+        def3_rt=
+        def3_sup=
+        def3_duty=
+        def3_btr=    
+
+        ref3_rfg_lo=
+        ref3_rfg_hi=
+        ref3_v=
+        ref3_rt=
+        ref3_sup=
+        ref3_duty=
+        ref3_btr=            
+                
+                    
+                    
+    def analyze_tolerances(self,num_barr):
+        
+        ipd_rfg_lo
+        ipd_rfg_hi
+        ipd_v
+        ipd_rtemp
+        ipd_duty
+        ipd_btr
+        ipdlow=[ipd_rfg_lo,ipd_rfg_hi,ipd_v,ipd_rtemp,ipd_duty,ipd_btr]*.9
+        ipdhi=[ipd_rfg_lo,ipd_rfg_hi,ipd_v,ipd_rtemp,ipd_duty,ipd_btr]*1.1
+        IPDTOL=[ipdhi,ipdlow]
+        
+        ref_rfg_lo
+        ref_rfg_hi
+        ref_v
+        ref_rtemp
+        ref_duty
+        ref_btr
+        reflow=[ref_rfg_lo,ref_rfg_hi,ref_v,ref_rtemp,ref_duty,ref_btr]*.9
+        refhi=[ref_rfg_lo,ref_rfg_hi,ref_v,ref_rtemp,ref_duty,ref_btr]*1.1
+        REFTOL=[refhi,reflow]
+        
+        
+        def_rfg_lo
+        def_rfg_hi
+        def_v
+        def_rtemp
+        def_duty
+        def_btr        
+        deflow=[def_rfg_lo,def_rfg_hi,def_v,def_rtemp,def_duty,def_btr]*.9
+        defhi=[def_rfg_lo,def_rfg_hi,def_v,def_rtemp,def_duty,def_btr]*1.1
+        DEFTOL=[defhi,deflow]        
+        
 
 
 
@@ -1086,11 +1162,11 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('773logtest2_TEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('774LABTEST.log')#('773logtest2_TEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
 # print num_barr   
 num_barr=4
-num_barr_to_use=3 #------------------------------------------------------------------------ returns an error sometimes if the barrels used in anlysis dont match with barrels actually working.
+num_barr_to_use=4 #------------------------------------------------------------------------ returns an error sometimes if the barrels used in anlysis dont match with barrels actually working.
 s.StatePopulator(num_barr_to_use)#_to_use)
 
 
@@ -1111,7 +1187,9 @@ s.getdata(num_barr_to_use)
 #print s.ipdprops[0][0][0]
 
 
-s.display_plots(num_barr_to_use,"all")
+s.display_plots(num_barr_to_use,"defrost")
+
+s.analyze_tolerances(num_barr_to_use)
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
