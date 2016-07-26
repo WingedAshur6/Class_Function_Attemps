@@ -1088,9 +1088,17 @@ class StateAnalyzer:
         ref4_btr= -0.000000000002984614080912080000*x**6 + 0.0000000002534440713209330*x**5 + 0.00000055656117658501100*x**4 - 0.0002063687484672500*x**3 + 0.02181824776045130*x**2 - 0.84002427817591*x** + 1017.180974138570
 
 
+        ipd4_lo=[ipd4_rfg_lo,ipd4_rfd_hi,ipd4_v,ipd4_rt,ipd4_sup,ipd4_duty,ipd4_btr]*.985
+        ipd4_hi=[ipd4_rfg_lo,ipd4_rfd_hi,ipd4_v,ipd4_rt,ipd4_sup,ipd4_duty,ipd4_btr]*1.15
+        self.IPD4_tolerances=[ipd4_hi,ipd4_lo]
+        
+        def4_lo=[def4_rfg_lo,def4_rfd_hi,def4_v,def4_rt,def4_sup,def4_duty,def4_btr]*.985
+        def4_hi=[def4_rfg_lo,def4_rfd_hi,def4_v,def4_rt,def4_sup,def4_duty,def4_btr]*1.15
+        self.DEF4_tolerances=[def4_hi,def4_lo]
 
-
-
+        ref4_lo=[ref4_rfg_lo,ref4_rfd_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]*.985
+        ref4_hi=[ref4_rfg_lo,ref4_rfd_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]*1.15
+        self.REF4_tolerances=[ref4_hi,ref4_lo]
 
 
 
@@ -1118,7 +1126,17 @@ class StateAnalyzer:
         ref3_duty=-0.000000000000065920212740646100*x**6 + 0.00000000016924471474124500*x**5 - 0.0000001688090043616940000*x**4 + 0.00008147615733434430000*x**3 - 0.0189769610258361000*x**2 + 1.7078452925536500000*x** + 22.6475677042086000
         ref3_btr=  -0.000000000000017145635305073900*x**6 + 0.0000000000170986424145307000*x**5 - 0.00000000121795492191857*x**4 - 0.00000440528697447917000*x**3 + 0.001548200798966900*x**2 - 0.148158340185274000*x** + 1000.20768955970        
                 
-                    
+        ipd3_lo=[ipd3_rfg_lo,ipd3_rfd_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]*.985
+        ipd3_hi=[ipd3_rfg_lo,ipd3_rfd_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]*1.15
+        self.IPD3_tolerances=[ipd3_hi,ipd3_lo]
+        
+        def3_lo=[def3_rfg_lo,def3_rfd_hi,def3_v,def3_rt,def3_sup,def3_duty,def3_btr]*.985
+        def3_hi=[def3_rfg_lo,def3_rfd_hi,def3_v,def3_rt,def3_sup,def3_duty,def3_btr]*1.15
+        self.DEF3_tolerances=[def3_hi,def3_lo]
+
+        ref3_lo=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]*.985
+        ref3_hi=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]*1.15
+        self.REF3_tolerances=[ref3_hi,ref3_lo]                    
                     
     def analyze_tolerances(self,num_barr):
         
