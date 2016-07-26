@@ -1090,24 +1090,24 @@ class StateAnalyzer:
 
         # ipd4_lo=[ipd4_rfg_lo,ipd4_rfd_hi,ipd4_v,ipd4_rt,ipd4_sup,ipd4_duty,ipd4_btr]*.985
         # ipd4_hi=[ipd4_rfg_lo,ipd4_rfd_hi,ipd4_v,ipd4_rt,ipd4_sup,ipd4_duty,ipd4_btr]*1.15
-        ipd4=[ipd4_rfg_lo,ipd4_rfd_hi,ipd4_v,ipd4_rt,ipd4_sup,ipd4_duty,ipd4_btr]
+        ipd4=[ipd4_rfg_lo,ipd4_rfg_hi,ipd4_v,ipd4_rt,ipd4_sup,ipd4_duty,ipd4_btr]
         self.IPD4_tolerances=ipd4
         
         # def4_lo=[def4_rfg_lo,def4_rfd_hi,def4_v,def4_rt,def4_sup,def4_duty,def4_btr]*.985
         # def4_hi=[def4_rfg_lo,def4_rfd_hi,def4_v,def4_rt,def4_sup,def4_duty,def4_btr]*1.15
-        def4=[def4_rfg_lo,def4_rfd_hi,def4_v,def4_rt,def4_sup,def4_duty,def4_btr]
+        def4=[def4_rfg_lo,def4_rfg_hi,def4_v,def4_rt,def4_sup,def4_duty,def4_btr]
         self.DEF4_tolerances=def4
 
         # ref4_lo=[ref4_rfg_lo,ref4_rfd_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]*.985
         # ref4_hi=[ref4_rfg_lo,ref4_rfd_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]*1.15
-        ref4=[ref4_rfg_lo,ref4_rfd_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]
+        ref4=[ref4_rfg_lo,ref4_rfg_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]
         self.REF4_tolerances=[ref4]    
 
 
 
         ipd3_rfg_lo=[-0.000000000000014350287034385800 , 0.0000000000418624705020636 ,- 0.00000004785638657790590 , 0.000026590545362421900 ,- 0.007099730424577330000 , 0.700448582478128000 , 51.66330704820280]
         ipd3_rfg_hi=[-0.000000000000048655126930162100 , 0.00000000012232276551327400 ,- 0.00000011861655534460600 , 0.00005532568308944710 ,- 0.01260123087912370 , 1.28316608139096000 , 212.95088669029900]
-        ipd3_v=1/[5E-16,0,0,0, - 2E-12,0,0 , 2E-09, 0,0,- 1E-06 ,0,0,0, 0.0004 ,- 0.0416 , 235.37]
+        ipd3_v=1/[5,0,0,0, - 2,0,0 , 2, 0,0,- 1 ,0,0,0, 0.0004 ,- 0.0416 , 235.37]
         ipd3_rt=[0.000000000000018712856169593300 ,- 0.0000000000432820532630369 , 0.00000003843418793395970 ,- 0.000016743077354304900 , 0.003951192348258280 ,- 0.5729455941878270000 , 69.6209257511355]
         ipd3_sup=[0.000000000000028640004906863400 ,- 0.0000000000724480156256685 , 0.00000007222288053774400 ,- 0.00003585641403580310000 , 0.00916555578096867000 - 1.10183156458269000 , 54.13292728184290]
         ipd3_duty=[-0.000000000000041179140569363500 , 0.000000000115308005613939 ,- 0.00000012355776372272800 , 0.0000630518147228682000 ,- 0.0152057892940340 , 1.350724058355290 , 33.45259834092480]
@@ -1131,51 +1131,23 @@ class StateAnalyzer:
                 
         # ipd3_lo=[ipd3_rfg_lo,ipd3_rfd_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]*.985
         # ipd3_hi=[ipd3_rfg_lo,ipd3_rfd_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]*1.15
-        ipd3=[ipd3_rfg_lo,ipd3_rfd_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]
+        ipd3=[ipd3_rfg_lo,ipd3_rfg_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]
         self.IPD3_tolerances=ipd3
         
         # def3_lo=[def3_rfg_lo,def3_rfd_hi,def3_v,def3_rt,def3_sup,def3_duty,def3_btr]*.985
         # def3_hi=[def3_rfg_lo,def3_rfd_hi,def3_v,def3_rt,def3_sup,def3_duty,def3_btr]*1.15
-        def3=[def3_rfg_lo,def3_rfd_hi,def3_v,def3_rt,def3_sup,def3_duty,def3_btr]
+        def3=[def3_rfg_lo,def3_rfg_hi,def3_v,def3_rt,def3_sup,def3_duty,def3_btr]
         self.DEF3_tolerances=def3
 
         # ref3_lo=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]*.985
         # ref3_hi=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]*1.15
-        ref3=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]
+        ref3=[ref3_rfg_lo,ref3_rfg_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]
         self.REF3_tolerances=[ref3]                    
                     
     def analyze_tolerances(self,num_barr):
         
-        ipd_rfg_lo
-        ipd_rfg_hi
-        ipd_v
-        ipd_rtemp
-        ipd_duty
-        ipd_btr
-        ipdlow=[ipd_rfg_lo,ipd_rfg_hi,ipd_v,ipd_rtemp,ipd_duty,ipd_btr]*.9
-        ipdhi=[ipd_rfg_lo,ipd_rfg_hi,ipd_v,ipd_rtemp,ipd_duty,ipd_btr]*1.1
-        IPDTOL=[ipdhi,ipdlow]
-        
-        ref_rfg_lo
-        ref_rfg_hi
-        ref_v
-        ref_rtemp
-        ref_duty
-        ref_btr
-        reflow=[ref_rfg_lo,ref_rfg_hi,ref_v,ref_rtemp,ref_duty,ref_btr]*.9
-        refhi=[ref_rfg_lo,ref_rfg_hi,ref_v,ref_rtemp,ref_duty,ref_btr]*1.1
-        REFTOL=[refhi,reflow]
-        
-        
-        def_rfg_lo
-        def_rfg_hi
-        def_v
-        def_rtemp
-        def_duty
-        def_btr        
-        deflow=[def_rfg_lo,def_rfg_hi,def_v,def_rtemp,def_duty,def_btr]*.9
-        defhi=[def_rfg_lo,def_rfg_hi,def_v,def_rtemp,def_duty,def_btr]*1.1
-        DEFTOL=[defhi,deflow]        
+        for i in range(100):
+            print np.polyval(self.IPD4_tolerances[0],i)
         
 
 
@@ -1211,8 +1183,8 @@ s.getdata(num_barr_to_use)
 #print s.ipdprops[0][0][0]
 
 
-s.display_plots(num_barr_to_use,"defrost")
-
+#s.display_plots(num_barr_to_use,"defrost")
+s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
