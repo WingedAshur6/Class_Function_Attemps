@@ -737,7 +737,8 @@ class StateAnalyzer:
                 x=[]
                 y=[]
                 BTRx=range(self.ipd[K].length())
-                BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
+                #BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
+                BTRy_hold=self.ipdprops[l][k][6]
                 BTRy=BTRy_hold[:]
                 zip(BTRx,BTRy)
                 BTRfig=plt.figure()
@@ -756,13 +757,14 @@ class StateAnalyzer:
                 for J in range(num_statistics-1):
                     title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
                     print title
-                    x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
+                    #x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
                     x_hold=range(self.ipd[K].length())
                     #x=np.array([],dtype=object)
                     #x=np.append(x,x_hold[:])
                     x.append(x_hold[:])
                     #print x
-                    y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
+                   # y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
+                    y_hold=(self.ipdprops[L][K][J])
                     #y=np.array([],dtype=object)
                     y.append(y_hold[:])
                     plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
@@ -793,7 +795,8 @@ class StateAnalyzer:
                 x=[]
                 y=[]
                 BTRx=range(self.refreeze[L][K].length())
-                BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
+                #BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
+                BTRy_hold=self.refprops[L][K][6]
                 BTRy=BTRy_hold[:]
                 zip(BTRx,BTRy)
                 BTRfig=plt.figure()
@@ -812,14 +815,15 @@ class StateAnalyzer:
                 for J in range(num_statistics-1):
                     title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
                     print title
-                    x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
+                    #x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
                     x_hold=range(self.refreeze[L][K].length())
                     #x=np.array([],dtype=object)
                     #x=np.append(x,x_hold[:])
                     x.append(x_hold[:])
                     #print x
-                    y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
+                    #y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
                     #y=np.array([],dtype=object)
+                    y_hold=self.refprops[L][K][J]
                     y.append(y_hold[:])
                     plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
                 plots=zip(x,y)
@@ -849,7 +853,8 @@ class StateAnalyzer:
                 x=[]
                 y=[]
                 BTRx=range(self.defrost[L][K].length())
-                BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
+                #BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
+                BTRy_hold=self.defprops[L][K][6]
                 BTRy=BTRy_hold[:]
                 zip(BTRx,BTRy)
                 BTRfig=plt.figure()
@@ -874,8 +879,9 @@ class StateAnalyzer:
                     #x=np.append(x,x_hold[:])
                     x.append(x_hold[:])
                     #print x
-                    y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
+                    #y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
                     #y=np.array([],dtype=object)
+                    y_hold=self.defprops[L][K][J]
                     y.append(y_hold[:])
                     plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
                 plots=zip(x,y)
@@ -902,7 +908,8 @@ class StateAnalyzer:
                  for K in range(self.ipditeration):
                  
                     BTRx=range(self.ipd[K].length())
-                    BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
+                    #BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
+                    BTRy_hold=self.ipdprops[L][K][6]
                     BTRy=BTRy_hold[:]
                     zip(BTRx,BTRy)
                     BTRfig=plt.figure()
@@ -927,8 +934,9 @@ class StateAnalyzer:
                         #x=np.append(x,x_hold[:])
                         x.append(x_hold[:])
                         #print x
-                        y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
+                        #y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
                         #y=np.array([],dtype=object)
+                        y_hold=self.ipdprops[L][K][J]
                         y.append(y_hold[:])
                         plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
                     plots=zip(x,y)
@@ -961,7 +969,8 @@ class StateAnalyzer:
                     x=[]
                     y=[]
                     BTRx=range(self.refreeze[L][K].length())
-                    BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
+                    #BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
+                    BTRy_hold=self.refprops[L][K][6]
                     BTRy=BTRy_hold[:]
                     zip(BTRx,BTRy)
                     BTRfig=plt.figure()
@@ -986,8 +995,9 @@ class StateAnalyzer:
                         #x=np.append(x,x_hold[:])
                         x.append(x_hold[:])
                         #print x
-                        y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
+                        #y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
                         #y=np.array([],dtype=object)
+                        y_hold=self.refprops[L][K][J]
                         y.append(y_hold[:])
                         plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[2],K)])
                     plots=zip(x,y)
@@ -1017,7 +1027,8 @@ class StateAnalyzer:
                     x=[]
                     y=[]
                     BTRx=range(self.defrost[L][K].length())
-                    BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
+                    #BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
+                    BTRy_hold=self.defprops[L][K][6]
                     BTRy=BTRy_hold[:]
                     zip(BTRx,BTRy)
                     BTRfig=plt.figure()
@@ -1042,8 +1053,9 @@ class StateAnalyzer:
                         #x=np.append(x,x_hold[:])
                         x.append(x_hold[:])
                         #print x
-                        y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
+                        #y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
                         #y=np.array([],dtype=object)
+                        y_hold=self.defprops[L][K][J]
                         y.append(y_hold[:])
                         plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
                     plots=zip(x,y)
