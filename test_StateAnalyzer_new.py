@@ -873,7 +873,7 @@ class StateAnalyzer:
                 for J in range(num_statistics-1):
                     title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[J],K)]
                     print title
-                    x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
+                    #x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
                     x_hold=range(self.defrost[L][K].length())
                     #x=np.array([],dtype=object)
                     #x=np.append(x,x_hold[:])
@@ -928,7 +928,7 @@ class StateAnalyzer:
                     for J in range(num_statistics-1):
                         title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
                         print title
-                        x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
+                        #x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
                         x_hold=range(self.ipd[K].length())
                         #x=np.array([],dtype=object)
                         #x=np.append(x,x_hold[:])
@@ -989,7 +989,7 @@ class StateAnalyzer:
                     for J in range(num_statistics-1):
                         title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
                         print title
-                        x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
+                        #x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
                         x_hold=range(self.refreeze[L][K].length())
                         #x=np.array([],dtype=object)
                         #x=np.append(x,x_hold[:])
@@ -1047,7 +1047,7 @@ class StateAnalyzer:
                     for J in range(num_statistics-1):
                         title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[J],K)]
                         print title
-                        x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
+                        #x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
                         x_hold=range(self.defrost[L][K].length())
                         #x=np.array([],dtype=object)
                         #x=np.append(x,x_hold[:])
