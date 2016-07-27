@@ -418,40 +418,40 @@ class StateAnalyzer:
                 ref_RFG_lo[ref_barrel][ref_instance]={}
                 ref_RFG_lo[ref_barrel][ref_instance]={}
                 ref_RFG_lo[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
-                ref_RFG_lo[ref_barrel][ref_instance]=np.delete((ref_RFG_lo[ref_barrel][ref_instance]),np.s_[1:4],axis=1)
-                ref_RFG_lo[ref_barrel][ref_instance]=np.delete((ref_RFG_lo[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                ref_RFG_lo[ref_barrel][ref_instance]=np.delete((ref_RFG_lo[ref_barrel][ref_instance]),np.s_[0:4],axis=1)
+                ref_RFG_lo[ref_barrel][ref_instance]=np.delete((ref_RFG_lo[ref_barrel][ref_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- RFG_High ---------------------------------------------------------------------------------------------------------------------
                 ref_RFG_hi[ref_barrel][ref_instance]={}
                 ref_RFG_hi[ref_barrel][ref_instance]={}
                 ref_RFG_hi[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
-                ref_RFG_hi[ref_barrel][ref_instance]=np.delete((ref_RFG_hi[ref_barrel][ref_instance]),np.s_[1:5],axis=1)
-                ref_RFG_hi[ref_barrel][ref_instance]=np.delete((ref_RFG_hi[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                ref_RFG_hi[ref_barrel][ref_instance]=np.delete((ref_RFG_hi[ref_barrel][ref_instance]),np.s_[0:5],axis=1)
+                ref_RFG_hi[ref_barrel][ref_instance]=np.delete((ref_RFG_hi[ref_barrel][ref_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- Voltage ---------------------------------------------------------------------------------------------------------------------
                 ref_V[ref_barrel][ref_instance]={}
                 ref_V[ref_barrel][ref_instance]={}
                 ref_V[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
-                ref_V[ref_barrel][ref_instance]=np.delete((ref_V[ref_barrel][ref_instance]),np.s_[1:6],axis=1)
-                ref_V[ref_barrel][ref_instance]=np.delete((ref_V[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                ref_V[ref_barrel][ref_instance]=np.delete((ref_V[ref_barrel][ref_instance]),np.s_[0:6],axis=1)
+                ref_V[ref_barrel][ref_instance]=np.delete((ref_V[ref_barrel][ref_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- RTemp ---------------------------------------------------------------------------------------------------------------------
                 ref_RT[ref_barrel][ref_instance]={}
                 ref_RT[ref_barrel][ref_instance]={}
                 ref_RT[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
-                ref_RT[ref_barrel][ref_instance]=np.delete((ref_RT[ref_barrel][ref_instance]),np.s_[1:7],axis=1)
-                ref_RT[ref_barrel][ref_instance]=np.delete((ref_RT[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                ref_RT[ref_barrel][ref_instance]=np.delete((ref_RT[ref_barrel][ref_instance]),np.s_[0:7],axis=1)
+                ref_RT[ref_barrel][ref_instance]=np.delete((ref_RT[ref_barrel][ref_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- SUPRHT ---------------------------------------------------------------------------------------------------------------------
                 ref_SUP[ref_barrel][ref_instance]={}
                 ref_SUP[ref_barrel][ref_instance]={}
                 ref_SUP[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
-                ref_SUP[ref_barrel][ref_instance]=np.delete((ref_SUP[ref_barrel][ref_instance]),np.s_[1:8],axis=1)
-                ref_SUP[ref_barrel][ref_instance]=np.delete((ref_SUP[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                ref_SUP[ref_barrel][ref_instance]=np.delete((ref_SUP[ref_barrel][ref_instance]),np.s_[0:8],axis=1)
+                ref_SUP[ref_barrel][ref_instance]=np.delete((ref_SUP[ref_barrel][ref_instance]),np.s_[1:],axis=1)
                 
                 
                 
@@ -459,8 +459,8 @@ class StateAnalyzer:
                 ref_DC[ref_barrel][ref_instance]={}
                 ref_DC[ref_barrel][ref_instance]={}
                 ref_DC[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
-                ref_DC[ref_barrel][ref_instance]=np.delete((ref_DC[ref_barrel][ref_instance]),np.s_[1:9],axis=1)
-                ref_DC[ref_barrel][ref_instance]=np.delete((ref_DC[ref_barrel][ref_instance]),np.s_[2:],axis=1)
+                ref_DC[ref_barrel][ref_instance]=np.delete((ref_DC[ref_barrel][ref_instance]),np.s_[0:9],axis=1)
+                ref_DC[ref_barrel][ref_instance]=np.delete((ref_DC[ref_barrel][ref_instance]),np.s_[1:],axis=1)
                 
                 
                 
@@ -469,8 +469,8 @@ class StateAnalyzer:
                 ref_BTR[ref_barrel][ref_instance]={}
                 ref_BTR[ref_barrel][ref_instance]={}
                 ref_BTR[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
-                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[1:12+7*ref_barrel],axis=1)
-                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[2:],axis=1)    
+                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[0:12+7*ref_barrel],axis=1)
+                ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[1:],axis=1)    
 
         self.ref_BTR=ref_BTR
         self.ref_RFG_lo=ref_RFG_lo
@@ -500,40 +500,40 @@ class StateAnalyzer:
                 def_RFG_lo[def_barrel][def_instance]={}
                 def_RFG_lo[def_barrel][def_instance]={}
                 def_RFG_lo[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
-                def_RFG_lo[def_barrel][def_instance]=np.delete((def_RFG_lo[def_barrel][def_instance]),np.s_[1:4],axis=1)
-                def_RFG_lo[def_barrel][def_instance]=np.delete((def_RFG_lo[def_barrel][def_instance]),np.s_[2:],axis=1)
+                def_RFG_lo[def_barrel][def_instance]=np.delete((def_RFG_lo[def_barrel][def_instance]),np.s_[0:4],axis=1)
+                def_RFG_lo[def_barrel][def_instance]=np.delete((def_RFG_lo[def_barrel][def_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- RFG_High ---------------------------------------------------------------------------------------------------------------------
                 def_RFG_hi[def_barrel][def_instance]={}
                 def_RFG_hi[def_barrel][def_instance]={}
                 def_RFG_hi[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
-                def_RFG_hi[def_barrel][def_instance]=np.delete((def_RFG_hi[def_barrel][def_instance]),np.s_[1:5],axis=1)
-                def_RFG_hi[def_barrel][def_instance]=np.delete((def_RFG_hi[def_barrel][def_instance]),np.s_[2:],axis=1)
+                def_RFG_hi[def_barrel][def_instance]=np.delete((def_RFG_hi[def_barrel][def_instance]),np.s_[0:5],axis=1)
+                def_RFG_hi[def_barrel][def_instance]=np.delete((def_RFG_hi[def_barrel][def_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- Voltage ---------------------------------------------------------------------------------------------------------------------
                 def_V[def_barrel][def_instance]={}
                 def_V[def_barrel][def_instance]={}
                 def_V[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
-                def_V[def_barrel][def_instance]=np.delete((def_V[def_barrel][def_instance]),np.s_[1:6],axis=1)
-                def_V[def_barrel][def_instance]=np.delete((def_V[def_barrel][def_instance]),np.s_[2:],axis=1)
+                def_V[def_barrel][def_instance]=np.delete((def_V[def_barrel][def_instance]),np.s_[0:6],axis=1)
+                def_V[def_barrel][def_instance]=np.delete((def_V[def_barrel][def_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- RTemp ---------------------------------------------------------------------------------------------------------------------
                 def_RT[def_barrel][def_instance]={}
                 def_RT[def_barrel][def_instance]={}
                 def_RT[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
-                def_RT[def_barrel][def_instance]=np.delete((def_RT[def_barrel][def_instance]),np.s_[1:7],axis=1)
-                def_RT[def_barrel][def_instance]=np.delete((def_RT[def_barrel][def_instance]),np.s_[2:],axis=1)
+                def_RT[def_barrel][def_instance]=np.delete((def_RT[def_barrel][def_instance]),np.s_[0:7],axis=1)
+                def_RT[def_barrel][def_instance]=np.delete((def_RT[def_barrel][def_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- SUPRHT ---------------------------------------------------------------------------------------------------------------------
                 def_SUP[def_barrel][def_instance]={}
                 def_SUP[def_barrel][def_instance]={}
                 def_SUP[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
-                def_SUP[def_barrel][def_instance]=np.delete((def_SUP[def_barrel][def_instance]),np.s_[1:8],axis=1)
-                def_SUP[def_barrel][def_instance]=np.delete((def_SUP[def_barrel][def_instance]),np.s_[2:],axis=1)
+                def_SUP[def_barrel][def_instance]=np.delete((def_SUP[def_barrel][def_instance]),np.s_[0:8],axis=1)
+                def_SUP[def_barrel][def_instance]=np.delete((def_SUP[def_barrel][def_instance]),np.s_[1:],axis=1)
                 
                 
                 
@@ -541,8 +541,8 @@ class StateAnalyzer:
                 def_DC[def_barrel][def_instance]={}
                 def_DC[def_barrel][def_instance]={}
                 def_DC[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
-                def_DC[def_barrel][def_instance]=np.delete((def_DC[def_barrel][def_instance]),np.s_[1:9],axis=1)
-                def_DC[def_barrel][def_instance]=np.delete((def_DC[def_barrel][def_instance]),np.s_[2:],axis=1)
+                def_DC[def_barrel][def_instance]=np.delete((def_DC[def_barrel][def_instance]),np.s_[0:9],axis=1)
+                def_DC[def_barrel][def_instance]=np.delete((def_DC[def_barrel][def_instance]),np.s_[1:],axis=1)
                 
                 
                 
@@ -551,8 +551,8 @@ class StateAnalyzer:
                 def_BTR[def_barrel][def_instance]={}
                 def_BTR[def_barrel][def_instance]={}
                 def_BTR[def_barrel][def_instance]=np.delete((self.data[self.defrost[def_barrel][def_instance].start_time:self.defrost[def_barrel][def_instance].end_time]),0,axis=1)
-                def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[1:12+7*def_barrel],axis=1)
-                def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[2:],axis=1)   
+                def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[0:12+7*def_barrel],axis=1)
+                def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[1:],axis=1)   
 
         self.def_BTR=def_BTR
         self.def_RFG_lo=def_RFG_lo
@@ -581,40 +581,40 @@ class StateAnalyzer:
                 ipd_RFG_lo[ipd_barrel][ipd_instance]={}
                 ipd_RFG_lo[ipd_barrel][ipd_instance]={}
                 ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
-                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_lo[ipd_barrel][ipd_instance]),np.s_[1:4],axis=1)
-                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_lo[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_lo[ipd_barrel][ipd_instance]),np.s_[0:4],axis=1)
+                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_lo[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- RFG_High ---------------------------------------------------------------------------------------------------------------------
                 ipd_RFG_hi[ipd_barrel][ipd_instance]={}
                 ipd_RFG_hi[ipd_barrel][ipd_instance]={}
                 ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
-                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_hi[ipd_barrel][ipd_instance]),np.s_[1:5],axis=1)
-                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_hi[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_hi[ipd_barrel][ipd_instance]),np.s_[0:5],axis=1)
+                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_hi[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- Voltage ---------------------------------------------------------------------------------------------------------------------
                 ipd_V[ipd_barrel][ipd_instance]={}
                 ipd_V[ipd_barrel][ipd_instance]={}
                 ipd_V[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
-                ipd_V[ipd_barrel][ipd_instance]=np.delete((ipd_V[ipd_barrel][ipd_instance]),np.s_[1:6],axis=1)
-                ipd_V[ipd_barrel][ipd_instance]=np.delete((ipd_V[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                ipd_V[ipd_barrel][ipd_instance]=np.delete((ipd_V[ipd_barrel][ipd_instance]),np.s_[0:6],axis=1)
+                ipd_V[ipd_barrel][ipd_instance]=np.delete((ipd_V[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- RTemp ---------------------------------------------------------------------------------------------------------------------
                 ipd_RT[ipd_barrel][ipd_instance]={}
                 ipd_RT[ipd_barrel][ipd_instance]={}
                 ipd_RT[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
-                ipd_RT[ipd_barrel][ipd_instance]=np.delete((ipd_RT[ipd_barrel][ipd_instance]),np.s_[1:7],axis=1)
-                ipd_RT[ipd_barrel][ipd_instance]=np.delete((ipd_RT[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                ipd_RT[ipd_barrel][ipd_instance]=np.delete((ipd_RT[ipd_barrel][ipd_instance]),np.s_[0:7],axis=1)
+                ipd_RT[ipd_barrel][ipd_instance]=np.delete((ipd_RT[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
                 
                 #--------------------------------------------------------------------------- SUPRHT ---------------------------------------------------------------------------------------------------------------------
                 ipd_SUP[ipd_barrel][ipd_instance]={}
                 ipd_SUP[ipd_barrel][ipd_instance]={}
                 ipd_SUP[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
-                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((ipd_SUP[ipd_barrel][ipd_instance]),np.s_[1:8],axis=1)
-                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((ipd_SUP[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((ipd_SUP[ipd_barrel][ipd_instance]),np.s_[0:8],axis=1)
+                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((ipd_SUP[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
                 
                 
@@ -622,8 +622,8 @@ class StateAnalyzer:
                 ipd_DC[ipd_barrel][ipd_instance]={}
                 ipd_DC[ipd_barrel][ipd_instance]={}
                 ipd_DC[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
-                ipd_DC[ipd_barrel][ipd_instance]=np.delete((ipd_DC[ipd_barrel][ipd_instance]),np.s_[1:9],axis=1)
-                ipd_DC[ipd_barrel][ipd_instance]=np.delete((ipd_DC[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                ipd_DC[ipd_barrel][ipd_instance]=np.delete((ipd_DC[ipd_barrel][ipd_instance]),np.s_[0:9],axis=1)
+                ipd_DC[ipd_barrel][ipd_instance]=np.delete((ipd_DC[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
                 
                 
@@ -632,8 +632,8 @@ class StateAnalyzer:
                 ipd_BTR[ipd_barrel][ipd_instance]={}
                 ipd_BTR[ipd_barrel][ipd_instance]={}
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
-                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[1:12+7*ipd_barrel],axis=1)
-                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[2:],axis=1)
+                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[0:12+7*ipd_barrel],axis=1)
+                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
 
 
         self.ipd_BTR=ipd_BTR
@@ -901,10 +901,6 @@ class StateAnalyzer:
                 for L in range(num_barr):
                  for K in range(self.ipditeration):
                  
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
                     BTRx=range(self.ipd[K].length())
                     BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
                     BTRy=BTRy_hold[:]
@@ -1101,13 +1097,13 @@ class StateAnalyzer:
         # ref4_lo=[ref4_rfg_lo,ref4_rfd_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]*.985
         # ref4_hi=[ref4_rfg_lo,ref4_rfd_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]*1.15
         ref4=[ref4_rfg_lo,ref4_rfg_hi,ref4_v,ref4_rt,ref4_sup,ref4_duty,ref4_btr]
-        self.REF4_tolerances=[ref4]    
+        self.REF4_tolerances=ref4    
 
 
 
         ipd3_rfg_lo=[-0.000000000000014350287034385800 , 0.0000000000418624705020636 ,- 0.00000004785638657790590 , 0.000026590545362421900 ,- 0.007099730424577330000 , 0.700448582478128000 , 51.66330704820280]
         ipd3_rfg_hi=[-0.000000000000048655126930162100 , 0.00000000012232276551327400 ,- 0.00000011861655534460600 , 0.00005532568308944710 ,- 0.01260123087912370 , 1.28316608139096000 , 212.95088669029900]
-        ipd3_v=1/[5,0,0,0, - 2,0,0 , 2, 0,0,- 1 ,0,0,0, 0.0004 ,- 0.0416 , 235.37]
+        ipd3_v=[.000000000000005,-.000000000002,.000000002,-.000001,.0004,-.0416,235.37]
         ipd3_rt=[0.000000000000018712856169593300 ,- 0.0000000000432820532630369 , 0.00000003843418793395970 ,- 0.000016743077354304900 , 0.003951192348258280 ,- 0.5729455941878270000 , 69.6209257511355]
         ipd3_sup=[0.000000000000028640004906863400 ,- 0.0000000000724480156256685 , 0.00000007222288053774400 ,- 0.00003585641403580310000 , 0.00916555578096867000 - 1.10183156458269000 , 54.13292728184290]
         ipd3_duty=[-0.000000000000041179140569363500 , 0.000000000115308005613939 ,- 0.00000012355776372272800 , 0.0000630518147228682000 ,- 0.0152057892940340 , 1.350724058355290 , 33.45259834092480]
@@ -1115,7 +1111,7 @@ class StateAnalyzer:
 
         def3_rfg_lo=[0.000000000000007380008598744330 ,- 0.0000000000505897792477820 , 0.0000000407060824019280 ,- 0.00001294213895736600 , 0.0019992693385747800 ,- 0.154807120752589000 , 69.93375899302940]
         def3_rfg_hi=[0.000000000000443388694941489000 ,- 0.00000000046824170813942500 , 0.00000019377135827482100 ,- 0.00004091803664446980 , 0.0049822968628578700 ,- 0.39392522125894600 , 166.776158421315000]
-        def3_v=1/[6 ,0,0,0,0,- 0.0023 , 235.1]
+        def3_v=[.000006,0,0,-.0023,0,0,235.1]
         def3_rt=[ -0.000000000000222881865534059000 , 0.0000000001686693253541400 ,- 0.0000000319760759315324000 ,- 0.00000274428320225935000 , 0.00151792003209220 ,- 0.174072689384317000 , 38.291224602307100]
         def3_sup=[-0.000000000000422078989877689000 , 0.00000000040542493541799500 ,- 0.00000014206142872964000 , 0.000022567704383153400 ,- 0.001483777164582270 ,- 0.0009194975131892860 , 7.525628381118130]
         def3_duty=[62]
@@ -1123,7 +1119,7 @@ class StateAnalyzer:
 
         ref3_rfg_lo=[0.000000000000069795296141203300 ,- 0.0000000001617877469009410 , 0.00000014260840504006600 ,- 0.000059602171771311300 , 0.01214062981901520000 - 1.1974190211231000 , 110.00]
         ref3_rfg_hi=[-0.000000000000068859277419135900 , 0.00000000017215806021735900 ,- 0.000000166519715315243000 , 0.0000778869797364097000 ,- 0.0179462548095561000 , 1.861684495706970 , 192.04280918950400]
-        ref3_v=1/[2,0,0, - 5 ,0,0 ,5,0,0, - 3,0,0,0 , 0.0007 ,- 0.0718 , 236.41]
+        ref3_v=[2*(1/(10**15)),-5*(1/(10**12)),5*(1/(10**9)),-3*(1/(10**6)),.0007,-.0718,236.41]
         ref3_rt=[0.000000000000022814439049244800 ,- 0.0000000000529003380547552 , 0.000000047162967962064600 ,- 0.00002059786871977900 , 0.0048087343139350600000 ,- 0.6645670123990600 , 73.894778643991400]
         ref3_sup=[ 0.000000000000014239014552723800 ,- 0.0000000000389410504068270 , 0.0000000423143348853191 ,- 0.0000231033472511573000 , 0.00655407782331355000000 ,- 0.881969831334810000000 , 49.93161423110800]
         ref3_duty=[-0.000000000000065920212740646100 , 0.00000000016924471474124500 ,- 0.0000001688090043616940000 , 0.00008147615733434430000 ,- 0.0189769610258361000 , 1.7078452925536500000 , 22.6475677042086000]
@@ -1142,14 +1138,167 @@ class StateAnalyzer:
         # ref3_lo=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]*.985
         # ref3_hi=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]*1.15
         ref3=[ref3_rfg_lo,ref3_rfg_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]
-        self.REF3_tolerances=[ref3]                    
+        self.REF3_tolerances=ref3                    
                     
     def analyze_tolerances(self,num_barr):
+        hightol=1.25
+        lowtol=.75
+        import time
+        Tol_data={}
+        self.states=[self.ipdprops,self.defprops,self.refprops]
+        Barrel_list=["BBL_1","BBL_2","BBL_3","BBL_4"]
+        Barrel_list=Barrel_list[0:num_barr]
+        Statistics=["RFG_lo","RFG_hi","V","RTemp","SUPHT","DUTYCycles","BTR%"]
+        for barrel in range(num_barr):
+            Tol_data[barrel]={}
+            for state in ["IPD","Defrost","Refreeze"]:
+                Tol_data[barrel][state]={}
+                if state=="IPD":
+                    for instance in range(np.size(self.states[0][barrel].items(),0)):
+                        Tol_data[barrel][state][instance]={}
+                        for statistic in ["RFG_lo","RFG_hi","V","RTemp","SUPHT","DUTYCycles","BTR%"]:
+                            Tol_data[barrel][state][instance][statistic]=True
+                if state=="Defrost":
+                    for instance in range(np.size(self.states[1][barrel].items(),0)):
+                        Tol_data[barrel][state][instance]={}
+                        for statistic in ["RFG_lo","RFG_hi","V","RTemp","SUPHT","DUTYCycles","BTR%"]:
+                            Tol_data[barrel][state][instance][statistic]=True
+                if state=="Refreeze":
+                    for instance in range(np.size(self.states[2][barrel].items(),0)):
+                        Tol_data[barrel][state][instance]={}
+                        for statistic in ["RFG_lo","RFG_hi","V","RTemp","SUPHT","DUTYCycles","BTR%"]:
+                            Tol_data[barrel][state][instance][statistic]=True
+        #return
+        #print Tol_data["BBL_1"]
+        #--------------------------------------------------------IPD TOLERANCE TESTING - 4 BARREL
+        if num_barr==4:
+            for barrel in range(num_barr):
+                print "barrel: ",barrel
+                for instance in range(np.size(self.ipdprops[barrel].items(),0)):
+                    print "          Instance of IPD: ",instance
+                    for statistic in range(self.ipdprops[barrel][instance].__len__()):
+                        print "                               Statistic: ", Statistics[statistic]
+                        #time.sleep(2)
+                        #------------------------------- COMMENCING TOLERANCE CHECK. ------------------------------
+                        for timer in range(np.size(self.ipdprops[barrel][instance][statistic],0)):
+                            if timer >50:# to give a buffer for the test iteration to get its life together
+                                uppertol=(np.polyval(self.IPD4_tolerances[statistic],timer))*hightol
+                                lowertol=(np.polyval(self.IPD4_tolerances[statistic],timer))*lowtol
+                                if self.ipdprops[barrel][instance][statistic][timer][0] > uppertol or  self.ipdprops[barrel][instance][statistic][timer][0] < lowertol:
+                                    #print ["UpTol -->",uppertol,self.ipdprops[barrel][instance][statistic][timer][0],lowertol,"<-- LoTol","Prop: %s"%(Statistics[statistic]),"Time: %s/%s"%(timer,np.size(self.ipdprops[barrel][instance][statistic],0))],"<---------- FAIL ----------- ","Failure at:" , Statistics[statistic]," At Time: ",timer
+                                    #time.sleep(.01)
+                                    Tol_data[barrel]["IPD"][instance][Statistics[statistic]]=False
+                                else:
+                                    #print ["UpTol -->",uppertol,self.ipdprops[barrel][instance][statistic][timer][0],lowertol,"<-- LoTol","Prop: %s"%(Statistics[statistic]),"Time: %s/%s"%(timer,np.size(self.ipdprops[barrel][instance][statistic],0))]
+                                    pass
+                                    
+        #--------------------------------------------------------IPD TOLERANCE TESTING - 3BARREL
+        if num_barr==3:
+            for barrel in range(num_barr):
+                print "barrel: ",barrel
+                for instance in range(np.size(self.ipdprops[barrel].items(),0)):
+                    print "          Instance of IPD: ",instance
+                    for statistic in range(self.ipdprops[barrel][instance].__len__()):
+                        print "                               Statistic: ", Statistics[statistic]
+                        #time.sleep(2)
+                        
+                        #------------------------------- COMMENCING TOLERANCE CHECK. ------------------------------
+                        
+                        for timer in range(np.size(self.ipdprops[barrel][instance][statistic],0)):
+                            if timer >50:# to give a buffer for the test iteration to get its life together
+                                uppertol=(np.polyval(self.IPD3_tolerances[statistic],timer))*hightol
+                                lowertol=(np.polyval(self.IPD3_tolerances[statistic],timer))*lowtol
+                                if self.ipdprops[barrel][instance][statistic][timer][0] > uppertol or  self.ipdprops[barrel][instance][statistic][timer][0] < lowertol:
+                                    print ["UpTol -->",uppertol,self.ipdprops[barrel][instance][statistic][timer][0],lowertol,"<-- LoTol","Prop: %s"%(Statistics[statistic]),"Time: %s/%s"%(timer,np.size(self.ipdprops[barrel][instance][statistic],0))],"<---------- FAIL ----------- ","Failure at:" , Statistics[statistic]," At Time: ",timer
+                                    #time.sleep(.01)
+                                    Tol_data[barrel]["IPD"][instance][Statistics[statistic]]=False
+                                else:
+                                    print ["UpTol -->",uppertol,self.ipdprops[barrel][instance][statistic][timer][0],lowertol,"<-- LoTol","Prop: %s"%(Statistics[statistic]),"Time: %s/%s"%(timer,np.size(self.ipdprops[barrel][instance][statistic],0))]
+                                    pass
+                        
+                        
         
-        for i in range(100):
-            print np.polyval(self.IPD4_tolerances[0],i)
+        #-------------------------------------------------------- REF/DEF TOLERANCE TESTING - 4 BARREL
+        if num_barr==4:
+            for barrel in range(num_barr):
+                print "barrel: ",barrel
+                for instance in range(np.size(self.refprops[barrel].items(),0)):
+                    print "          Instance of Refreeze:  ",instance
+                    #print "Number of instances: ", np.size(self.refprops[barrel].items(),0)
+                    #return
+                    for statistic in range(np.size(Statistics)):
+                        print "                               Statistic: ", Statistics[statistic]
+                        #time.sleep(2)
+                        #------------------------------- COMMENCING TOLERANCE CHECK. ------------------------------
+                        for timer in range(np.size(self.refprops[barrel][instance][statistic],0)):
+                            
+                            if timer >50:# to give a buffer for the test iteration to get its life together
+                                uppertol=(np.polyval(self.REF4_tolerances[statistic],timer))*hightol
+                                lowertol=(np.polyval(self.REF4_tolerances[statistic],timer))*lowtol
+                                if self.refprops[barrel][instance][statistic][timer][0] > uppertol or  self.refprops[barrel][instance][statistic][timer][0] < lowertol:
+                                    #print ["UpTol -->",uppertol,self.refprops[barrel][instance][statistic][timer][0],lowertol,"<-- LoTol","Prop: %s"%(Statistics[statistic]),"Time: %s/%s"%(timer,np.size(self.refprops[barrel][instance][statistic],0))],"<---------- FAIL ----------- ","Failure at:" , Statistics[statistic]," At Time: ",timer
+                                    #time.sleep(.01)
+                                    Tol_data[barrel]["Refreeze"][instance][Statistics[statistic]]=False
+                                else:
+                                    #print ["UpTol -->",uppertol,self.refprops[barrel][instance][statistic][timer][0],lowertol,"<-- LoTol","Prop: %s"%(Statistics[statistic]),"Time: %s/%s"%(timer,np.size(self.refprops[barrel][instance][statistic],0))]
+                                    pass        
+            for barrel in range(num_barr):
+                print "barrel: ",barrel
+                for instance in range(np.size(self.defprops[barrel].items(),0)):
+                    print "          Instance of Refreeze:  ",instance
+                    for statistic in range(self.defprops[barrel][instance].__len__()):
+                        print "                               Statistic: ", Statistics[statistic]
+                        #time.sleep(2)
+                        #------------------------------- COMMENCING TOLERANCE CHECK. ------------------------------
+                        for timer in range(np.size(self.defprops[barrel][instance][statistic],0)):
+                            if timer >50:# to give a buffer for the test iteration to get its life together
+                                uppertol=(np.polyval(self.DEF4_tolerances[statistic],timer))*hightol
+                                lowertol=(np.polyval(self.DEF4_tolerances[statistic],timer))*lowtol
+                                if self.defprops[barrel][instance][statistic][timer][0] > uppertol or  self.defprops[barrel][instance][statistic][timer][0] < lowertol:
+                                    #print ["UpTol -->",uppertol,self.defprops[barrel][instance][statistic][timer][0],lowertol,"<-- LoTol","Prop: %s"%(Statistics[statistic]),"Time: %s/%s"%(timer,np.size(self.defprops[barrel][instance][statistic],0))],"<---------- FAIL ----------- ","Failure at:" , Statistics[statistic]," At Time: ",timer
+                                    #time.sleep(.01)
+                                    Tol_data[barrel]["Defrost"][instance][Statistics[statistic]]=False
+                                else:
+                                    #print ["UpTol -->",uppertol,self.defprops[barrel][instance][statistic][timer][0],lowertol,"<-- LoTol","Prop: %s"%(Statistics[statistic]),"Time: %s/%s"%(timer,np.size(self.defprops[barrel][instance][statistic],0))]
+                                    pass               
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        print Tol_data[0]["IPD"]                
+        print "Tolerance Check Complete."
+        statelist=["IPD","Defrost","Refreeze"]
 
+
+        #time.sleep(1)
+        for barrel in range(num_barr):
+            print "Barrel Number: %s"%(Barrel_list[barrel])
+            for state in range(np.size(statelist)):
+                print "    State: %s"%(statelist[state])
+                for instance in range(np.size(self.states[state][barrel].items(),0)):
+                    print "            Instance : %s" %(instance)
+                    for statistic in range(self.states[state][barrel][instance].__len__()):
+                        print "                        Property: %s   |   Result: %s"%(Statistics[statistic],Tol_data[barrel][statelist[state]][instance][Statistics[statistic]])
+        '''  This gives the correct tolerance evaluation.          
+        for x in range (np.size(self.IPD4_tolerances)):
+            print x,"-------"*10
+            for i in range(10):
+            
+                print np.polyval(self.IPD4_tolerances[x],i)
+        
+        '''
 
 
         
@@ -1183,9 +1332,17 @@ s.getdata(num_barr_to_use)
 #print s.ipdprops[0][0][0]
 
 
-#s.display_plots(num_barr_to_use,"defrost")
+s.display_plots(num_barr_to_use,"defros")
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
+
+# print "\n\n\n"
+# print s.ipdprops[0][0][6][0]
+# print np.size(s.refprops[0].items(),0)
+# print s.refprops[0][0][0]
+# print dir(s.refprops[0][0])
+# print s.refprops[0][0].__len__()
+#print np.size(s.refprops[0][0].items(),0)
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
