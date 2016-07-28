@@ -837,7 +837,9 @@ class StateAnalyzer:
         # ref3_lo=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]*.985
         # ref3_hi=[ref3_rfg_lo,ref3_rfd_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]*1.15
         ref3=[ref3_rfg_lo,ref3_rfg_hi,ref3_v,ref3_rt,ref3_sup,ref3_duty,ref3_btr]
-        self.REF3_tolerances=ref3                    
+        self.REF3_tolerances=ref3  
+        self.tols4=[self.IPD4_tolerances,self.DEF4_tolerances,self.REF4_tolerances]
+        self.tols3=[self.IPD3_tolerances,self.DEF3_tolerances,self.REF3_tolerances]
                     
     def analyze_tolerances(self,num_barr):
         hightol=1.25
@@ -980,7 +982,8 @@ class StateAnalyzer:
         print "Tolerance Check Complete."
         statelist=["IPD","Defrost","Refreeze"]
 
-
+        self.hightol=hightol
+        self.lowtol=lowtol
         #time.sleep(1)
         for barrel in range(num_barr):
             print "Barrel Number: %s"%(Barrel_list[barrel])
@@ -1066,13 +1069,17 @@ class StateAnalyzer:
         numrows=fixnum/3
                 
         for state in range(np.size(self.stateprops)):
+            
             if state==0:
-
+                imnum=0
                 print numcols," columns, and ",numrows," rows."
                 for statistic in range(1):#range(np.size(stats)):
                     BTRfig=plt.figure()
+                    
                     for barrel in range(np.size(Barrels)):
                         #BTRfig=plt.figure()
+                        lower=[]
+                        upper=[]
                         for iteration in range(self.stateiters[state]):
                             x=[]
                             y=[]
@@ -1082,23 +1089,41 @@ class StateAnalyzer:
                             zip(BTRx,BTRy)
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
-
+                            
+                            for timer in range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time):
+                                
+                                uppertol=(np.polyval(self.IPD4_tolerances[6],timer))*self.hightol
+                                lowertol=(np.polyval(self.IPD4_tolerances[6],timer))*self.lowtol
+                                
+                                upper.append(uppertol)
+                                lower.append(lowertol)
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.hold(True)
+                    plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                    plt.hold(True)
+                    plt.plot(np.transpose(BTRx),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                    plt.hold(True)
+                    plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)
                     plt.hold(False)
                     plt.title("%s: %s"%(States[state],stats[6]))
                     plt.grid(True)
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
+                    imnum+=1
+                    plt.savefig("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
                     plt.show()
-                  
+                    
+
+                    
                 
 
-                fig=plt.figure()    
+                fig=plt.figure()
+                
                 for statistic2 in range(num_statistics-1):
                     #fig=plt.figure()
 
                     for barrel in range(np.size(Barrels)):
- 
+                        lower=[]
+                        upper=[]
                         for iteration in range(self.stateiters[state]):
                             x=[]
                             y=[]
@@ -1107,17 +1132,37 @@ class StateAnalyzer:
                             BTRy=BTRy_hold[:]
                             zip(BTRx,BTRy)
                             plotarray=[]
+                            
+                            
+                            for timer in range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time):
+                                
+                                uppertol=(np.polyval(self.IPD4_tolerances[statistic2],timer))*self.hightol
+                                lowertol=(np.polyval(self.IPD4_tolerances[statistic2],timer))*self.lowtol
+                                
+                                upper.append(uppertol)
+                                lower.append(lowertol)                            
+                            
+                            
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
                             fig.add_subplot(numrows,numcols,statistic2+1)
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.title("%s"%(stats[statistic2]))
                             plt.hold(True)
+                    plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                    plt.hold(True)
+                    plt.plot(np.transpose(BTRx),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                    plt.hold(True)
+                    plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)
+                    
                 plt.hold(False)
                 plt.suptitle("%s"%(States[state]))
                 plt.grid(True)
                 plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
+                imnum+=1
+                plt.savefig("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))#filename_state_barrel_statistic_image_number
+
                 plt.show()
-   
+                #imnum+=1   
                     
                     
                     
@@ -1127,12 +1172,14 @@ class StateAnalyzer:
                     
                     
             elif state!=0:
-
+                imnum=0
                 print numcols," columns, and ",numrows," rows."
                 for statistic in range(1):#range(np.size(stats)):
                     BTRfig=plt.figure()
                     for barrel in range(np.size(Barrels)):
                         #BTRfig=plt.figure()
+                        lower=[]
+                        upper=[]
                         for iteration in range(self.stateiters[state][barrel]):
                             x=[]
                             y=[]
@@ -1154,17 +1201,31 @@ class StateAnalyzer:
                             zip(BTRx,BTRy)
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
-                            BTRfig.add_subplot(1,2,2)                            
+                            BTRfig.add_subplot(1,2,2)
+                            for timer in range(np.size(BTRx)):
+                                
+                                uppertol=(np.polyval(self.tols4[state][6],timer))*self.hightol
+                                lowertol=(np.polyval(self.tols4[state][6],timer))*self.lowtol
+                                
+                                upper.append(uppertol)
+                                lower.append(lowertol)                            
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.hold(True)
                             plt.title("%s, Overlay"%(stats[6]))
-                            
+                    plt.subplot(1,2,2)
+                    plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                    plt.hold(True)
+                    plt.plot(np.transpose(BTRx),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                    plt.hold(True)
+                    plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
                             
                             
                     plt.suptitle("%s"%(States[state]))        
                     plt.hold(False)
                     plt.grid(True)
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
+                    imnum+=1
+                    plt.savefig("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                     plt.show()
                     
                     
@@ -1173,6 +1234,8 @@ class StateAnalyzer:
 
                     for barrel in range(np.size(Barrels)):
                         #BTRfig=plt.figure()
+                        lower=[]
+                        upper=[]
                         for iteration in range(self.stateiters[state][barrel]):
                             x=[]
                             y=[]
@@ -1194,15 +1257,29 @@ class StateAnalyzer:
                             BTRy=BTRy_hold[:]
                             zip(BTRx,BTRy)  
                             fig.add_subplot(1,2,2)
+                            for timer in range(np.size(BTRx)):
+                                
+                                uppertol=(np.polyval(self.tols4[state][statistic2],timer))*self.hightol
+                                lowertol=(np.polyval(self.tols4[state][statistic2],timer))*self.lowtol
+                                
+                                upper.append(uppertol)
+                                lower.append(lowertol)   
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.hold(True)
                             plt.grid(True)
                             plt.title("%s, Overlay"%(stats[statistic2]))
-                            
+                    plt.subplot(1,2,2)
+                    plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                    plt.hold(True)
+                    plt.plot(np.transpose(BTRx),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                    plt.hold(True)
+                    plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
                             
                     plt.suptitle("%s"%(States[state]))        
                     plt.hold(False)
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
+                    imnum+=1
+                    plt.savefig("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                     plt.show()
                 
                         # #return
