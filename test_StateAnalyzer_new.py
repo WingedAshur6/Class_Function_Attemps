@@ -122,6 +122,31 @@ class StateAnalyzer:
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
     def analysis_of_states(self,num_barr):
         import time
         import numpy as np        
@@ -340,6 +365,51 @@ class StateAnalyzer:
         self.refreezeiteration=refreezeiteration
         self.defrostiteration=defrostiteration
         return  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     '''    
     def thecleaners(self,num_barr):# ------------------------------------------------------------ NOT WORKING. IMPLEMENT AND FIX LATER. -------------------------------------------------------------------------------
         self.newref={}
@@ -683,392 +753,9 @@ class StateAnalyzer:
         self.ipdprops=ipdprops
         self.defprops=defprops
         self.refprops=refprops
-        
-        
-    def display_plots(self,num_barr,state):
-        '''
-        # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
-        # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
-        '''
-        import matplotlib.pyplot as plt
-        import matplotlib.dates as mdates
-        import matplotlib.ticker as ticker
-        import matplotlib
-        from matplotlib.backends.backend_pdf import PdfPages
-        from datetime import datetime as dt
-        from datetime import timedelta
-        '''
-        # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
-        # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
-        '''
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        Barrels=["BBL_1","BBL_2","BBL_3","BBL_4"]
-        States=["IPD","Defrost","Refreeze"]
-        stats=["RFGLow","RFGHigh", "V", "RTemp", "SUPRHT", "DTYCycles", "BTR%"]
-        
-        print "\n          ","---"*10,"< Initializing Plots >","---"*10
-        
-        print "State: ",state.upper()
-        state=state.lower()
-        if state=="ipd":
-            num_statistics=np.size(stats)            
-            #----------------------------------------------------------- Counting the number of times IPD is entered:
-            print "\n Number of IPD states: ",(self.ipditeration)
-            #----------------------------------------------------------- Counting the number of statistics that exist:
-            print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-            print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-            numcols=(num_statistics-1)/2
-            numrows=(num_statistics-1)/3
-            print numcols," columns, and ",numrows," rows."
-            for L in range(num_barr):
-             for K in range(self.ipditeration):
-             
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                BTRx=range(self.ipd[K].length())
-                #BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
-                BTRy_hold=self.ipdprops[l][k][6]
-                BTRy=BTRy_hold[:]
-                zip(BTRx,BTRy)
-                BTRfig=plt.figure()
-                #plots=zip(BTRx,BTRy)
-                plt.plot(np.transpose(BTRx),BTRy,'b')
-                plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[0],stats[6],K))
-                plt.show()                
-                
-               
-                
-                fig=plt.figure()
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                for J in range(num_statistics-1):
-                    title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
-                    print title
-                    #x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
-                    x_hold=range(self.ipd[K].length())
-                    #x=np.array([],dtype=object)
-                    #x=np.append(x,x_hold[:])
-                    x.append(x_hold[:])
-                    #print x
-                   # y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
-                    y_hold=(self.ipdprops[L][K][J])
-                    #y=np.array([],dtype=object)
-                    y.append(y_hold[:])
-                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'b')
-                    plt.title(["%s" % (stats[idx])])
-                print np.shape(x)
-                plt.show()
+   
 
-        elif state=="refreeze":
-            num_statistics=np.size(stats)            
-            #----------------------------------------------------------- Counting the number of times IPD is entered:
-            print "\n Number of IPD states: ",(self.refreezeiteration)
-            #----------------------------------------------------------- Counting the number of statistics that exist:
-            print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-            print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-            numcols=(num_statistics-1)/2
-            numrows=(num_statistics-1)/3
-            print numcols," columns, and ",numrows," rows."
-            for L in range(num_barr):
-             for K in range(self.refreezeiteration[L]):
-             
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                BTRx=range(self.refreeze[L][K].length())
-                #BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
-                BTRy_hold=self.refprops[L][K][6]
-                BTRy=BTRy_hold[:]
-                zip(BTRx,BTRy)
-                BTRfig=plt.figure()
-                #plots=zip(BTRx,BTRy)
-                plt.plot(np.transpose(BTRx),BTRy,'c')
-                plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[2],stats[6],K))
-                plt.show()                
-                
-               
-                
-                fig=plt.figure()
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                for J in range(num_statistics-1):
-                    title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
-                    print title
-                    #x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
-                    x_hold=range(self.refreeze[L][K].length())
-                    #x=np.array([],dtype=object)
-                    #x=np.append(x,x_hold[:])
-                    x.append(x_hold[:])
-                    #print x
-                    #y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
-                    #y=np.array([],dtype=object)
-                    y_hold=self.refprops[L][K][J]
-                    y.append(y_hold[:])
-                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'c')
-                    plt.title(["%s" % (stats[idx])])
-                print np.shape(x)
-                plt.show()
-
-        elif state=="defrost":
-            num_statistics=np.size(stats)            
-            #----------------------------------------------------------- Counting the number of times IPD is entered:
-            print "\n Number of IPD states: ",(self.defrostiteration)
-            #----------------------------------------------------------- Counting the number of statistics that exist:
-            print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-            print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-            numcols=(num_statistics-1)/2
-            numrows=(num_statistics-1)/3
-            print numcols," columns, and ",numrows," rows."
-            for L in range(num_barr):
-             for K in range(self.defrostiteration[L]):
-             
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                BTRx=range(self.defrost[L][K].length())
-                #BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
-                BTRy_hold=self.defprops[L][K][6]
-                BTRy=BTRy_hold[:]
-                zip(BTRx,BTRy)
-                BTRfig=plt.figure()
-                #plots=zip(BTRx,BTRy)
-                plt.plot(np.transpose(BTRx),BTRy,'m')
-                plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[1],stats[6],K))
-                plt.show()                
-                
-               
-                
-                fig=plt.figure()
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                for J in range(num_statistics-1):
-                    title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[J],K)]
-                    print title
-                    #x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
-                    x_hold=range(self.defrost[L][K].length())
-                    #x=np.array([],dtype=object)
-                    #x=np.append(x,x_hold[:])
-                    x.append(x_hold[:])
-                    #print x
-                    #y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
-                    #y=np.array([],dtype=object)
-                    y_hold=self.defprops[L][K][J]
-                    y.append(y_hold[:])
-                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'m')
-                    plt.title(["%s" % (stats[idx])])
-                print np.shape(x)
-                plt.show()
-                
-        else:
-            
-                num_statistics=np.size(stats)            
-                #----------------------------------------------------------- Counting the number of times IPD is entered:
-                print "\n Number of IPD states: ",(self.ipditeration)
-                #----------------------------------------------------------- Counting the number of statistics that exist:
-                print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-                print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-                numcols=(num_statistics-1)/2
-                numrows=(num_statistics-1)/3
-                print numcols," columns, and ",numrows," rows."
-                for L in range(num_barr):
-                 for K in range(self.ipditeration):
-                 
-                    BTRx=range(self.ipd[K].length())
-                    #BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
-                    BTRy_hold=self.ipdprops[L][K][6]
-                    BTRy=BTRy_hold[:]
-                    zip(BTRx,BTRy)
-                    BTRfig=plt.figure()
-                    #plots=zip(BTRx,BTRy)
-                    plt.plot(np.transpose(BTRx),BTRy,'b')
-                    plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[0],stats[6],K))
-                    plt.show()                
-                    
-                   
-                    
-                    fig=plt.figure()
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    for J in range(num_statistics-1):
-                        title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
-                        print title
-                        #x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
-                        x_hold=range(self.ipd[K].length())
-                        #x=np.array([],dtype=object)
-                        #x=np.append(x,x_hold[:])
-                        x.append(x_hold[:])
-                        #print x
-                        #y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
-                        #y=np.array([],dtype=object)
-                        y_hold=self.ipdprops[L][K][J]
-                        y.append(y_hold[:])
-                        plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'b')
-                        plt.title(["%s" % (stats[idx])])
-                    print np.shape(x)
-                    plt.show()
-                
-                
-                
-                
-                
-                num_statistics=np.size(stats)            
-                #----------------------------------------------------------- Counting the number of times IPD is entered:
-                print "\n Number of IPD states: ",(self.refreezeiteration)
-                #----------------------------------------------------------- Counting the number of statistics that exist:
-                print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-                print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-                numcols=(num_statistics-1)/2
-                numrows=(num_statistics-1)/3
-                print numcols," columns, and ",numrows," rows."
-                for L in range(num_barr):
-                 for K in range(self.refreezeiteration[L]):
-                 
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    BTRx=range(self.refreeze[L][K].length())
-                    #BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
-                    BTRy_hold=self.refprops[L][K][6]
-                    BTRy=BTRy_hold[:]
-                    zip(BTRx,BTRy)
-                    BTRfig=plt.figure()
-                    #plots=zip(BTRx,BTRy)
-                    plt.plot(np.transpose(BTRx),BTRy,'c')
-                    plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[2],stats[6],K))
-                    plt.show()                
-                    
-                   
-                    
-                    fig=plt.figure()
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    for J in range(num_statistics-1):
-                        title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
-                        print title
-                        #x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
-                        x_hold=range(self.refreeze[L][K].length())
-                        #x=np.array([],dtype=object)
-                        #x=np.append(x,x_hold[:])
-                        x.append(x_hold[:])
-                        #print x
-                        #y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
-                        #y=np.array([],dtype=object)
-                        y_hold=self.refprops[L][K][J]
-                        y.append(y_hold[:])
-                        plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[2],K)])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'c')
-                        plt.title(["%s" % (stats[idx])])
-                    print np.shape(x)
-                    plt.show()
-
-            
-                num_statistics=np.size(stats)            
-                #----------------------------------------------------------- Counting the number of times IPD is entered:
-                print "\n Number of IPD states: ",(self.defrostiteration)
-                #----------------------------------------------------------- Counting the number of statistics that exist:
-                print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-                print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-                numcols=(num_statistics-1)/2
-                numrows=(num_statistics-1)/3
-                print numcols," columns, and ",numrows," rows."
-                for L in range(num_barr):
-                 for K in range(self.defrostiteration[L]):
-                 
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    BTRx=range(self.defrost[L][K].length())
-                    #BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
-                    BTRy_hold=self.defprops[L][K][6]
-                    BTRy=BTRy_hold[:]
-                    zip(BTRx,BTRy)
-                    BTRfig=plt.figure()
-                    #plots=zip(BTRx,BTRy)
-                    plt.plot(np.transpose(BTRx),BTRy,'m')
-                    plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[1],stats[6],K))
-                    plt.show()                
-                    
-                   
-                    
-                    fig=plt.figure()
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    for J in range(num_statistics-1):
-                        title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[J],K)]
-                        print title
-                        #x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
-                        x_hold=range(self.defrost[L][K].length())
-                        #x=np.array([],dtype=object)
-                        #x=np.append(x,x_hold[:])
-                        x.append(x_hold[:])
-                        #print x
-                        #y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
-                        #y=np.array([],dtype=object)
-                        y_hold=self.defprops[L][K][J]
-                        y.append(y_hold[:])
-                        plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'m')
-                        plt.title(["%s" % (stats[idx])])
-                    print np.shape(x)
-                    plt.show()
-
-                    
-                    
+   
     def initialize_Tolerances(self):
         x=0#--------------------------------------------------------------------------- this is just to establish a variable.
         ipd4_rfg_lo=[-0.000000000000002536019852714590 , 0.000000000011345518669780900000 ,- 0.0000000197522549099102 , 0.00001664706297478020 ,- 0.006724643990663730 , 0.99175324899836600 , 69.263097541421400]
@@ -1374,8 +1061,10 @@ class StateAnalyzer:
         # print "\n Number of %s Iterations: %s"%(States[state],self.stateiters[state])
         # print "\n Number of Statistics: %s \nDisplaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
         # print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-        numcols=(num_statistics-1)/2
-        numrows=(num_statistics-1)/3        
+        fixnum=6
+        numcols=fixnum/2
+        numrows=fixnum/3
+                
         for state in range(np.size(self.stateprops)):
             if state==0:
 
@@ -1393,6 +1082,7 @@ class StateAnalyzer:
                             zip(BTRx,BTRy)
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
+
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.hold(True)
                     plt.hold(False)
@@ -1400,30 +1090,34 @@ class StateAnalyzer:
                     plt.grid(True)
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                     plt.show()
-                    
-                    
+                  
+                
+
+                fig=plt.figure()    
                 for statistic2 in range(num_statistics-1):
-                    fig=plt.figure()
+                    #fig=plt.figure()
 
                     for barrel in range(np.size(Barrels)):
-                        #BTRfig=plt.figure()
+ 
                         for iteration in range(self.stateiters[state]):
                             x=[]
                             y=[]
-                            BTRx=range(self.statelengths[state][iteration].length())
+                            BTRx=range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time)# self.statelengths[state][iteration].length()  <----------- used to be that. may include with another file for monitoring.
                             BTRy_hold=self.stateprops[state][barrel][iteration][statistic2]
                             BTRy=BTRy_hold[:]
                             zip(BTRx,BTRy)
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
+                            fig.add_subplot(numrows,numcols,statistic2+1)
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
+                            plt.title("%s"%(stats[statistic2]))
                             plt.hold(True)
-                    plt.hold(False)
-                    plt.title("%s: %s"%(States[state],stats[statistic2]))
-                    plt.grid(True)
-                    plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
-                    plt.show()
-                    
+                plt.hold(False)
+                plt.suptitle("%s"%(States[state]))
+                plt.grid(True)
+                plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
+                plt.show()
+   
                     
                     
                     
@@ -1442,16 +1136,33 @@ class StateAnalyzer:
                         for iteration in range(self.stateiters[state][barrel]):
                             x=[]
                             y=[]
-                            BTRx=range(self.statelengths[state][barrel][iteration].length())
+                            BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#.length())
                             BTRy_hold=self.stateprops[state][barrel][iteration][6]
                             BTRy=BTRy_hold[:]
                             zip(BTRx,BTRy)
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
+                            BTRfig.add_subplot(1,2,1)                            
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.hold(True)
+                            plt.grid(True)
+                            plt.title("%s, Chronologic"%(stats[6]))
+                            
+                            BTRx=range(self.statelengths[state][barrel][iteration].length())#.length())
+                            BTRy_hold=self.stateprops[state][barrel][iteration][6]
+                            BTRy=BTRy_hold[:]
+                            zip(BTRx,BTRy)
+                            plotarray=[]
+                            #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
+                            BTRfig.add_subplot(1,2,2)                            
+                            plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
+                            plt.hold(True)
+                            plt.title("%s, Overlay"%(stats[6]))
+                            
+                            
+                            
+                    plt.suptitle("%s"%(States[state]))        
                     plt.hold(False)
-                    plt.title("%s: %s"%(States[state],stats[6]))
                     plt.grid(True)
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                     plt.show()
@@ -1466,16 +1177,31 @@ class StateAnalyzer:
                             x=[]
                             y=[]
                             BTRx=range(self.statelengths[state][barrel][iteration].length())
+                            BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#.length())
+
                             BTRy_hold=self.stateprops[state][barrel][iteration][statistic2]
                             BTRy=BTRy_hold[:]
                             zip(BTRx,BTRy)
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
+                            fig.add_subplot(1,2,1)
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.hold(True)
+                            plt.grid(True)
+                            plt.title("%s, Chronologic"%(stats[statistic2]))
+                            BTRx=range(self.statelengths[state][barrel][iteration].length())
+                            BTRy_hold=self.stateprops[state][barrel][iteration][statistic2]
+                            BTRy=BTRy_hold[:]
+                            zip(BTRx,BTRy)  
+                            fig.add_subplot(1,2,2)
+                            plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
+                            plt.hold(True)
+                            plt.grid(True)
+                            plt.title("%s, Overlay"%(stats[statistic2]))
+                            
+                            
+                    plt.suptitle("%s"%(States[state]))        
                     plt.hold(False)
-                    plt.title("%s: %s"%(States[state],stats[statistic2]))
-                    plt.grid(True)
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                     plt.show()
                 
@@ -1539,393 +1265,7 @@ class StateAnalyzer:
         return
         
         
-        
-        if state=="ipd":
-            num_statistics=np.size(stats)            
-            #----------------------------------------------------------- Counting the number of times IPD is entered:
-            print "\n Number of IPD states: ",(self.ipditeration)
-            #----------------------------------------------------------- Counting the number of statistics that exist:
-            print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-            print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-            numcols=(num_statistics-1)/2
-            numrows=(num_statistics-1)/3
-            print numcols," columns, and ",numrows," rows."
-            for L in range(num_barr):
-             for K in range(self.ipditeration):
-             
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                BTRx=range(self.ipd[K].length())
-                #BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
-                BTRy_hold=self.ipdprops[l][k][6]
-                BTRy=BTRy_hold[:]
-                zip(BTRx,BTRy)
-                BTRfig=plt.figure()
-                #plots=zip(BTRx,BTRy)
-                plt.plot(np.transpose(BTRx),BTRy,'b')
-                plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[0],stats[6],K))
-                plt.show()                
-                
-               
-                
-                fig=plt.figure()
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                for J in range(num_statistics-1):
-                    title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
-                    print title
-                    #x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
-                    x_hold=range(self.ipd[K].length())
-                    #x=np.array([],dtype=object)
-                    #x=np.append(x,x_hold[:])
-                    x.append(x_hold[:])
-                    #print x
-                   # y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
-                    y_hold=(self.ipdprops[L][K][J])
-                    #y=np.array([],dtype=object)
-                    y.append(y_hold[:])
-                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'b')
-                    plt.title(["%s" % (stats[idx])])
-                print np.shape(x)
-                plt.show()
-
-        elif state=="refreeze":
-            num_statistics=np.size(stats)            
-            #----------------------------------------------------------- Counting the number of times IPD is entered:
-            print "\n Number of IPD states: ",(self.refreezeiteration)
-            #----------------------------------------------------------- Counting the number of statistics that exist:
-            print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-            print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-            numcols=(num_statistics-1)/2
-            numrows=(num_statistics-1)/3
-            print numcols," columns, and ",numrows," rows."
-            for L in range(num_barr):
-             for K in range(self.refreezeiteration[L]):
-             
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                BTRx=range(self.refreeze[L][K].length())
-                #BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
-                BTRy_hold=self.refprops[L][K][6]
-                BTRy=BTRy_hold[:]
-                zip(BTRx,BTRy)
-                BTRfig=plt.figure()
-                #plots=zip(BTRx,BTRy)
-                plt.plot(np.transpose(BTRx),BTRy,'c')
-                plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[2],stats[6],K))
-                plt.show()                
-                
-               
-                
-                fig=plt.figure()
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                for J in range(num_statistics-1):
-                    title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
-                    print title
-                    #x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
-                    x_hold=range(self.refreeze[L][K].length())
-                    #x=np.array([],dtype=object)
-                    #x=np.append(x,x_hold[:])
-                    x.append(x_hold[:])
-                    #print x
-                    #y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
-                    #y=np.array([],dtype=object)
-                    y_hold=self.refprops[L][K][J]
-                    y.append(y_hold[:])
-                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'c')
-                    plt.title(["%s" % (stats[idx])])
-                print np.shape(x)
-                plt.show()
-
-        elif state=="defrost":
-            num_statistics=np.size(stats)            
-            #----------------------------------------------------------- Counting the number of times IPD is entered:
-            print "\n Number of IPD states: ",(self.defrostiteration)
-            #----------------------------------------------------------- Counting the number of statistics that exist:
-            print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-            print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-            numcols=(num_statistics-1)/2
-            numrows=(num_statistics-1)/3
-            print numcols," columns, and ",numrows," rows."
-            for L in range(num_barr):
-             for K in range(self.defrostiteration[L]):
-             
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                BTRx=range(self.defrost[L][K].length())
-                #BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
-                BTRy_hold=self.defprops[L][K][6]
-                BTRy=BTRy_hold[:]
-                zip(BTRx,BTRy)
-                BTRfig=plt.figure()
-                #plots=zip(BTRx,BTRy)
-                plt.plot(np.transpose(BTRx),BTRy,'m')
-                plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[1],stats[6],K))
-                plt.show()                
-                
-               
-                
-                fig=plt.figure()
-                x=np.array([],dtype=object)
-                y=np.array([],dtype=object)
-                x=[]
-                y=[]
-                for J in range(num_statistics-1):
-                    title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[J],K)]
-                    print title
-                    #x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
-                    x_hold=range(self.defrost[L][K].length())
-                    #x=np.array([],dtype=object)
-                    #x=np.append(x,x_hold[:])
-                    x.append(x_hold[:])
-                    #print x
-                    #y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
-                    #y=np.array([],dtype=object)
-                    y_hold=self.defprops[L][K][J]
-                    y.append(y_hold[:])
-                    plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
-                plots=zip(x,y)
-                axs={}
-                for idx,plot in enumerate(plots):
-                    axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                    axs[idx].plot(plot[0],plot[1],'m')
-                    plt.title(["%s" % (stats[idx])])
-                print np.shape(x)
-                plt.show()
-                
-        else:
-            
-                num_statistics=np.size(stats)            
-                #----------------------------------------------------------- Counting the number of times IPD is entered:
-                print "\n Number of IPD states: ",(self.ipditeration)
-                #----------------------------------------------------------- Counting the number of statistics that exist:
-                print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-                print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-                numcols=(num_statistics-1)/2
-                numrows=(num_statistics-1)/3
-                print numcols," columns, and ",numrows," rows."
-                for L in range(num_barr):
-                 for K in range(self.ipditeration):
-                 
-                    BTRx=range(self.ipd[K].length())
-                    #BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
-                    BTRy_hold=self.ipdprops[L][K][6]
-                    BTRy=BTRy_hold[:]
-                    zip(BTRx,BTRy)
-                    BTRfig=plt.figure()
-                    #plots=zip(BTRx,BTRy)
-                    plt.plot(np.transpose(BTRx),BTRy,'b')
-                    plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[0],stats[6],K))
-                    plt.show()                
-                    
-                   
-                    
-                    fig=plt.figure()
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    for J in range(num_statistics-1):
-                        title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
-                        print title
-                        #x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
-                        x_hold=range(self.ipd[K].length())
-                        #x=np.array([],dtype=object)
-                        #x=np.append(x,x_hold[:])
-                        x.append(x_hold[:])
-                        #print x
-                        #y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
-                        #y=np.array([],dtype=object)
-                        y_hold=self.ipdprops[L][K][J]
-                        y.append(y_hold[:])
-                        plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'b')
-                        plt.title(["%s" % (stats[idx])])
-                    print np.shape(x)
-                    plt.show()
-                
-                
-                
-                
-                
-                num_statistics=np.size(stats)            
-                #----------------------------------------------------------- Counting the number of times IPD is entered:
-                print "\n Number of IPD states: ",(self.refreezeiteration)
-                #----------------------------------------------------------- Counting the number of statistics that exist:
-                print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-                print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-                numcols=(num_statistics-1)/2
-                numrows=(num_statistics-1)/3
-                print numcols," columns, and ",numrows," rows."
-                for L in range(num_barr):
-                     for K in range(self.refreezeiteration[L]):
-                     
-                            x=np.array([],dtype=object)
-                            y=np.array([],dtype=object)
-                            x=[]
-                            y=[]
-                            BTRx=range(self.refreeze[L][K].length())
-                            #BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
-                            BTRy_hold=self.refprops[L][K][6]
-                            BTRy=BTRy_hold[:]
-                            zip(BTRx,BTRy)
-                            BTRfig=plt.figure()
-                            #plots=zip(BTRx,BTRy)
-                            plt.plot(np.transpose(BTRx),BTRy,'c')
-                            plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[2],stats[6],K))
-                            plt.show()                
-                            
-                           
-                            
-                            fig=plt.figure()
-                            x=np.array([],dtype=object)
-                            y=np.array([],dtype=object)
-                            x=[]
-                            y=[]
-                            for J in range(num_statistics-1):
-                                title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
-                                print title
-                                #x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
-                                x_hold=range(self.refreeze[L][K].length())
-                                #x=np.array([],dtype=object)
-                                #x=np.append(x,x_hold[:])
-                                x.append(x_hold[:])
-                                #print x
-                                #y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
-                                #y=np.array([],dtype=object)
-                                y_hold=self.refprops[L][K][J]
-                                y.append(y_hold[:])
-                                plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[2],K)])
-                            plots=zip(x,y)
-                            axs={}
-                            for idx,plot in enumerate(plots):
-                                axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                                axs[idx].plot(plot[0],plot[1],'c')
-                                plt.title(["%s" % (stats[idx])])
-                            print np.shape(x)
-                            plt.show()
-
-            
-                num_statistics=np.size(stats)            
-                #----------------------------------------------------------- Counting the number of times IPD is entered:
-                print "\n Number of IPD states: ",(self.defrostiteration)
-                #----------------------------------------------------------- Counting the number of statistics that exist:
-                print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-                print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-                numcols=(num_statistics-1)/2
-                numrows=(num_statistics-1)/3
-                print numcols," columns, and ",numrows," rows."
-                for L in range(num_barr):
-                 for K in range(self.defrostiteration[L]):
-                 
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    BTRx=range(self.defrost[L][K].length())
-                    #BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
-                    BTRy_hold=self.defprops[L][K][6]
-                    BTRy=BTRy_hold[:]
-                    zip(BTRx,BTRy)
-                    BTRfig=plt.figure()
-                    #plots=zip(BTRx,BTRy)
-                    plt.plot(np.transpose(BTRx),BTRy,'m')
-                    plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[1],stats[6],K))
-                    plt.show()                
-                    
-                   
-                    
-                    fig=plt.figure()
-                    x=np.array([],dtype=object)
-                    y=np.array([],dtype=object)
-                    x=[]
-                    y=[]
-                    for J in range(num_statistics-1):
-                        title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[J],K)]
-                        print title
-                        #x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
-                        x_hold=range(self.defrost[L][K].length())
-                        #x=np.array([],dtype=object)
-                        #x=np.append(x,x_hold[:])
-                        x.append(x_hold[:])
-                        #print x
-                        #y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
-                        #y=np.array([],dtype=object)
-                        y_hold=self.defprops[L][K][J]
-                        y.append(y_hold[:])
-                        plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
-                    plots=zip(x,y)
-                    axs={}
-                    for idx,plot in enumerate(plots):
-                        axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        axs[idx].plot(plot[0],plot[1],'m')
-                        plt.title(["%s" % (stats[idx])])
-                    print np.shape(x)
-                    plt.show()        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+  
         
         
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
@@ -1949,7 +1289,7 @@ s.analysis_of_states(num_barr_to_use)
 
 s.getdata(num_barr_to_use)
 #print s.ipd_BTR[0][0]
-#print s.ipd[0].length()
+print s.ipd[0].length()
 #print s.ref_BTR[0][1]
 
 
@@ -1958,9 +1298,11 @@ s.getdata(num_barr_to_use)
 #print s.ipdprops[0][0][0]
 
 
-s.display_plots_version2(num_barr_to_use,"defros")
+
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
+s.display_plots_version2(num_barr_to_use,"defros")
+
 
 # print "\n\n\n"
 # print s.ipdprops[0][0][6][0]
@@ -2020,7 +1362,392 @@ s.analyze_tolerances(num_barr_to_use)
 
 
 
+     
+        
+    # def display_plots(self,num_barr,state):
+        # '''
+        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # '''
+        # import matplotlib.pyplot as plt
+        # import matplotlib.dates as mdates
+        # import matplotlib.ticker as ticker
+        # import matplotlib
+        # from matplotlib.backends.backend_pdf import PdfPages
+        # from datetime import datetime as dt
+        # from datetime import timedelta
+        # '''
+        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
+        # '''
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        # Barrels=["BBL_1","BBL_2","BBL_3","BBL_4"]
+        # States=["IPD","Defrost","Refreeze"]
+        # stats=["RFGLow","RFGHigh", "V", "RTemp", "SUPRHT", "DTYCycles", "BTR%"]
+        
+        # print "\n          ","---"*10,"< Initializing Plots >","---"*10
+        
+        # print "State: ",state.upper()
+        # state=state.lower()
+        # if state=="ipd":
+            # num_statistics=np.size(stats)            
+            # #----------------------------------------------------------- Counting the number of times IPD is entered:
+            # print "\n Number of IPD states: ",(self.ipditeration)
+            # #----------------------------------------------------------- Counting the number of statistics that exist:
+            # print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
+            # print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
+            # numcols=(num_statistics-1)/2
+            # numrows=(num_statistics-1)/3
+            # print numcols," columns, and ",numrows," rows."
+            # for L in range(num_barr):
+             # for K in range(self.ipditeration):
+             
+                # x=np.array([],dtype=object)
+                # y=np.array([],dtype=object)
+                # x=[]
+                # y=[]
+                # BTRx=range(self.ipd[K].length())
+                # #BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
+                # BTRy_hold=self.ipdprops[l][k][6]
+                # BTRy=BTRy_hold[:]
+                # zip(BTRx,BTRy)
+                # BTRfig=plt.figure()
+                # #plots=zip(BTRx,BTRy)
+                # plt.plot(np.transpose(BTRx),BTRy,'b')
+                # plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[0],stats[6],K))
+                # plt.show()                
+                
+               
+                
+                # fig=plt.figure()
+                # x=np.array([],dtype=object)
+                # y=np.array([],dtype=object)
+                # x=[]
+                # y=[]
+                # for J in range(num_statistics-1):
+                    # title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
+                    # print title
+                    # #x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
+                    # x_hold=range(self.ipd[K].length())
+                    # #x=np.array([],dtype=object)
+                    # #x=np.append(x,x_hold[:])
+                    # x.append(x_hold[:])
+                    # #print x
+                   # # y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
+                    # y_hold=(self.ipdprops[L][K][J])
+                    # #y=np.array([],dtype=object)
+                    # y.append(y_hold[:])
+                    # plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
+                # plots=zip(x,y)
+                # axs={}
+                # for idx,plot in enumerate(plots):
+                    # axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                    # axs[idx].plot(plot[0],plot[1],'b')
+                    # plt.title(["%s" % (stats[idx])])
+                # print np.shape(x)
+                # plt.show()
 
+        # elif state=="refreeze":
+            # num_statistics=np.size(stats)            
+            # #----------------------------------------------------------- Counting the number of times IPD is entered:
+            # print "\n Number of IPD states: ",(self.refreezeiteration)
+            # #----------------------------------------------------------- Counting the number of statistics that exist:
+            # print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
+            # print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
+            # numcols=(num_statistics-1)/2
+            # numrows=(num_statistics-1)/3
+            # print numcols," columns, and ",numrows," rows."
+            # for L in range(num_barr):
+             # for K in range(self.refreezeiteration[L]):
+             
+                # x=np.array([],dtype=object)
+                # y=np.array([],dtype=object)
+                # x=[]
+                # y=[]
+                # BTRx=range(self.refreeze[L][K].length())
+                # #BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
+                # BTRy_hold=self.refprops[L][K][6]
+                # BTRy=BTRy_hold[:]
+                # zip(BTRx,BTRy)
+                # BTRfig=plt.figure()
+                # #plots=zip(BTRx,BTRy)
+                # plt.plot(np.transpose(BTRx),BTRy,'c')
+                # plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[2],stats[6],K))
+                # plt.show()                
+                
+               
+                
+                # fig=plt.figure()
+                # x=np.array([],dtype=object)
+                # y=np.array([],dtype=object)
+                # x=[]
+                # y=[]
+                # for J in range(num_statistics-1):
+                    # title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
+                    # print title
+                    # #x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
+                    # x_hold=range(self.refreeze[L][K].length())
+                    # #x=np.array([],dtype=object)
+                    # #x=np.append(x,x_hold[:])
+                    # x.append(x_hold[:])
+                    # #print x
+                    # #y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
+                    # #y=np.array([],dtype=object)
+                    # y_hold=self.refprops[L][K][J]
+                    # y.append(y_hold[:])
+                    # plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
+                # plots=zip(x,y)
+                # axs={}
+                # for idx,plot in enumerate(plots):
+                    # axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                    # axs[idx].plot(plot[0],plot[1],'c')
+                    # plt.title(["%s" % (stats[idx])])
+                # print np.shape(x)
+                # plt.show()
+
+        # elif state=="defrost":
+            # num_statistics=np.size(stats)            
+            # #----------------------------------------------------------- Counting the number of times IPD is entered:
+            # print "\n Number of IPD states: ",(self.defrostiteration)
+            # #----------------------------------------------------------- Counting the number of statistics that exist:
+            # print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
+            # print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
+            # numcols=(num_statistics-1)/2
+            # numrows=(num_statistics-1)/3
+            # print numcols," columns, and ",numrows," rows."
+            # for L in range(num_barr):
+             # for K in range(self.defrostiteration[L]):
+             
+                # x=np.array([],dtype=object)
+                # y=np.array([],dtype=object)
+                # x=[]
+                # y=[]
+                # BTRx=range(self.defrost[L][K].length())
+                # #BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
+                # BTRy_hold=self.defprops[L][K][6]
+                # BTRy=BTRy_hold[:]
+                # zip(BTRx,BTRy)
+                # BTRfig=plt.figure()
+                # #plots=zip(BTRx,BTRy)
+                # plt.plot(np.transpose(BTRx),BTRy,'m')
+                # plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[1],stats[6],K))
+                # plt.show()                
+                
+               
+                
+                # fig=plt.figure()
+                # x=np.array([],dtype=object)
+                # y=np.array([],dtype=object)
+                # x=[]
+                # y=[]
+                # for J in range(num_statistics-1):
+                    # title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[J],K)]
+                    # print title
+                    # #x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
+                    # x_hold=range(self.defrost[L][K].length())
+                    # #x=np.array([],dtype=object)
+                    # #x=np.append(x,x_hold[:])
+                    # x.append(x_hold[:])
+                    # #print x
+                    # #y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
+                    # #y=np.array([],dtype=object)
+                    # y_hold=self.defprops[L][K][J]
+                    # y.append(y_hold[:])
+                    # plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
+                # plots=zip(x,y)
+                # axs={}
+                # for idx,plot in enumerate(plots):
+                    # axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                    # axs[idx].plot(plot[0],plot[1],'m')
+                    # plt.title(["%s" % (stats[idx])])
+                # print np.shape(x)
+                # plt.show()
+                
+        # else:
+            
+                # num_statistics=np.size(stats)            
+                # #----------------------------------------------------------- Counting the number of times IPD is entered:
+                # print "\n Number of IPD states: ",(self.ipditeration)
+                # #----------------------------------------------------------- Counting the number of statistics that exist:
+                # print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
+                # print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
+                # numcols=(num_statistics-1)/2
+                # numrows=(num_statistics-1)/3
+                # print numcols," columns, and ",numrows," rows."
+                # for L in range(num_barr):
+                 # for K in range(self.ipditeration):
+                 
+                    # BTRx=range(self.ipd[K].length())
+                    # #BTRy_hold=np.delete(self.ipdprops[L][K][6],0,axis=1)
+                    # BTRy_hold=self.ipdprops[L][K][6]
+                    # BTRy=BTRy_hold[:]
+                    # zip(BTRx,BTRy)
+                    # BTRfig=plt.figure()
+                    # #plots=zip(BTRx,BTRy)
+                    # plt.plot(np.transpose(BTRx),BTRy,'b')
+                    # plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[0],stats[6],K))
+                    # plt.show()                
+                    
+                   
+                    
+                    # fig=plt.figure()
+                    # x=np.array([],dtype=object)
+                    # y=np.array([],dtype=object)
+                    # x=[]
+                    # y=[]
+                    # for J in range(num_statistics-1):
+                        # title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[0],stats[J],K)]
+                        # print title
+                        # #x_hold=np.delete(self.ipdprops[L][K][J],1,axis=1)
+                        # x_hold=range(self.ipd[K].length())
+                        # #x=np.array([],dtype=object)
+                        # #x=np.append(x,x_hold[:])
+                        # x.append(x_hold[:])
+                        # #print x
+                        # #y_hold=np.delete(self.ipdprops[L][K][J],0,axis=1)
+                        # #y=np.array([],dtype=object)
+                        # y_hold=self.ipdprops[L][K][J]
+                        # y.append(y_hold[:])
+                        # plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[0],K)])
+                    # plots=zip(x,y)
+                    # axs={}
+                    # for idx,plot in enumerate(plots):
+                        # axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                        # axs[idx].plot(plot[0],plot[1],'b')
+                        # plt.title(["%s" % (stats[idx])])
+                    # print np.shape(x)
+                    # plt.show()
+                
+                
+                
+                
+                
+                # num_statistics=np.size(stats)            
+                # #----------------------------------------------------------- Counting the number of times IPD is entered:
+                # print "\n Number of IPD states: ",(self.refreezeiteration)
+                # #----------------------------------------------------------- Counting the number of statistics that exist:
+                # print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
+                # print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
+                # numcols=(num_statistics-1)/2
+                # numrows=(num_statistics-1)/3
+                # print numcols," columns, and ",numrows," rows."
+                # for L in range(num_barr):
+                 # for K in range(self.refreezeiteration[L]):
+                 
+                    # x=np.array([],dtype=object)
+                    # y=np.array([],dtype=object)
+                    # x=[]
+                    # y=[]
+                    # BTRx=range(self.refreeze[L][K].length())
+                    # #BTRy_hold=np.delete(self.refprops[L][K][6],0,axis=1)
+                    # BTRy_hold=self.refprops[L][K][6]
+                    # BTRy=BTRy_hold[:]
+                    # zip(BTRx,BTRy)
+                    # BTRfig=plt.figure()
+                    # #plots=zip(BTRx,BTRy)
+                    # plt.plot(np.transpose(BTRx),BTRy,'c')
+                    # plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[2],stats[6],K))
+                    # plt.show()                
+                    
+                   
+                    
+                    # fig=plt.figure()
+                    # x=np.array([],dtype=object)
+                    # y=np.array([],dtype=object)
+                    # x=[]
+                    # y=[]
+                    # for J in range(num_statistics-1):
+                        # title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[2],stats[J],K)]
+                        # print title
+                        # #x_hold=np.delete(self.refprops[L][K][J],1,axis=1)
+                        # x_hold=range(self.refreeze[L][K].length())
+                        # #x=np.array([],dtype=object)
+                        # #x=np.append(x,x_hold[:])
+                        # x.append(x_hold[:])
+                        # #print x
+                        # #y_hold=np.delete(self.refprops[L][K][J],0,axis=1)
+                        # #y=np.array([],dtype=object)
+                        # y_hold=self.refprops[L][K][J]
+                        # y.append(y_hold[:])
+                        # plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[2],K)])
+                    # plots=zip(x,y)
+                    # axs={}
+                    # for idx,plot in enumerate(plots):
+                        # axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                        # axs[idx].plot(plot[0],plot[1],'c')
+                        # plt.title(["%s" % (stats[idx])])
+                    # print np.shape(x)
+                    # plt.show()
+
+            
+                # num_statistics=np.size(stats)            
+                # #----------------------------------------------------------- Counting the number of times IPD is entered:
+                # print "\n Number of IPD states: ",(self.defrostiteration)
+                # #----------------------------------------------------------- Counting the number of statistics that exist:
+                # print "\n Number of statistics: ",num_statistics,"\n Displaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
+                # print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
+                # numcols=(num_statistics-1)/2
+                # numrows=(num_statistics-1)/3
+                # print numcols," columns, and ",numrows," rows."
+                # for L in range(num_barr):
+                 # for K in range(self.defrostiteration[L]):
+                 
+                    # x=np.array([],dtype=object)
+                    # y=np.array([],dtype=object)
+                    # x=[]
+                    # y=[]
+                    # BTRx=range(self.defrost[L][K].length())
+                    # #BTRy_hold=np.delete(self.defprops[L][K][6],0,axis=1)
+                    # BTRy_hold=self.defprops[L][K][6]
+                    # BTRy=BTRy_hold[:]
+                    # zip(BTRx,BTRy)
+                    # BTRfig=plt.figure()
+                    # #plots=zip(BTRx,BTRy)
+                    # plt.plot(np.transpose(BTRx),BTRy,'m')
+                    # plt.title("%s: %s, %s, iteration: %d" %(Barrels[L],States[1],stats[6],K))
+                    # plt.show()                
+                    
+                   
+                    
+                    # fig=plt.figure()
+                    # x=np.array([],dtype=object)
+                    # y=np.array([],dtype=object)
+                    # x=[]
+                    # y=[]
+                    # for J in range(num_statistics-1):
+                        # title=["%s: %s, %s,  iteration: %d" % (Barrels[L],States[1],stats[J],K)]
+                        # print title
+                        # #x_hold=np.delete(self.defprops[L][K][J],1,axis=1)
+                        # x_hold=range(self.defrost[L][K].length())
+                        # #x=np.array([],dtype=object)
+                        # #x=np.append(x,x_hold[:])
+                        # x.append(x_hold[:])
+                        # #print x
+                        # #y_hold=np.delete(self.defprops[L][K][J],0,axis=1)
+                        # #y=np.array([],dtype=object)
+                        # y_hold=self.defprops[L][K][J]
+                        # y.append(y_hold[:])
+                        # plt.suptitle(["%s: %s Iteration: %d"%(Barrels[L],States[1],K)])
+                    # plots=zip(x,y)
+                    # axs={}
+                    # for idx,plot in enumerate(plots):
+                        # axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
+                        # axs[idx].plot(plot[0],plot[1],'m')
+                        # plt.title(["%s" % (stats[idx])])
+                    # print np.shape(x)
+                    # plt.show()
+
+                    
+    
 
 
 
