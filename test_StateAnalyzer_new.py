@@ -373,13 +373,7 @@ class StateAnalyzer:
         
         
         
-        
-        
-        
-        
-        
-        
-        
+
         
         
         
@@ -754,7 +748,7 @@ class StateAnalyzer:
         self.defprops=defprops
         self.refprops=refprops
    
-
+    
    
     def initialize_Tolerances(self):
         x=0#--------------------------------------------------------------------------- this is just to establish a variable.
@@ -774,13 +768,13 @@ class StateAnalyzer:
         def4_duty=[45]
         def4_btr=[-0.000000000000343859157906408000 , 0.000000000617121691113187 ,- 0.000000440823775947578000 , 0.0001602486681267550 ,- 0.0314566570202913000 , 3.231869855277910 , 894.552790322034]
         
-        ref4_rfg_lo=[0.000000000009843677872286210000 ,- 0.0000000089234759924423100 , 0.0000031556924643363000 ,- 0.00054766179227129400 , 0.04814731845701180 - 2.043485224364490 , 69.8726896943374]
-        ref4_rfg_hi=[-0.000000000021427018632512400000 , 0.0000000190579135406828000 ,- 0.00000665075800163716000 , 0.00115707356148735000 ,- 0.1052510998512760 , 4.6110265229987200 , 190.9043717854380]
-        ref4_v=[0.000000000001117280719558600000 ,- 0.00000000107815793299254000 , 0.000000392142730854167000 ,- 0.000066087461160713500 , 0.0052055338179162900 ,- 0.187668351053867 , 240.411758597448]
-        ref4_rt=[-0.000000000004182611997263700000 , 0.0000000038345172539283000 ,- 0.0000013847995317553100 , 0.00024938018722194700 ,- 0.0231633153794545000 , 0.94885329775282 , 0.9058971255743260]
-        ref4_sup=[-0.000000000011732281002069500000 , 0.0000000107100761766259000 ,- 0.0000038275725293482900 , 0.00067487406548644600 ,- 0.06066708103480140 , 2.575693197498150 - 30.27116690524830]
-        ref4_duty=[0.000000000003026957666003450000 ,- 0.0000000019081517741109900 , 0.00000033952692911632100 , 0.0000043450998777401500 ,- 0.00573253886755474000 , 0.3348242716697960 , 45.8257515436490]
-        ref4_btr=[ -0.000000000002984614080912080000 , 0.0000000002534440713209330 , 0.00000055656117658501100 ,- 0.0002063687484672500 , 0.02181824776045130 ,- 0.84002427817591 , 1017.180974138570]
+        ref4_rfg_lo=[0.0000000000130709123066733 ,- 0.0000000136503202446935 , 0.0000055161253342159 ,- 0.00107780690053222 , 0.103075387979013, - 4.27346568770697 , 94.1598345915965]
+        ref4_rfg_hi=[-0.00000000000327943984608733 , 0.00000000372878850210249 ,-0.00000169349605606151 , 0.000390568372430505 ,-0.0485073282211776 , 3.2210081081822 , 153.275673579752]
+        ref4_v=[0.000000000000378418984365667 ,- 0.00000000036550993926092 , 0.000000131952569782895 ,- 0.0000220977498852878 ,0.00178214395474613 ,- 0.0746710031826405 , 240.824317689944]
+        ref4_rt=[-0.00000000000347710327361523 , 0.00000000360294629693408 ,-0.00000143195246115459 , 0.000269109743980975 ,- 0.0230079648270963 , 0.494106929873897 , 40.687412924506]
+        ref4_sup=[-0.0000000000142852999059852 , 0.0000000149385926045583 ,- 0.00000603552895218374 , 0.0011729378647694 ,- 0.10953542607884 , 4.03794713723142, - 8.27110629642979]
+        ref4_duty=[-0.00000000000506330004345779 ,0.00000000538133961191277 , -0.00000225822216997687 , 0.00047623881875663 ,- 0.0522568366818242 , 2.53282849414769 , 37.79592770393]
+        ref4_btr=[ -0.0000000000119421885386435 , 0.0000000105009276828418 , -0.00000353345921920926 ,0.000536365360298898 , -0.0366003616928813 ,0.951326072591128, 999.592009961661]
 
 
         # ipd4_lo=[ipd4_rfg_lo,ipd4_rfd_hi,ipd4_v,ipd4_rt,ipd4_sup,ipd4_duty,ipd4_btr]*.985
@@ -1001,8 +995,8 @@ class StateAnalyzer:
                 print np.polyval(self.IPD4_tolerances[x],i)
         
         '''
+        self.Tol_data=Tol_data
 
-
         
         
         
@@ -1010,7 +1004,7 @@ class StateAnalyzer:
         
         
         
-        
+    
         
         
         
@@ -1072,7 +1066,7 @@ class StateAnalyzer:
             
             if state==0:
                 imnum=0
-                print numcols," columns, and ",numrows," rows."
+                #print numcols," columns, and ",numrows," rows."
                 for statistic in range(1):#range(np.size(stats)):
                     BTRfig=plt.figure()
                     
@@ -1173,13 +1167,27 @@ class StateAnalyzer:
                     
             elif state!=0:
                 imnum=0
-                print numcols," columns, and ",numrows," rows."
+                #print numcols," columns, and ",numrows," rows."
                 for statistic in range(1):#range(np.size(stats)):
                     BTRfig=plt.figure()
+                    longest=0
                     for barrel in range(np.size(Barrels)):
                         #BTRfig=plt.figure()
                         lower=[]
                         upper=[]
+                        
+                        long=[]
+                        for iteration in range(self.stateiters[state][barrel]):
+                            lengthtest=np.size(range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time))
+                            
+                            long.append(lengthtest)
+                        long=max(long)
+                        if long>longest:
+                            longest=long
+                        #print longest
+                        
+                        
+                        
                         for iteration in range(self.stateiters[state][barrel]):
                             x=[]
                             y=[]
@@ -1189,7 +1197,8 @@ class StateAnalyzer:
                             zip(BTRx,BTRy)
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
-                            BTRfig.add_subplot(1,2,1)                            
+                            BTRfig.add_subplot(1,2,1)   
+                            print np.shape(np.transpose(BTRx)),np.shape(BTRy)
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.hold(True)
                             plt.grid(True)
@@ -1202,7 +1211,7 @@ class StateAnalyzer:
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
                             BTRfig.add_subplot(1,2,2)
-                            for timer in range(np.size(BTRx)):
+                            for timer in range(longest):
                                 
                                 uppertol=(np.polyval(self.tols4[state][6],timer))*self.hightol
                                 lowertol=(np.polyval(self.tols4[state][6],timer))*self.lowtol
@@ -1213,11 +1222,11 @@ class StateAnalyzer:
                             plt.hold(True)
                             plt.title("%s, Overlay"%(stats[6]))
                     plt.subplot(1,2,2)
-                    plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                    plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
                     plt.hold(True)
-                    plt.plot(np.transpose(BTRx),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                    plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
                     plt.hold(True)
-                    plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
+                    plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
                             
                             
                     plt.suptitle("%s"%(States[state]))        
@@ -1231,11 +1240,20 @@ class StateAnalyzer:
                     
                 for statistic2 in range(num_statistics-1):
                     fig=plt.figure()
-
+                    longest=0
                     for barrel in range(np.size(Barrels)):
                         #BTRfig=plt.figure()
                         lower=[]
                         upper=[]
+                        long=[]
+                        for iteration in range(self.stateiters[state][barrel]):
+                            lengthtest=np.size(range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time))
+                            
+                            long.append(lengthtest)
+                        long=max(long)
+                        if long>longest:
+                                longest=long
+                        print longest
                         for iteration in range(self.stateiters[state][barrel]):
                             x=[]
                             y=[]
@@ -1257,7 +1275,8 @@ class StateAnalyzer:
                             BTRy=BTRy_hold[:]
                             zip(BTRx,BTRy)  
                             fig.add_subplot(1,2,2)
-                            for timer in range(np.size(BTRx)):
+                           
+                            for timer in range(longest):
                                 
                                 uppertol=(np.polyval(self.tols4[state][statistic2],timer))*self.hightol
                                 lowertol=(np.polyval(self.tols4[state][statistic2],timer))*self.lowtol
@@ -1269,11 +1288,11 @@ class StateAnalyzer:
                             plt.grid(True)
                             plt.title("%s, Overlay"%(stats[statistic2]))
                     plt.subplot(1,2,2)
-                    plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                    plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
                     plt.hold(True)
-                    plt.plot(np.transpose(BTRx),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                    plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
                     plt.hold(True)
-                    plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
+                    plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
                             
                     plt.suptitle("%s"%(States[state]))        
                     plt.hold(False)
@@ -1295,7 +1314,7 @@ class StateAnalyzer:
                         # plt.hold(True)
                     # print np.shape(x)
                     # plt.hold(False)
-                    # plt.show()
+                    # ########################################plt.show()
 
                         
                     
@@ -1334,7 +1353,7 @@ class StateAnalyzer:
                     plt.title("%s: %s"%(States[state],stats[6]))
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                     plt.grid(True)
-                    plt.show()
+                    ########################################plt.show()
 
             '''
 
@@ -1342,7 +1361,298 @@ class StateAnalyzer:
         return
         
         
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def create_pdf(self):# ------------------------------- will be using "self" for now. next iteration will be: STATES,ERRORS,PLOTS_GEN)
+       # if __name__ == '__main__':
+            
+            import numpy as np
+
+            from pylatex import Document, Section, Subsection, Tabular, Math, TikZ, Axis, \
+                Plot, Figure, Package, Matrix, MultiColumn, MultiRow
+            
+            from pylatex.utils import italic
+            import os
+            import sys
+            
+            
+            #creating multiple columns according to number of barrels
+            ## for x in range(20):
+            ## ...  mystring=mystring+'%s'%(x)
+
+
+            
+            print ""
+            print  "------------------ PDFGEN INITIALIZED. -----------------------"
+            #time.sleep(.5)
+            print""
+            print "------------------- DISPLAYING STATES -------------------------"
+            print""
+            # print "IPD:"
+            # print IPD
+            # print""
+            # print "FF:"
+            # print FF
+            # print""
+            # print "Defrost:"
+            # print np.transpose(DEF)
+            print ""
+            #return
+        #########################################################
+        # Assigning the Image Filename like below will SHOW the path to the file in the PDF.
+            # image_filename2 = os.path.join(os.path.dirname(__file__), 'IPDStats1.png')
+            # image_filename2=   image_filename2.replace('\\','/')
+            # image_filename = os.path.join(os.path.dirname(__file__), 'IPD4barrel.jpg')
+            # image_filename=   image_filename.replace('\\','/')
+        # Assigning the Image Filename like above will SHOW the path to the file in the PDF.
+        #########################################################    
+ 
+            doc = Document()
+            doc.packages.append(Package('geometry', options=['tmargin=1cm']))
+
+            with doc.create(Section('REPORT SUMMARY AND DIAGNOSTICS')):
+                doc.append('Number of Barrels Tested: %s'%(self.number_of_barrels))
+                # doc.append(italic('italic text. '))
+                # doc.append('\nAlso some crazy characters: $&#{}')
+            
+            with doc.create(Subsection('Test Phases')):
+                '''
+                mytable=''
+                mystates=['IPD','DEF','REF']
+                for x in range(self.number_of_barrels):
+                    mytable=mytable+'%s'%('|c|c|c|c|c|c')
+                mytable=mytable+'|'
+                with doc.create(Tabular(mytable)) as table:
+                    table.add_hline()
+                    barrels_to_add=[]
+                    add_barrel_labels_into_table=[]
+                    add_State=[]
+                    add_start=[]
+                    add_end=[]
+                    for x in range(self.number_of_barrels):
+                        barrels_to_add.append('Barrel %s '%((x)+1))
+                        add_barrel_labels_into_table.append(MultiColumn(6,align='|c|',data=barrels_to_add[x]))
+                        for y in range(np.size(mystates)):
+                            add_State.append(MultiColumn(2*y,align='|c|',data=mystates[y]))
+                            for z in range(2):
+                                add_start.append(MultiColumn(z*y,align='|c|',data='Start'))
+                                add_start.append(MultiColumn(z*y,align='|c|',data='End'))
+                    table.add_row(add_barrel_labels_into_table)
+                    table.add_row(add_State)
+                    table.add_hline()
+                    table.add_row(add_start)
+                    table.add_hline()
+                    #table.add_row((1, 2, 3, 4))
+                    table.add_hline()
+                    table.add_empty_row()
+                    table.add_empty_row()
+                    #table.add_row((4, 5, 6, 7))
+                '''
+                state=[]
+                for barrel in range(self.number_of_barrels):
+                    doc.append('Barrel: %s\n'%(barrel+1))
+                    for state in range(3):
+                        if state==0:
+                            for iteration in range(self.ipditeration):
+                                doc.append("NoEscape(\indent)    IPD Interval   : %s\n"%(iteration+1))
+                                doc.append("\i                       IPD Start       :  %s\n"%(self.ipd[iteration].start_time))
+                                doc.append("\t\t                       IPD End         :  %s\n"%(self.ipd[iteration].end_time))
+                        if state==1:
+                            for iteration in range(self.defrostiteration[barrel]):
+                                doc.append("\t    Defrost Interval: %s\n"%(iteration+1))
+                                doc.append("\t\t                       Defrost Start   :  %s\n"%(self.defrost[barrel][iteration].start_time))
+                                doc.append("\t\t                       Defrost End     :  %s\n"%(self.defrost[barrel][iteration].end_time))
+                        if state==2:
+                            for iteration in range(self.refreezeiteration[barrel]):
+                                doc.append("\t    Refreeze Interval: %s\n"%(iteration+1))
+                                doc.append("\t\t                       Refreeze Start   :  %s\n"%(self.refreeze[barrel][iteration].start_time))
+                                doc.append("\t\t                       Refreeze End     :  %s\n"%(self.refreeze[barrel][iteration].end_time))                                 
+                    
+                # for i in range(num_barr):
+                    # print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
+                    # if np.size(self.ipd.items())>0:
+                        # for l in range(self.ipditeration):#-----------debug
+                            # print "     IPD Time Iteration:      ",l
+                            # print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
+                    # if np.size(self.refreezeiteration.items())>2:
+                        # for j in range(self.refreezeiteration[i]):
+                            # print "     Refreeze Time Iteration: ",j
+                            # print "                                    Refreeze Start: ",self.refreeze[i][j].start_time,"\n                                    Refreeze End:   ",self.refreeze[i][j].end_time,"\n                                    Refreeze Length:",self.refreeze[i][j].length()   
+                    # if np.size(self.defrostiteration.items())>2:
+                        # for k in range((self.defrostiteration[i])):
+                            # print "     Defrost Time Iteration:  ",k
+                            # print "                                    Defrost Start:  ",self.defrost[i][k].start_time,"\n                                    Defrost End:    ",self.defrost[i][k].end_time,"\n                                    Defrost Length: ",self.defrost[i][k].length()   
+                        # print"\n"    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+            a = np.array([[100, 10, 20]]).T
+            M = np.matrix([[2, 3, 4],
+                           [0, 0, 1],
+                           [0, 0, 2]])
+
+            with doc.create(Section('The fancy stuff')):
+                with doc.create(Subsection('Correct lklkmatrix equations')):
+                    doc.append(Math(data=[Matrix(M), Matrix(a), '=', Matrix(M * a)]))
+
+                with doc.create(Subsection('Beautiful graphs')):
+                    with doc.create(TikZ()):
+                        plot_options = 'height=6cm, width=6cm, grid=major'
+                        with doc.create(Axis(options=plot_options)) as plot:
+                            plot.append(Plot(name='model', func='-x^5 - 242'))
+
+                            coordinates = [
+                                (-4.77778, 2027.60977),
+                                (-3.55556, 347.84069),
+                                (-2.33333, 22.58953),
+                                (-1.11111, -493.50066),
+                                (0.11111, 46.66082),
+                                (1.33333, -205.56286),
+                                (2.55556, -341.40638),
+                                (3.77778, -1169.24780),
+                                (5.00000, -3269.56775),
+                            ]
+
+                            plot.append(Plot(name='estimate', coordinates=coordinates))
+                '''
+                with doc.create(Subsection('Cute kitten pictures')):
+                    with doc.create(Figure(position='h!')) as kitten_pic:
+                        kitten_pic.add_image(image_filename, width='120px')
+                        kitten_pic.add_caption('Look it\'s on its back')
+                '''
+                    
+            doc.generate_pdf(os.path.basename(sys.argv[0]), clean_tex=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def statecleaner(self,num_barr):
+        self.newstate=State(None,None,None,None)
+        
+        for i in range(num_barr):
+            print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
+            if np.size(self.ipd.items())>0:
+                for l in range(self.ipditeration):#-----------debug
+                    print "     IPD Time Iteration:      ",l
+                    print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
+            if np.size(self.refreezeiteration.items())>2:
+                for j in range(self.refreezeiteration[i]):
+                    print "     Refreeze Time Iteration: ",j
+                    print "                                    Refreeze Start: ",self.refreeze[i][j].start_time,"\n                                    Refreeze End:   ",self.refreeze[i][j].end_time,"\n                                    Refreeze Length:",self.refreeze[i][j].length()   
+            if np.size(self.defrostiteration.items())>2:
+                for k in range((self.defrostiteration[i])):
+                    print "     Defrost Time Iteration:  ",k
+                    print "                                    Defrost Start:  ",self.defrost[i][k].start_time,"\n                                    Defrost End:    ",self.defrost[i][k].end_time,"\n                                    Defrost Length: ",self.defrost[i][k].length()   
+                print"\n"
+        
+        
+        
+        
+        #---------------------------- REFREEZE CLENAUP --------------------------------------
+        self.newstate_ref={}
+        for i in range(num_barr):
+            test_for_overlap=0
+            print "statecleanup"
+            self.newstate_ref[i]={}
+            if np.size(self.refreezeiteration.items())>2:
+                for j in range(self.refreezeiteration[i]):
+                    self.newstate_ref[i][j]={}
+                    test_for_overlap=0
+                    for k in range(self.ipditeration):
+                        if  self.refreeze[i][j].end_time <= self.ipd[k].end_time or self.refreeze[i][j].start_time>=self.ipd[k].start_time and self.refreeze[i][j].start_time<=self.ipd[k].end_time or self.refreeze[i][j].length()<30:
+                            test_for_overlap=1
+                            print "TEST FAILED."
+                            #del(self.refreeze[i][j])
+                            if self.refreezeiteration[i+1]:
+                                self.refreeze[i][j]=self.refreeze[i][j+1]
+                                del(self.refreeze[i][j+1])
+                                self.refreezeiteration[i]-=1
+                                print self.refreeze[i][j].start_time
+                                break
+                            break
+                        break
+                    break
+                            
+                    if test_for_overlap==0:
+                        self.newstate_ref[i]=self.refreeze[i]
+                        print "test passed."
+                        
+                        
+        print "\n\n\n\n\n\n"    
+        for i in range(num_barr):
+            print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
+            if np.size(self.ipd.items())>0:
+                for l in range(self.ipditeration):#-----------debug
+                    print "     IPD Time Iteration:      ",l
+                    print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
+            if np.size(self.refreezeiteration.items())>2:
+                for j in range(self.refreezeiteration[i]):
+                    print "     Refreeze Time Iteration: ",j
+                    print "                                    Refreeze Start: ",self.refreeze[i][j].start_time,"\n                                    Refreeze End:   ",self.refreeze[i][j].end_time,"\n                                    Refreeze Length:",self.refreeze[i][j].length()   
+            if np.size(self.defrostiteration.items())>2:
+                for k in range((self.defrostiteration[i])):
+                    print "     Defrost Time Iteration:  ",k
+                    print "                                    Defrost Start:  ",self.defrost[i][k].start_time,"\n                                    Defrost End:    ",self.defrost[i][k].end_time,"\n                                    Defrost Length: ",self.defrost[i][k].length()   
+                print"\n"                
+
+        
+        
+
+
+
+
+
+
+
+
+        
         
         
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
@@ -1359,7 +1669,7 @@ s.StatePopulator(num_barr_to_use)#_to_use)
 
 
 s.analysis_of_states(num_barr_to_use)
-
+s.statecleaner(num_barr_to_use)
 # state hierarchy: IPD: number of iterations --> [ .start_time, .end_time]  --------------------------------------------------->>>>>> object.ipd[iteration number].start_time or object.ipd[barrel].end_time
                  # Refreeze and Defrost: barrel -->number of iterations --> [ .start_time, .end_time]-------------------------->>>>>> object.refreeze/defrost[barrel][iteration number].start_time or .end_time
 
@@ -1378,9 +1688,11 @@ print s.ipd[0].length()
 
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
-s.display_plots_version2(num_barr_to_use,"defros")
+#s.statecleaner(num_barr_to_use)
 
+s.display_plots_version2(num_barr_to_use,"defrost")
 
+#s.create_pdf()
 # print "\n\n\n"
 # print s.ipdprops[0][0][6][0]
 # print np.size(s.refprops[0].items(),0)
