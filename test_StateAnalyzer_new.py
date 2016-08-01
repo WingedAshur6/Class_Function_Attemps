@@ -1020,7 +1020,9 @@ class StateAnalyzer:
         print "State: ",state.upper()
         state=state.lower()
 
-
+        ipdpics=[]
+        refpics=[]
+        defpics=[]
 
 
         num_statistics=np.size(stats)
@@ -1073,6 +1075,7 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
+                        ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
                         if shonosho==1:
                             plt.show()
                         
@@ -1124,7 +1127,7 @@ class StateAnalyzer:
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                     imnum+=1
                     plt.savefig("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))#filename_state_barrel_statistic_image_number
-
+                    ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
                     if shonosho==1:
                         plt.show()
                     #imnum+=1   
@@ -1206,6 +1209,10 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==1:
+                            defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==2:
+                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                         if shonosho==1:
                             plt.show()
                         
@@ -1271,6 +1278,10 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==1:
+                            defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==2:
+                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                         if shonosho==1:
                             plt.show()
                     
@@ -1329,6 +1340,12 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
+                        if state==0:
+                            ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
+                        if state==1:
+                            defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==2:
+                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum)) 
                         if shonosho==1:
                             plt.show()
                         
@@ -1380,7 +1397,12 @@ class StateAnalyzer:
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                     imnum+=1
                     plt.savefig("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))#filename_state_barrel_statistic_image_number
-
+                    if state==0:
+                        ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
+                    if state==1:
+                        defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                    if state==2:
+                        refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum)) 
                     if shonosho==1:
                         plt.show()
                     #imnum+=1   
@@ -1462,6 +1484,12 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==0:
+                            ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
+                        if state==1:
+                            defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==2:
+                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum)) 
                         if shonosho==1:
                             plt.show()
                         
@@ -1527,6 +1555,12 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==0:
+                            ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
+                        if state==1:
+                            defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
+                        if state==2:
+                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum)) 
                         if shonosho==1:
                             plt.show()
                     
@@ -1586,11 +1620,85 @@ class StateAnalyzer:
 
             '''
 
-                    
-        return
+        savedpics=[ipdpics,defpics,refpics]        
+        return savedpics
         
 
-    def create_pdf(self):# ------------------------------- will be using "self" for now. next iteration will be: STATES,ERRORS,PLOTS_GEN)
+
+
+    def statecleaner(self,num_barr):
+        self.newstate=State(None,None,None,None)
+        
+        for i in range(num_barr):
+            print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
+            if np.size(self.ipd.items())>0:
+                for l in range(self.ipditeration):#-----------debug
+                    print "     IPD Time Iteration:      ",l
+                    print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
+            if np.size(self.refreezeiteration.items())>2:
+                for j in range(self.refreezeiteration[i]):
+                    print "     Refreeze Time Iteration: ",j
+                    print "                                    Refreeze Start: ",self.refreeze[i][j].start_time,"\n                                    Refreeze End:   ",self.refreeze[i][j].end_time,"\n                                    Refreeze Length:",self.refreeze[i][j].length()   
+            if np.size(self.defrostiteration.items())>2:
+                for k in range((self.defrostiteration[i])):
+                    print "     Defrost Time Iteration:  ",k
+                    print "                                    Defrost Start:  ",self.defrost[i][k].start_time,"\n                                    Defrost End:    ",self.defrost[i][k].end_time,"\n                                    Defrost Length: ",self.defrost[i][k].length()   
+                print"\n"
+        
+        
+        
+        
+        #---------------------------- REFREEZE CLENAUP --------------------------------------
+        self.errors_ref={}
+        for i in range(num_barr):
+            test_for_overlap=0
+            dictkey=0
+            print "statecleanup"
+            self.errors_ref[i]={}
+            if np.size(self.refreezeiteration.items())>2:
+                for j in range(self.refreezeiteration[i]):
+                    self.errors_ref[i][j]={}
+                    test_for_overlap=0
+                    for k in range(self.ipditeration):
+                        if  self.refreeze[i][j].end_time <= self.ipd[k].end_time or self.refreeze[i][j].start_time>=self.ipd[k].start_time and self.refreeze[i][j].start_time<=self.ipd[k].end_time or self.refreeze[i][j].length()<30:
+                            test_for_overlap=1
+                            print "TEST FAILED."
+                            self.errors_ref[dictkey][j]=self.refreeze[i][j]
+                            dictkey+=1
+                            if self.refreezeiteration[i+1]:
+                                self.refreeze[i][j]=self.refreeze[i][j+1]
+                                del(self.refreeze[i][j+1])
+                                self.refreezeiteration[i]-=1
+                                print self.refreeze[i][j].start_time
+                                break
+                            break
+                        break
+                    break
+                            
+                    if test_for_overlap==0:
+                        self.errors_ref[i]=self.refreeze[i]
+                        print "test passed."
+                        
+                        
+        print "\n\n\n\n\n\n"    
+        for i in range(num_barr):
+            print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
+            if np.size(self.ipd.items())>0:
+                for l in range(self.ipditeration):#-----------debug
+                    print "     IPD Time Iteration:      ",l
+                    print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
+            if np.size(self.refreezeiteration.items())>2:
+                for j in range(self.refreezeiteration[i]):
+                    print "     Refreeze Time Iteration: ",j
+                    print "                                    Refreeze Start: ",self.refreeze[i][j].start_time,"\n                                    Refreeze End:   ",self.refreeze[i][j].end_time,"\n                                    Refreeze Length:",self.refreeze[i][j].length()   
+            if np.size(self.defrostiteration.items())>2:
+                for k in range((self.defrostiteration[i])):
+                    print "     Defrost Time Iteration:  ",k
+                    print "                                    Defrost Start:  ",self.defrost[i][k].start_time,"\n                                    Defrost End:    ",self.defrost[i][k].end_time,"\n                                    Defrost Length: ",self.defrost[i][k].length()   
+                print"\n"                
+
+        
+    def create_pdf(self,pics):# ------------------------------- will be using "self" for now. next iteration will be: STATES,ERRORS,PLOTS_GEN)
         import time
         from reportlab.lib.enums import TA_JUSTIFY
         from reportlab.lib.enums import TA_CENTER
@@ -1628,7 +1736,7 @@ class StateAnalyzer:
         address_parts = ["411 State St.", "Marshalltown, IA 50158"]
         serialno=self.data[0][0]
         testlength=self.data[-1][1]-self.data[0][1]
-        im = Image(logo, 5*2/3*inch, 3*2/3*inch)
+        
         series="77x"
         barr_num=self.number_of_barrels
         myverdict="FAIL"#<----------------------------------------------- THIS NEEDS TO BE CHANGED TO AN ACTUAL THING.
@@ -1710,6 +1818,18 @@ class StateAnalyzer:
                     for statistic in range(self.states[state][barrel][instance].__len__()):
                         if False in self.states[state][barrel][instance][statistic]:
                             Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Property: &nbsp&nbsp %s   | &nbsp&nbsp  Result:&nbsp&nbsp  FAIL</font>"%(Statistics[statistic]),styles["Normal"]))
+        print np.size(pics)
+        
+        Story.append(Spacer(1,48))
+        Story.append(Paragraph("<font size=16>Test Visualization: </font>",styles["Normal"]))
+        Story.append(Spacer(1,24))
+        for state in range(np.size(pics)):
+            Story.append(Paragraph("<font size=12>%s </font>"%(statelist[state]),styles["Normal"]))
+            for picnum in range(np.size(pics[state])):
+                im = Image(pics[state][picnum], 5*inch, 3*inch)
+                Story.append(im)
+                Story.append(Spacer(1,24))
+                
         # data= [['00', '01', '02', '03', '04'],
                # ['10', '11', '12', '13', '14'],
                # ['20', '21', '22', '23', '24'],
@@ -1770,85 +1890,8 @@ class StateAnalyzer:
         doc.build(Story)
         openpage=subprocess.Popen(['%s.pdf'%(__file__)],shell=True)
         time.sleep(10)
+        
 
-
-    def statecleaner(self,num_barr):
-        self.newstate=State(None,None,None,None)
-        
-        for i in range(num_barr):
-            print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
-            if np.size(self.ipd.items())>0:
-                for l in range(self.ipditeration):#-----------debug
-                    print "     IPD Time Iteration:      ",l
-                    print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
-            if np.size(self.refreezeiteration.items())>2:
-                for j in range(self.refreezeiteration[i]):
-                    print "     Refreeze Time Iteration: ",j
-                    print "                                    Refreeze Start: ",self.refreeze[i][j].start_time,"\n                                    Refreeze End:   ",self.refreeze[i][j].end_time,"\n                                    Refreeze Length:",self.refreeze[i][j].length()   
-            if np.size(self.defrostiteration.items())>2:
-                for k in range((self.defrostiteration[i])):
-                    print "     Defrost Time Iteration:  ",k
-                    print "                                    Defrost Start:  ",self.defrost[i][k].start_time,"\n                                    Defrost End:    ",self.defrost[i][k].end_time,"\n                                    Defrost Length: ",self.defrost[i][k].length()   
-                print"\n"
-        
-        
-        
-        
-        #---------------------------- REFREEZE CLENAUP --------------------------------------
-        self.errors_ref={}
-        for i in range(num_barr):
-            test_for_overlap=0
-            dictkey=0
-            print "statecleanup"
-            self.errors_ref[i]={}
-            if np.size(self.refreezeiteration.items())>2:
-                for j in range(self.refreezeiteration[i]):
-                    self.errors_ref[i][j]={}
-                    test_for_overlap=0
-                    for k in range(self.ipditeration):
-                        if  self.refreeze[i][j].end_time <= self.ipd[k].end_time or self.refreeze[i][j].start_time>=self.ipd[k].start_time and self.refreeze[i][j].start_time<=self.ipd[k].end_time or self.refreeze[i][j].length()<30:
-                            test_for_overlap=1
-                            print "TEST FAILED."
-                            self.errors_ref[dictkey][j]=self.refreeze[i][j]
-                            dictkey+=1
-                            if self.refreezeiteration[i+1]:
-                                self.refreeze[i][j]=self.refreeze[i][j+1]
-                                del(self.refreeze[i][j+1])
-                                self.refreezeiteration[i]-=1
-                                print self.refreeze[i][j].start_time
-                                break
-                            break
-                        break
-                    break
-                            
-                    if test_for_overlap==0:
-                        self.errors_ref[i]=self.refreeze[i]
-                        print "test passed."
-                        
-                        
-        print "\n\n\n\n\n\n"    
-        for i in range(num_barr):
-            print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
-            if np.size(self.ipd.items())>0:
-                for l in range(self.ipditeration):#-----------debug
-                    print "     IPD Time Iteration:      ",l
-                    print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
-            if np.size(self.refreezeiteration.items())>2:
-                for j in range(self.refreezeiteration[i]):
-                    print "     Refreeze Time Iteration: ",j
-                    print "                                    Refreeze Start: ",self.refreeze[i][j].start_time,"\n                                    Refreeze End:   ",self.refreeze[i][j].end_time,"\n                                    Refreeze Length:",self.refreeze[i][j].length()   
-            if np.size(self.defrostiteration.items())>2:
-                for k in range((self.defrostiteration[i])):
-                    print "     Defrost Time Iteration:  ",k
-                    print "                                    Defrost Start:  ",self.defrost[i][k].start_time,"\n                                    Defrost End:    ",self.defrost[i][k].end_time,"\n                                    Defrost Length: ",self.defrost[i][k].length()   
-                print"\n"                
-
-        
-        
-    def picfinder():
-        import os
-        absFilePath = os.path.abspath(__file__)
-        os.chdir( os.path.dirname(absFilePath) )
         
 
 
@@ -1885,8 +1928,8 @@ s.getdata(num_barr_to_use)
 #print s.ref_BTR[0][1]
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
-#s.display_plots_version2(num_barr_to_use,"all",0)
-s.create_pdf()
+pics=s.display_plots_version2(num_barr_to_use,"all",0)
+s.create_pdf(pics)
 
 
 # property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
