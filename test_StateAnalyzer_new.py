@@ -1829,65 +1829,88 @@ class StateAnalyzer:
                 im = Image(pics[state][picnum], 5*inch, 3*inch)
                 Story.append(im)
                 Story.append(Spacer(1,24))
-                
-        data= [['UNIT TESTING REPORT (%s)'%(serialno), '01', '02', '03', '04','05'],
-                ['Unit Type:', '%s'%(series), '12', '13', '14','15'],
-                ['Number of Barrels: ', '%s'%(barr_num), '22', '23', '24','25'],
-                ['20', '21', '22', '23', '24','25'],
-                ['20', '21', '22', '23', '24','25'],
-                ['1', '21', '22', '23', '24','25'],
-                ['2', '21', '22', '23', '24','25'],
-                ['3', '21', '22', '23', '24','25'],
-                ['4', '21', '22', '23', '24','25'],
-                ['5', '21', '22', '23', '24','25'],
-                ['6', '21', '22', '23', '24','25'],
-                ['7', '21', '22', '23', '24','25'],
-                ['8', '21', '22', '23', '24','25'],
-                ['9', '21', '22', '23', '24','25'],
-                ['10', '21', '22', '23', '24','25'],
-                ['11', '21', '22', '23', '24','25'],
-                ['12', '21', '22', '23', '24','25'],
-                ['13', '21', '22', '23', '24','25'],
-                ['14', '21', '22', '23', '24','25'],
-                ['15', '21', '22', '23', '24','25'],
-                ['16', '21', '22', '23', '24','25'],
-                ['17', '11', '12', '13', '14','15'],
-                ['18', '21', '22', '23', '24','25'],
-                ['19', '21', '22', '23', '24','25'],
-                ['20', '21', '22', '23', '24','25'],
+        ipdm,ipds=divmod(self.ipd[0].length(),60)
+        ipdLlim_m,ipdLlim_s=divmod(13*60,60)
+        ipdMlim_m,ipdMlim_s=divmod(18*60,60)
+        if self.ipd[0].length()>18*60 or self.ipd[0].length()<13*60:
+            ipdverd="Fail"
+        else:
+            ipdverd="Pass"
+        data= [['UNIT TESTING REPORT (%s)'%(serialno), '-', '-', '-', '-','-'],
+                ['Unit Type', '%s'%(series), 'Date/Time', '%s'%(time.ctime()), 'Result:','%s'%(myverdict)],
+                ['Barrels ', '%s'%(barr_num), '-', '-', '-','-'],
+                ['-', '-', 'Tester', 'Stanford Martinez', '-','-'],
+                ['Summary of Results', '-', '-', '-', '-','-'],
+                ['', '', 'Actual', 'Low', 'High','Result'],
+                ['2', 'Initial PullDown Time', '%s:%s'%(ipdm,ipds), '%s:%s'%(ipdLlim_m,ipdLlim_s), '%s:%s'%(ipdMlim_m,ipdMlim_s),'%s'%(ipdverd)],
+                ['3', 'IPD Baseline (Barrel 1) ', '22', '23', '24','25'],
+                ['4', 'IPD Baseline (Barrel 2)', '22', '23', '24','25'],
+                ['5', 'IPD Baseline (Barrel 3)', '22', '23', '24','25'],
+                ['6', 'IPD Baseline (Barrel 4)', '22', '23', '24','25'],
+                ['7', 'IPD Max Hiside Pressure', '22', '23', '24','25'],
+                ['8', 'IPD Min Lowside Pressure', '22', '23', '24','25'],
+                ['9', 'IPD Min Return Temp', '22', '23', '24','25'],
+                ['10', 'IPD Average Duty Cycle', '22', '23', '24','25'],
+                ['11', 'IPD Avg. Superheat', '22', '23', '24','25'],
+                ['12', 'Defrost Time (Barrel 1)', '22', '23', '24','25'],
+                ['13', 'Defrost Time (Barrel 2)', '22', '23', '24','25'],
+                ['14', 'Defrost Time (Barrel 3)', '22', '23', '24','25'],
+                ['15', 'Defrost Time (Barrel 4)', '22', '23', '24','25'],
+                ['16', 'Defrost Baseline (Barrel 1)', '22', '23', '24','25'],
+                ['17', 'Defrost Baseline (Barrel 2)', '12', '13', '14','15'],
+                ['18', 'Defrost Baseline (Barrel 3)', '22', '23', '24','25'],
+                ['19', 'Defrost Baseline (Barrel 4)', '22', '23', '24','25'],
+                ['20', 'Refreeze Highside Pressure (Barrels 1-4)', '22', '23', '24','25'],
                 ['21', '21', '22', '23', '24','25'],
                 ['22', '21', '22', '23', '24','25'],
                 ['23', '21', '22', '23', '24','25'],
-                ['24', '21', '22', '23', '24','25'],
+                ['24', 'Refreeze LowSide Pressure (Barrels 1-4)', '22', '23', '24','25'],
                 ['25', '21', '22', '23', '24','25'],
                 ['26', '21', '22', '23', '24','25'],
                 ['27', '21', '22', '23', '24','25'],
-                ['28', '21', '22', '23', '24','25'],
+                ['28', 'Refreeze Times Pressure (Barrels 1-4)', '22', '23', '24','25'],
                 ['29', '21', '22', '23', '24','25'],
                 ['30', '21', '22', '23', '24','25'],
                 ['31', '21', '22', '23', '24','25'],
-                ['32', '21', '22', '23', '24','25'],
+                ['32', 'Refreeze SH (Barrels 1-4)', '22', '23', '24','25'],
                 ['33', '21', '22', '23', '24','25'],
                 ['34', '21', '22', '23', '24','25'],
                 ['35', '21', '22', '23', '24','25'],
-                ['36', '21', '22', '23', '24','25'],
+                ['36', 'Refreeze Average DC% (Barrels 1-4)', '22', '23', '24','25'],
                 ['37', '21', '22', '23', '24','25'],
-                ['38', '31', '32', '33', '34','35']]
-        # t=Table(data)
-        # t.setStyle(TableStyle([('BACKGROUND',(1,1),(-2,-2),colors.green),
-                               # ('TEXTCOLOR',(0,0),(1,-1),colors.red)]))
-        # t.setStyle(TableStyle([('ALIGN',(1,1),(-2,-2),'RIGHT'),
-                               # ('TEXTCOLOR',(1,1),(-2,-2),colors.red),
-                               # ('VALIGN',(0,0),(0,-1),'TOP'),
-                               # ('TEXTCOLOR',(0,0),(0,-1),colors.blue),
-                               # ('ALIGN',(0,-1),(-1,-1),'CENTER'),
-                               # ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
-                               # ('TEXTCOLOR',(0,-1),(-1,-1),colors.green),
-                               # ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),#(xstart,ystart),(xend,yend),thickness
-                               # ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                               # #('SPAN',(0,0),(1,1)),
-                               # ]))
-        # Story.append(t) 
+                ['38', '21', '22', '23', '24','25'],
+                ['39', '31', '32', '33', '34','35']]
+        
+        t=Table(data)
+        t.setStyle(TableStyle([('BACKGROUND',(-1,1),(-1,1),colors.red)]))
+        t.setStyle(TableStyle([('ALIGN',(0,0),(-1,0),'CENTER'),
+                               ('TEXTCOLOR',(1,1),(-2,-2),colors.red),
+                               ('VALIGN',(0,0),(0,-1),'TOP'),
+                               ('TEXTCOLOR',(0,0),(0,-1),colors.blue),
+                               ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                               ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                               ('SPAN',(0,0),(-1,0)),
+                               ('SPAN',(0,2),(0,3)),
+                               ('SPAN',(1,2),(1,3)),
+                               ('SPAN',(2,1),(2,2)),
+                               ('SPAN',(3,1),(3,2)),
+                               ('SPAN',(4,1),(4,2)),
+                               ('SPAN',(5,1),(5,2)),
+                               ('SPAN',(3,3),(-1,3)),
+                               ('SPAN',(0,4),(-1,4)),
+                               ('SPAN',(0,5),(1,5)),
+                               ('SPAN',(1,24),(1,27)),
+                               ('SPAN',(1,28),(1,31)),
+                               ('SPAN',(1,32),(1,35)),
+                               ('SPAN',(1,36),(1,39)),
+                               ('SPAN',(1,40),(1,43)),
+                               ('ALIGN',(0,4),(-1,4),'CENTER'),
+                               #('TEXTCOLOR',(0,-1),(-1,-1),colors.green),
+                               ('GRID', (0,0), (-1,-1), 0.25, colors.black),#(columnstart,rowstart),(columnend,rowend),thickness
+                               ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                               ]))
+        Story.append(PageBreak())
+        Story.append(t) 
 
         '''
         for the report, change the initial data from the output to represent this:
