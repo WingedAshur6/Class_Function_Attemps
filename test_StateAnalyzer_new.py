@@ -1703,7 +1703,7 @@ class StateAnalyzer:
         from reportlab.lib.enums import TA_JUSTIFY
         from reportlab.lib.enums import TA_CENTER
         from reportlab.lib.pagesizes import letter
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle,PageBreak
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.lib.units import inch
         from reportlab.lib import colors       
@@ -1787,7 +1787,7 @@ class StateAnalyzer:
         
             
         for i in range(self.number_of_barrels):
-            Story.append(Paragraph( "<font size=8>-------------------------------------------------------------< Barrel Number: %s >---------------------------------------------------------------</font>"%(i+1),styles["Normal"]))
+            Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >---------------------------------------------------------------------</font>"%(i+1),styles["Normal"]))
             if np.size(self.ipd.items())>0:
                 for l in range(self.ipditeration):#-----------debug
                     Story.append(Paragraph( "<font size=8>     IPD Time Iteration:      %s</font>"%(l+1),styles["Normal"]))
@@ -1810,7 +1810,7 @@ class StateAnalyzer:
         Barrel_list=["BBL_1","BBL_2","BBL_3","BBL_4"]
         Statistics=["RFG_lo","RFG_hi","V","RTemp","SUPHT","DUTYCycles","BTR%"]        
         for barrel in range(barr_num):
-            Story.append(Paragraph( "<font size=8>-------------------------------------------------------------< Barrel Number: %s >---------------------------------------------------------------</font>"%(barrel+1),styles["Normal"]))
+            Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >--------------------------------------------------------------------</font>"%(barrel+1),styles["Normal"]))
             for state in range(np.size(statelist)):
                 Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp State: %s</font>"%(statelist[state]),styles["Normal"]))
                 for instance in range(np.size(self.states[state][barrel].items(),0)):
@@ -1820,7 +1820,7 @@ class StateAnalyzer:
                             Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Property: &nbsp&nbsp %s   | &nbsp&nbsp  Result:&nbsp&nbsp  FAIL</font>"%(Statistics[statistic]),styles["Normal"]))
         print np.size(pics)
         
-        Story.append(Spacer(1,48))
+        Story.append(PageBreak())
         Story.append(Paragraph("<font size=16>Test Visualization: </font>",styles["Normal"]))
         Story.append(Spacer(1,24))
         for state in range(np.size(pics)):
@@ -1830,10 +1830,49 @@ class StateAnalyzer:
                 Story.append(im)
                 Story.append(Spacer(1,24))
                 
-        # data= [['00', '01', '02', '03', '04'],
-               # ['10', '11', '12', '13', '14'],
-               # ['20', '21', '22', '23', '24'],
-               # ['30', '31', '32', '33', '34']]
+        data= [['UNIT TESTING REPORT (%s)'%(serialno), '01', '02', '03', '04','05'],
+                ['Unit Type:', '%s'%(series), '12', '13', '14','15'],
+                ['Number of Barrels: ', '%s'%(barr_num), '22', '23', '24','25'],
+                ['20', '21', '22', '23', '24','25'],
+                ['20', '21', '22', '23', '24','25'],
+                ['1', '21', '22', '23', '24','25'],
+                ['2', '21', '22', '23', '24','25'],
+                ['3', '21', '22', '23', '24','25'],
+                ['4', '21', '22', '23', '24','25'],
+                ['5', '21', '22', '23', '24','25'],
+                ['6', '21', '22', '23', '24','25'],
+                ['7', '21', '22', '23', '24','25'],
+                ['8', '21', '22', '23', '24','25'],
+                ['9', '21', '22', '23', '24','25'],
+                ['10', '21', '22', '23', '24','25'],
+                ['11', '21', '22', '23', '24','25'],
+                ['12', '21', '22', '23', '24','25'],
+                ['13', '21', '22', '23', '24','25'],
+                ['14', '21', '22', '23', '24','25'],
+                ['15', '21', '22', '23', '24','25'],
+                ['16', '21', '22', '23', '24','25'],
+                ['17', '11', '12', '13', '14','15'],
+                ['18', '21', '22', '23', '24','25'],
+                ['19', '21', '22', '23', '24','25'],
+                ['20', '21', '22', '23', '24','25'],
+                ['21', '21', '22', '23', '24','25'],
+                ['22', '21', '22', '23', '24','25'],
+                ['23', '21', '22', '23', '24','25'],
+                ['24', '21', '22', '23', '24','25'],
+                ['25', '21', '22', '23', '24','25'],
+                ['26', '21', '22', '23', '24','25'],
+                ['27', '21', '22', '23', '24','25'],
+                ['28', '21', '22', '23', '24','25'],
+                ['29', '21', '22', '23', '24','25'],
+                ['30', '21', '22', '23', '24','25'],
+                ['31', '21', '22', '23', '24','25'],
+                ['32', '21', '22', '23', '24','25'],
+                ['33', '21', '22', '23', '24','25'],
+                ['34', '21', '22', '23', '24','25'],
+                ['35', '21', '22', '23', '24','25'],
+                ['36', '21', '22', '23', '24','25'],
+                ['37', '21', '22', '23', '24','25'],
+                ['38', '31', '32', '33', '34','35']]
         # t=Table(data)
         # t.setStyle(TableStyle([('BACKGROUND',(1,1),(-2,-2),colors.green),
                                # ('TEXTCOLOR',(0,0),(1,-1),colors.red)]))
@@ -1850,40 +1889,56 @@ class StateAnalyzer:
                                # ]))
         # Story.append(t) 
 
-
+        '''
+        for the report, change the initial data from the output to represent this:
         
-        # Create return address
-        # ptext = '<font size=12>%s</font>' % full_name
-        # Story.append(Paragraph(ptext, styles["Normal"]))       
-        # for part in address_parts:
-            # ptext = '<font size=12>%s</font>' % part.strip()
-            # Story.append(Paragraph(ptext, styles["Normal"]))   
+        
+        UNIT TESTING REPORT ( << unit serial number >>)
+        Unit Type:                      Date
+        Software:                       Time of Test (Unix, self.data[0][0])        RESULT: PASS/FAIL
+         SUmmary of REsults:
          
-        # Story.append(Spacer(1, 12))
-        # ptext = '<font size=12>Dear %s:</font>' % full_name.split()[0].strip()
-        # Story.append(Paragraph(ptext, styles["Normal"]))
-        # Story.append(Spacer(1, 12))
+                                        Actual          low             high        Result
          
-        # ptext = '<font size=12>We would like to welcome you to our subscriber base for %s Magazine! \
-                # You will receive %s issues at the excellent introductory price of $%s. Please respond by\
-                # %s to start receiving your subscription and get the following free gift: %s.</font>' % (magName, 
-                                                                                                        # issueNum,
-                                                                                                        # subPrice,
-                                                                                                        # limitedDate,
-                                                                                                        # freeGift)
-        # Story.append(Paragraph(ptext, styles["Justify"]))
-        # Story.append(Spacer(1, 12))
-         
-         
-        # ptext = '<font size=12>Thank you very much and we look forward to serving you.</font>'
-        # Story.append(Paragraph(ptext, styles["Justify"]))
-        # Story.append(Spacer(1, 12))
-        # ptext = '<font size=12>Sincerely,</font>'
-        # Story.append(Paragraph(ptext, styles["Normal"]))
-        # Story.append(Spacer(1, 48))
-        # ptext = '<font size=12>Ima Sucker</font>'
-        # Story.append(Paragraph(ptext, styles["Normal"]))
-        # Story.append(Spacer(1, 12))
+         Initial Pulldown Time
+         IPD Baseline (BBL1)
+         2
+         3
+         4
+         IPD Max Hiside Pres
+         IPD Min Lowside Pres
+         IPD min retun temp
+         IPD Avg Duty
+         IPD Avg Superheat
+         Defrost Time (BBL1)
+         2
+         3
+         4
+         Defrost Baseline(BBL1)
+         2
+         3
+         4
+         Refreeze HSP (BBL1-4)
+         #
+         #
+         #
+         Refreeze LSP (BBL1-4)
+         #
+         #
+         #
+         Refreeze Times (BBL1-4)
+         #
+         #
+         #
+         Refreeze SUPR(BBL1-4)
+         #
+         #
+         #
+         Refreeze Avg DC(1-4)
+         #
+         #
+         #
+         '''
         
         
         
