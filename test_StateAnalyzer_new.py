@@ -1829,6 +1829,8 @@ class StateAnalyzer:
                 im = Image(pics[state][picnum], 5*inch, 3*inch)
                 Story.append(im)
                 Story.append(Spacer(1,24))
+###########################################################################
+        ## Creating some calculation data to put into the PDF Table:
         ipdm,ipds=divmod(self.ipd[0].length(),60)
         ipdLlim_m,ipdLlim_s=divmod(13*60,60)
         ipdMlim_m,ipdMlim_s=divmod(18*60,60)
@@ -1836,6 +1838,74 @@ class StateAnalyzer:
             ipdverd="Fail"
         else:
             ipdverd="Pass"
+        ipd_max_HSP=np.max(self.data[self.ipd[0].start_time:self.ipd[0].end_time][6])#--------------------------self.ipd[barrel]
+        ipd_min_LSP=np.min(self.data[self.ipd[0].start_time:self.ipd[0].end_time][5])
+        ipd_Base=[[],[],[],[]]
+        
+        
+        def_base=[[],[],[],[]]
+        def_times=[[],[],[],[]]
+        
+        
+        ref_base=[[],[],[],[]]
+        ref_max_HSP=[[],[],[],[]]
+        ref_min_LSP=[[],[],[],[]]
+        ref_times=[[],[],[],[]]
+        ref_avg_SUPR=[[],[],[],[]]
+        ref_avg_DC=[[],[],[],[]]
+        
+        
+        
+        
+        
+        
+        for i in range( barr_num):# ----------------------------------------------------------------------------Refreeze HSP,LSP,Times,SH, DC
+            
+            for iteration in range(self.ipditeration):
+                ipd_Base[i].append([])
+                ipd_Base[i][iteration].append(self.data[self.ipd[0].start_time][14+7*i])
+                
+                
+            for iteration in range(self.refreezeiteration[i]):
+                ref_base[i].append([])
+                ref_base[i][iteration].append(self.data[self.refreeze[i][iteration].start_time][14+7*i])
+                
+                ref_min_LSP[i].append([])
+                ref_min_LSP[i][iteration].append(np.min(self.refprops[i][iteration][0][0:-1]))
+                
+                ref_max_HSP[i].append([])
+                ref_max_HSP[i][iteration].append(np.max(self.refprops[i][iteration][1][0:-1]))
+                
+                refm,refs=divmod(self.refreeze[i][iteration].length(),60)
+                ref_times[i].append([])
+                ref_times[i][iteration].append(["%s:%s"%(refm,refs)])
+                
+                ref_avg_SUPR[i].append([])
+                ref_avg_SUPR[i][iteration].append(np.mean(self.refprops[i][iteration][4][0:-1]))
+                
+                ref_avg_DC[i].append([])
+                ref_avg_DC[i][iteration].append(np.mean(self.refprops[i][iteration][5][0:-1]))
+                
+                
+            for iteration in range(self.defrostiteration[i]):
+                def_base[i].append([])
+                def_base[i][iteration].append(self.data[self.defrost[i][iteration].start_time][14+7*i])
+                
+                defm,defs=divmod(self.defrost[i][iteration].length(),60)
+                def_times[i].append([])
+                def_times[i][iteration].append(["%s:%s"%(defm,defs)])
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+        ## Calculation data to be put up into the the PDF table above
+###########################################################################        
         data= [['UNIT TESTING REPORT (%s)'%(serialno), '-', '-', '-', '-','-'],
                 ['Unit Type', '%s'%(series), 'Date/Time', '%s'%(time.ctime()), 'Result:','%s'%(myverdict)],
                 ['Barrels ', '%s'%(barr_num), '-', '-', '-','-'],
@@ -1868,7 +1938,7 @@ class StateAnalyzer:
                 ['25', '21', '22', '23', '24','25'],
                 ['26', '21', '22', '23', '24','25'],
                 ['27', '21', '22', '23', '24','25'],
-                ['28', 'Refreeze Times Pressure (Barrels 1-4)', '22', '23', '24','25'],
+                ['28', 'Refreeze Times (Barrels 1-4)', '22', '23', '24','25'],
                 ['29', '21', '22', '23', '24','25'],
                 ['30', '21', '22', '23', '24','25'],
                 ['31', '21', '22', '23', '24','25'],
