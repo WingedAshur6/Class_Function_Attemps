@@ -138,11 +138,9 @@ class StateAnalyzer:
         #time.sleep(10)
         #print Data[0][0],time.sleep(5)
 
-        ipditeration=0
+        ipditeration={}
         ipdrun={}
-        ipdrun[ipditeration]={}
-        ipdrun[ipditeration]=State(ipditeration,None,None,None)
-        ipdtimerec=0
+        ipdtimerec={}
         
         refreeze={}
         refreezeiteration={}
@@ -154,6 +152,11 @@ class StateAnalyzer:
         
         
         for i in range(num_barr):
+            ipdrun[i]={}
+            ipdtimerec[i]=0
+            ipditeration[i]=0
+            ipdrun[i][ipditeration[i]]=State(ipditeration,None,None,None)
+        
             refreeze[i]={}
             refreezerunrec[i]=0
             refreezeiteration[i]=0
@@ -175,14 +178,14 @@ class StateAnalyzer:
             for barrel, barrel_state in enumerate(row_state):
 ##---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                         
-                if "IPD" in row_state and  ipdtimerec==0:#------------------------------------------------------------------------------------------------------------------------------------- When it enters IPD state.
+                if "IPD" in row_state and  ipdtimerec[barrel]==0:#------------------------------------------------------------------------------------------------------------------------------------- When it enters IPD state.
 
                         
                         #print"\n\n capturing ipd START in IPD interval: ", ipdrun[ipditeration].barrel
                         #time.sleep(5)
-                        ipdrun[ipditeration].start_time=row[0]-self.state_data[0][0]
-                        ipdrun[ipditeration].state_name=row_state[barrel]
-                        
+                        ipdrun[barrel][ipditeration[barrel]].start_time=row[0]-self.state_data[0][0]
+                        ipdrun[barrel][ipditeration[barrel]].state_name=row_state[barrel]
+                        ipdrun[barrel][ipditeration[barrel]].barrel=barrel
                         
                         
                 if "Freezing" in row_state[barrel] and refreezerunrec[barrel]==0 and not "IPD" in data_analysis_states:
@@ -229,15 +232,15 @@ class StateAnalyzer:
                         #time.sleep(10)
                         defrostrunrec[barrel]=0                        
 
-                if not "IPD" in data_analysis_states and ipdtimerec==1:
+                if not "IPD" in data_analysis_states and ipdtimerec[barrel]==1:
 
                    
                     #print"\n\n capturing ipd END in IPD interval: ", ipdrun[ipditeration].barrel
-                    ipdrun[ipditeration].end_time=row[0]-self.state_data[0][0]
-                    ipditeration+=1
-                    ipdrun[ipditeration]={}
-                    ipdrun[ipditeration]=State(ipditeration,None,None,None)
-                    ipdtimerec=0 
+                    ipdrun[barrel][ipditeration[barrel]].end_time=row[0]-self.state_data[0][0]
+                    ipditeration[barrel]+=1
+                    ipdrun[barrel][ipditeration[barrel]]={}
+                    ipdrun[barrel][ipditeration[barrel]]=State(ipditeration[barrel],None,None,None)
+                    ipdtimerec[barrel]=0 
                     #print "\n\n new IPDrecorder created: ",ipdrun[ipditeration].barrel," Previous: ",ipdrun[ipditeration-1].barrel
                     #time.sleep(5)
                     #return
@@ -272,21 +275,21 @@ class StateAnalyzer:
                     
                     
                     
-                if "IPD" in row_state and ipdtimerec==0:#----------------------------------------------------- CRITICAL IPD HARDCODE. DO NOT TOUCH. DO NOT MOVE. ---------------------------------------------------------- this must be here in order for the IPD recording to start.
+                if "IPD" in row_state and ipdtimerec[barrel]==0:#----------------------------------------------------- CRITICAL IPD HARDCODE. DO NOT TOUCH. DO NOT MOVE. ---------------------------------------------------------- this must be here in order for the IPD recording to start.
 
 
                     #ipditeration+=1 #-----------------------------------------here is to say that the IPD recording phase has ended and a new one can start, IF the system enters ipd phase again.
-                    ipdtimerec=1
-                if not "IPD" in data_analysis_states and ipditeration!=0 and ipdtimerec!=0:
+                    ipdtimerec[barrel]=1
+                if not "IPD" in data_analysis_states and ipditeration!=0 and ipdtimerec[barrel]!=0:
                         #print "\n\n IPD start time recorded already after new recorder made. State Transition found. recording END TIME."
                         #time.sleep(3)
-                        ipdtimerec=0
+                        ipdtimerec[barrel]=0
                         #print"\n\n capturing ipd END in IPD interval: ", ipdrun[ipditeration].barrel
-                        ipdrun[ipditeration].end_time=row[0]-self.state_data[0][0]
-                        ipditeration+=1
-                        ipdrun[ipditeration]={}
-                        ipdrun[ipditeration]=State(ipditeration,None,None,None)
-                        ipdtimerec=0 
+                        ipdrun[barrel][ipditeration[barrel]].end_time=row[0]-self.state_data[0][0]
+                        ipditeration[barrel]+=1
+                        ipdrun[barrel][ipditeration[barrel]]={}
+                        ipdrun[barrel][ipditeration[barrel]]=State(ipditeration[barrel],None,None,None)
+                        ipdtimerec[barrel]=0 
                         #print "\n\n new IPDrecorder created: ",ipdrun[ipditeration].barrel," Previous: ",ipdrun[ipditeration-1].barrel
                         #time.sleep(5)    
                     
@@ -322,9 +325,9 @@ class StateAnalyzer:
         for i in range(num_barr):
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
             if np.size(ipdrun.items())>0:
-                for l in range(ipditeration):#-----------debug
+                for l in range(ipditeration[i]):#-----------debug
                     print "     IPD Time Iteration:      ",l
-                    print "                                    IPD Start:      ",ipdrun[l].start_time,"\n                                    IPD End:        ",ipdrun[l].end_time,"\n                                    IPD Length:     ",ipdrun[l].length()   
+                    print "                                    IPD Start:      ",ipdrun[i][l].start_time,"\n                                    IPD End:        ",ipdrun[i][l].end_time,"\n                                    IPD Length:     ",ipdrun[i][l].length()   
             if np.size(refreezeiteration.items())>2:
                 for j in range(refreezeiteration[i]):
                     print "     Refreeze Time Iteration: ",j
@@ -576,12 +579,12 @@ class StateAnalyzer:
             ipd_SUP[ipd_barrel]={}
             ipd_DC[ipd_barrel]={}
             ipd_RT[ipd_barrel]={}
-            for ipd_instance in range(self.ipditeration):
+            for ipd_instance in range(self.ipditeration[ipd_barrel]):
             ## gary: dont use magic numbers or "hardcode numbers" so its easier to come back to when 
                 #--------------------------------------------------------------------------- RFG_Low ---------------------------------------------------------------------------------------------------------------------
                 ipd_RFG_lo[ipd_barrel][ipd_instance]={}
                 ipd_RFG_lo[ipd_barrel][ipd_instance]={}
-                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_barrel][ipd_instance].start_time:self.ipd[ipd_barrel][ipd_instance].end_time]),0,axis=1)
                 ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_lo[ipd_barrel][ipd_instance]),np.s_[0:4],axis=1)
                 ipd_RFG_lo[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_lo[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
@@ -589,7 +592,7 @@ class StateAnalyzer:
                 #--------------------------------------------------------------------------- RFG_High ---------------------------------------------------------------------------------------------------------------------
                 ipd_RFG_hi[ipd_barrel][ipd_instance]={}
                 ipd_RFG_hi[ipd_barrel][ipd_instance]={}
-                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_barrel][ipd_instance].start_time:self.ipd[ipd_barrel][ipd_instance].end_time]),0,axis=1)
                 ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_hi[ipd_barrel][ipd_instance]),np.s_[0:5],axis=1)
                 ipd_RFG_hi[ipd_barrel][ipd_instance]=np.delete((ipd_RFG_hi[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
@@ -597,7 +600,7 @@ class StateAnalyzer:
                 #--------------------------------------------------------------------------- Voltage ---------------------------------------------------------------------------------------------------------------------
                 ipd_V[ipd_barrel][ipd_instance]={}
                 ipd_V[ipd_barrel][ipd_instance]={}
-                ipd_V[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_V[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_barrel][ipd_instance].start_time:self.ipd[ipd_barrel][ipd_instance].end_time]),0,axis=1)
                 ipd_V[ipd_barrel][ipd_instance]=np.delete((ipd_V[ipd_barrel][ipd_instance]),np.s_[0:6],axis=1)
                 ipd_V[ipd_barrel][ipd_instance]=np.delete((ipd_V[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
@@ -605,7 +608,7 @@ class StateAnalyzer:
                 #--------------------------------------------------------------------------- RTemp ---------------------------------------------------------------------------------------------------------------------
                 ipd_RT[ipd_barrel][ipd_instance]={}
                 ipd_RT[ipd_barrel][ipd_instance]={}
-                ipd_RT[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_RT[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_barrel][ipd_instance].start_time:self.ipd[ipd_barrel][ipd_instance].end_time]),0,axis=1)
                 ipd_RT[ipd_barrel][ipd_instance]=np.delete((ipd_RT[ipd_barrel][ipd_instance]),np.s_[0:7],axis=1)
                 ipd_RT[ipd_barrel][ipd_instance]=np.delete((ipd_RT[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
@@ -613,7 +616,7 @@ class StateAnalyzer:
                 #--------------------------------------------------------------------------- SUPRHT ---------------------------------------------------------------------------------------------------------------------
                 ipd_SUP[ipd_barrel][ipd_instance]={}
                 ipd_SUP[ipd_barrel][ipd_instance]={}
-                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_SUP[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_barrel][ipd_instance].start_time:self.ipd[ipd_barrel][ipd_instance].end_time]),0,axis=1)
                 ipd_SUP[ipd_barrel][ipd_instance]=np.delete((ipd_SUP[ipd_barrel][ipd_instance]),np.s_[0:8],axis=1)
                 ipd_SUP[ipd_barrel][ipd_instance]=np.delete((ipd_SUP[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
@@ -622,7 +625,7 @@ class StateAnalyzer:
                 #--------------------------------------------------------------------------- DUTYCycles ---------------------------------------------------------------------------------------------------------------------
                 ipd_DC[ipd_barrel][ipd_instance]={}
                 ipd_DC[ipd_barrel][ipd_instance]={}
-                ipd_DC[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_DC[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_barrel][ipd_instance].start_time:self.ipd[ipd_barrel][ipd_instance].end_time]),0,axis=1)
                 ipd_DC[ipd_barrel][ipd_instance]=np.delete((ipd_DC[ipd_barrel][ipd_instance]),np.s_[0:9],axis=1)
                 ipd_DC[ipd_barrel][ipd_instance]=np.delete((ipd_DC[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
                 
@@ -632,7 +635,7 @@ class StateAnalyzer:
                 #--------------------------------------------------------------------------- BTR ---------------------------------------------------------------------------------------------------------------------
                 ipd_BTR[ipd_barrel][ipd_instance]={}
                 ipd_BTR[ipd_barrel][ipd_instance]={}
-                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_instance].start_time:self.ipd[ipd_instance].end_time]),0,axis=1)
+                ipd_BTR[ipd_barrel][ipd_instance]=np.delete((self.data[self.ipd[ipd_barrel][ipd_instance].start_time:self.ipd[ipd_barrel][ipd_instance].end_time]),0,axis=1)
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[0:12+7*ipd_barrel],axis=1)
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
 
@@ -651,7 +654,7 @@ class StateAnalyzer:
             ipdprops[barrel]={}
             defprops[barrel]={}
             refprops[barrel]={}
-            for instance in range(self.ipditeration):
+            for instance in range(self.ipditeration[barrel]):
                 ipdprops[barrel][instance]={}
                 ipdprops[barrel][instance]={0:self.ipd_RFG_lo[barrel][instance]}
                 ipdprops[barrel][instance].update({1:self.ipd_RFG_hi[barrel][instance]})
@@ -771,7 +774,32 @@ class StateAnalyzer:
         self.REF3_tolerances=ref3  
         self.tols4=[self.IPD4_tolerances,self.DEF4_tolerances,self.REF4_tolerances]
         self.tols3=[self.IPD3_tolerances,self.DEF3_tolerances,self.REF3_tolerances]
-                    
+        
+        ipd_time=[18*60,13*60]
+        ipd_base=[4200,3500]
+        ipd_max_HSP=[280,240]
+        ipd_min_LSP=[50,40]
+        ipd_min_RT=[25,10]
+        ipd_avg_DC=[60,30]
+        ipd_avg_SH=[15,5]
+        ipd_pdf_tolerances=[ipd_time,ipd_base,ipd_max_HSP,ipd_min_LSP,ipd_min_RT,ipd_avg_DC,ipd_avg_SH]
+        ipd_verdicts=["Pass","Pass","Pass","Pass","Pass","Pass","Pass"]
+        
+        def_time=[5*60,2.5*60]
+        def_base=[4200,3500]
+        def_pdf_tolerances=[def_time,def_base]
+        def_verdicts=["Pass","Pass"]
+        
+        ref_max_HSP=[280,240]
+        ref_min_LSP=[50,40]
+        ref_time=[5*60,2.5*60]
+        ref_avg_SH=[15,5]
+        ref_avg_DC=[60,30]
+        ref_pdf_tolerances=[ref_time,ref_max_HSP,ref_min_LSP,ref_avg_SH,ref_avg_DC]
+        ref_verdicts=["Pass","Pass","Pass","Pass","Pass"]
+
+
+        
     def analyze_tolerances(self,num_barr):
         hightol=1.25
         lowtol=.75
@@ -1045,17 +1073,17 @@ class StateAnalyzer:
                             #BTRfig=plt.figure()
                             lower=[]
                             upper=[]
-                            for iteration in range(self.stateiters[state]):
+                            for iteration in range(self.stateiters[state][barrel]):
                                 x=[]
                                 y=[]
-                                BTRx=range(self.statelengths[state][iteration].length())
+                                BTRx=range(self.statelengths[state][barrel][iteration].length())
                                 BTRy_hold=self.stateprops[state][barrel][iteration][6]
                                 BTRy=BTRy_hold[:]
                                 zip(BTRx,BTRy)
                                 plotarray=[]
                                 #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
                                 
-                                for timer in range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time):
+                                for timer in range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time):
                                     
                                     uppertol=(np.polyval(self.IPD4_tolerances[6],timer))*self.hightol
                                     lowertol=(np.polyval(self.IPD4_tolerances[6],timer))*self.lowtol
@@ -1091,17 +1119,17 @@ class StateAnalyzer:
                         for barrel in range(np.size(Barrels)):
                             lower=[]
                             upper=[]
-                            for iteration in range(self.stateiters[state]):
+                            for iteration in range(self.stateiters[state][barrel]):
                                 x=[]
                                 y=[]
-                                BTRx=range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time)# self.statelengths[state][iteration].length()  <----------- used to be that. may include with another file for monitoring.
+                                BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)# self.statelengths[state][iteration].length()  <----------- used to be that. may include with another file for monitoring.
                                 BTRy_hold=self.stateprops[state][barrel][iteration][statistic2]
                                 BTRy=BTRy_hold[:]
                                 zip(BTRx,BTRy)
                                 plotarray=[]
                                 
                                 
-                                for timer in range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time):
+                                for timer in range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time):
                                     
                                     uppertol=(np.polyval(self.IPD4_tolerances[statistic2],timer))*self.hightol
                                     lowertol=(np.polyval(self.IPD4_tolerances[statistic2],timer))*self.lowtol
@@ -1632,9 +1660,9 @@ class StateAnalyzer:
         for i in range(num_barr):
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
             if np.size(self.ipd.items())>0:
-                for l in range(self.ipditeration):#-----------debug
+                for l in range(self.ipditeration[i]):#-----------debug
                     print "     IPD Time Iteration:      ",l
-                    print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
+                    print "                                    IPD Start:      ",self.ipd[i][l].start_time,"\n                                    IPD End:        ",self.ipd[i][l].end_time,"\n                                    IPD Length:     ",self.ipd[i][l].length()   
             if np.size(self.refreezeiteration.items())>2:
                 for j in range(self.refreezeiteration[i]):
                     print "     Refreeze Time Iteration: ",j
@@ -1659,8 +1687,8 @@ class StateAnalyzer:
                 for j in range(self.refreezeiteration[i]):
                     self.errors_ref[i][j]={}
                     test_for_overlap=0
-                    for k in range(self.ipditeration):
-                        if  self.refreeze[i][j].end_time <= self.ipd[k].end_time or self.refreeze[i][j].start_time>=self.ipd[k].start_time and self.refreeze[i][j].start_time<=self.ipd[k].end_time or self.refreeze[i][j].length()<30:
+                    for k in range(self.ipditeration[i]):
+                        if  self.refreeze[i][j].end_time <= self.ipd[i][k].end_time or self.refreeze[i][j].start_time>=self.ipd[i][k].start_time and self.refreeze[i][j].start_time<=self.ipd[i][k].end_time or self.refreeze[i][j].length()<30:
                             test_for_overlap=1
                             print "TEST FAILED."
                             self.errors_ref[dictkey][j]=self.refreeze[i][j]
@@ -1684,9 +1712,9 @@ class StateAnalyzer:
         for i in range(num_barr):
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
             if np.size(self.ipd.items())>0:
-                for l in range(self.ipditeration):#-----------debug
+                for l in range(self.ipditeration[i]):#-----------debug
                     print "     IPD Time Iteration:      ",l
-                    print "                                    IPD Start:      ",self.ipd[l].start_time,"\n                                    IPD End:        ",self.ipd[l].end_time,"\n                                    IPD Length:     ",self.ipd[l].length()   
+                    print "                                    IPD Start:      ",self.ipd[i][l].start_time,"\n                                    IPD End:        ",self.ipd[i][l].end_time,"\n                                    IPD Length:     ",self.ipd[i][l].length()   
             if np.size(self.refreezeiteration.items())>2:
                 for j in range(self.refreezeiteration[i]):
                     print "     Refreeze Time Iteration: ",j
@@ -1789,9 +1817,9 @@ class StateAnalyzer:
         for i in range(self.number_of_barrels):
             Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >---------------------------------------------------------------------</font>"%(i+1),styles["Normal"]))
             if np.size(self.ipd.items())>0:
-                for l in range(self.ipditeration):#-----------debug
+                for l in range(self.ipditeration[i]):#-----------debug
                     Story.append(Paragraph( "<font size=8>     IPD Time Iteration:      %s</font>"%(l+1),styles["Normal"]))
-                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Start:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD End: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Length:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s</font>"%(self.ipd[l].start_time,self.ipd[l].end_time,self.ipd[l].length()),styles["Normal"]) )  
+                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Start:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD End: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Length:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s</font>"%(self.ipd[i][l].start_time,self.ipd[i][l].end_time,self.ipd[i][l].length()),styles["Normal"]) )  
             if np.size(self.refreezeiteration.items())>2:
                 for j in range(self.refreezeiteration[i]):
                     Story.append(Paragraph( "<font size=8>     Refreeze Time Iteration: %s</font>"%(j+1),styles["Normal"]))
@@ -1831,17 +1859,20 @@ class StateAnalyzer:
                 Story.append(Spacer(1,24))
 ###########################################################################
         ## Creating some calculation data to put into the PDF Table:
-        ipdm,ipds=divmod(self.ipd[0].length(),60)
+        ipdm,ipds=divmod(self.ipd[0][0].length(),60)
         ipdLlim_m,ipdLlim_s=divmod(13*60,60)
         ipdMlim_m,ipdMlim_s=divmod(18*60,60)
-        if self.ipd[0].length()>18*60 or self.ipd[0].length()<13*60:
+        if self.ipd[0][0].length()>18*60 or self.ipd[0][0].length()<13*60:
             ipdverd="Fail"
         else:
             ipdverd="Pass"
-        ipd_max_HSP=np.max(self.data[self.ipd[0].start_time:self.ipd[0].end_time][6])#--------------------------self.ipd[barrel]
-        ipd_min_LSP=np.min(self.data[self.ipd[0].start_time:self.ipd[0].end_time][5])
+        ipd_max_HSP=[[],[],[],[]]#np.max(self.data[self.ipd[0][0].start_time:self.ipd[0][0].end_time][6])#--------------------------self.ipd[barrel][iteration]
+        ipd_min_LSP=[[],[],[],[]]#np.min(self.data[self.ipd[0].start_time:self.ipd[0].end_time][5])
         ipd_Base=[[],[],[],[]]
-        
+        ipd_times=[[],[],[],[]]
+        ipd_min_RT=[[],[],[],[]]
+        ipd_avg_DC=[[],[],[],[]]
+        ipd_avg_SH=[[],[],[],[]]
         
         def_base=[[],[],[],[]]
         def_times=[[],[],[],[]]
@@ -1859,12 +1890,30 @@ class StateAnalyzer:
         
         
         
-        for i in range( barr_num):# ----------------------------------------------------------------------------Refreeze HSP,LSP,Times,SH, DC
+        for i in range( barr_num):# ----------------------------------------------------------------------------IPD  HSP,LSP,Times,SH, DC
             
-            for iteration in range(self.ipditeration):
+            for iteration in range(self.ipditeration[i]):
                 ipd_Base[i].append([])
-                ipd_Base[i][iteration].append(self.data[self.ipd[0].start_time][14+7*i])
-                ## ADD THE TIME TO IPD ITERATION.
+                ipd_Base[i][iteration].append(self.data[self.ipd[i][0].start_time][14+7*i])
+                
+                ipd_max_HSP[i].append([])
+                ipd_max_HSP[i][iteration].append(np.round(np.max(self.ipdprops[i][iteration][1][0:-1])))
+                
+                ipd_min_LSP[i].append([])
+                ipd_min_LSP[i][iteration].append(np.round(np.min(self.ipdprops[i][iteration][0][0:-1])))
+                
+                ipdm,ipds=divmod(self.ipd[i][iteration].length(),60)
+                ipd_times[i].append([])
+                ipd_times[i][iteration].append('%s:%s'%(ipdm,ipds))
+                
+                ipd_min_RT[i].append([])
+                ipd_min_RT[i][iteration].append(np.min(self.ipdprops[i][iteration][3][0:-1]))
+                
+                ipd_avg_DC[i].append([])
+                ipd_avg_DC[i][iteration].append(np.round(np.mean(self.ipdprops[i][iteration][5][0:-1])))
+                
+                ipd_avg_SH[i].append([])
+                ipd_avg_SH[i][iteration].append(np.round(np.mean(self.ipdprops[i][iteration][4][0:-1])))
                 
             for iteration in range(self.refreezeiteration[i]):
                 ref_base[i].append([])
@@ -1878,13 +1927,13 @@ class StateAnalyzer:
                 
                 refm,refs=divmod(self.refreeze[i][iteration].length(),60)
                 ref_times[i].append([])
-                ref_times[i][iteration].append(["%s:%s"%(refm,refs)])
+                ref_times[i][iteration].append('%s:%s'%(refm,refs))
                 
                 ref_avg_SUPR[i].append([])
-                ref_avg_SUPR[i][iteration].append(np.mean(self.refprops[i][iteration][4][0:-1]))
+                ref_avg_SUPR[i][iteration].append(np.round(np.mean(self.refprops[i][iteration][4][0:-1])))
                 
                 ref_avg_DC[i].append([])
-                ref_avg_DC[i][iteration].append(np.mean(self.refprops[i][iteration][5][0:-1]))
+                ref_avg_DC[i][iteration].append(np.round(np.mean(self.refprops[i][iteration][5][0:-1])))
                 
                 
             for iteration in range(self.defrostiteration[i]):
@@ -1893,7 +1942,7 @@ class StateAnalyzer:
                 
                 defm,defs=divmod(self.defrost[i][iteration].length(),60)
                 def_times[i].append([])
-                def_times[i][iteration].append(["%s:%s"%(defm,defs)])
+                def_times[i][iteration].append('%s:%s'%(defm,defs))
                 
                 
                 
@@ -1905,13 +1954,104 @@ class StateAnalyzer:
                 
                 
         ## Calculation data to be put up into the the PDF table above
-###########################################################################        
+###########################################################################    
+        
+        state_names=["IPD","Def.","Ref."]
+        printipd=0#---------------------------------------------------------------------------
+        printref=1#---------------------------------------------------------------------------
+        printdef=1#---------------------------------------------------------------------------
+        tablecombine_columns_ipd=[]
+        tablecombine_columns_ref=[]
+        tablecombine_columns_def=[]
+        tablecombine_columns_iteration=[]
+        tablecombine_rows_ref=[]
+        
+        
+        
+        
+                ## Calculation data to be put up into the the PDF table above
+###########################################################################
+        state_iterations=[self.ipditeration,self.defrostiteration,self.refreezeiteration]
+        
         data= [['UNIT TESTING REPORT (%s)'%(serialno), '-', '-', '-', '-','-'],
                 ['Unit Type', '%s'%(series), 'Date/Time', '%s'%(time.ctime()), 'Result:','%s'%(myverdict)],
                 ['Barrels ', '%s'%(barr_num), '-', '-', '-','-'],
                 ['-', '-', 'Tester', 'Stanford Martinez', '-','-'],
                 ['Summary of Results', '-', '-', '-', '-','-'],
-                ['', '', 'Actual', 'Low', 'High','Result'],
+                ['', '', 'Actual', 'Low', 'High','Result']]
+
+        for state in range(np.size(state_iterations,0)):
+            print state_names[state]
+            data.append(['%s' %(state_names[state]), '-', '-', '-', '-','-'])
+            for barrel in range(barr_num):
+                for iteration in range(state_iterations[state][barrel]):
+                    data.append(['Time Interval: %s'%(iteration), '-','-','-','-','-'])
+                    tablecombine_columns_iteration.append(np.size(data,0))
+                    
+                    if state==0:
+                        tablecombine_columns_ipd.append(np.size(data,0))
+                        data.append(['%s'%(np.size(data,0)), '%s PullDown Time '%(state_names[state]), '%s'%(ipd_times[barrel][iteration][0]), '23', '24','25'])
+                    
+                    
+                    for barrel in range(barr_num):
+                        if state==0:
+                            data.append(['%s'%(np.size(data,0)), '%s Baseline (Barrel %s) '%(state_names[state],barrel+1), '22', '23', '24','25'])
+
+                        
+                        
+                        
+                    if printipd==0:
+                        data.append(['%s'%(np.size(data,0)), '%s Max HiSide Pressure '%(state_names[state]), '%s'%(ipd_max_HSP[barrel][iteration][0]), '%s'%(240), '%s'%(280),'25'])
+                        data.append(['%s'%(np.size(data,0)), '%s Min LoSide Pressure '%(state_names[state]), '%s'%(ipd_min_LSP[barrel][iteration][0]), '%s'%(40), '%s'%(50),'25'])
+                        data.append(['%s'%(np.size(data,0)), '%s Min Return Temp '%(state_names[state]), '%s'%(ipd_min_RT[barrel][iteration][0]), '%s'%(10), '%s'%(25),'25'])
+                        data.append(['%s'%(np.size(data,0)), '%s Avg. Duty Cycle '%(state_names[state]), '%s'%(ipd_avg_DC[barrel][iteration][0]), '%s'%(30), '%s'%(60),'25'])
+                        data.append(['%s'%(np.size(data,0)), '%s Avg. Superheat '%(state_names[state]), '%s'%(ipd_avg_SH[barrel][iteration][0]), '%s'%(5), '%s'%(15),'25'])
+                        printipd=1
+                        printdef=0
+                        
+                        
+                    if printdef==0 and state==1:
+                        tablecombine_columns_def.append(np.size(data,0))
+                        for barrel in range(barr_num):
+                            data.append(['%s'%(np.size(data,0)), '%s Time (Barrel %s) '%(state_names[state],barrel+1), '%s'%(def_times[barrel][iteration]), '%s'%("Min "), '%s'%("Max "),'25'])
+                        for barrel in range(barr_num):
+                            data.append(['%s'%(np.size(data,0)), '%s Baseline (Barrel %s) '%(state_names[state], barrel+1), '%s'%(def_base[barrel][iteration]), '%s'%(3500), '%s'%(4200),'25'])
+                
+                        printdef=1
+                        printref=0
+                        
+                        
+                    if printref==0 and state==2:
+                        tablecombine_columns_ref.append(np.size(data,0))
+                        tablecombine_rows_ref.append(np.size(data,0)-1)
+                        for barrel in range(barr_num):
+                            data.append(['%s'%(np.size(data,0)), '%s Time (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_times[barrel][iteration]), '%s'%("Min "), '%s'%("Max "),'25'])
+                        tablecombine_rows_ref.append(np.size(data,0)-1)
+                        
+                        for barrel in range(barr_num):
+                            data.append(['%s'%(np.size(data,0)), '%s HiSide Pressure (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_max_HSP[barrel][iteration]), '%s'%(240), '%s'%(280),'25'])
+                        tablecombine_rows_ref.append(np.size(data,0)-1)
+                        
+                        for barrel in range(barr_num):
+                            data.append(['%s'%(np.size(data,0)), '%s LowSide Pressure (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_min_LSP[barrel][iteration]), '%s'%(40), '%s'%(50),'25'])
+                        tablecombine_rows_ref.append(np.size(data,0)-1)
+                        
+                        for barrel in range(barr_num):
+                            data.append(['%s'%(np.size(data,0)), '%s Superheat (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_avg_SUPR[barrel][iteration]), '%s'%(5), '%s'%(15),'25'])
+                        tablecombine_rows_ref.append(np.size(data,0)-1)
+                        
+                        for barrel in range(barr_num):
+                            data.append(['%s'%(np.size(data,0)), '%s Avg. Duty Cycle (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_avg_DC[barrel][iteration]), '%s'%(30), '%s'%(60),'25'])
+                        #tablecombine_rows_ref.append(np.size(data,0)-1)
+                        printref=1
+                    
+
+
+
+                        
+                break
+                
+            '''    
                 ['2', 'Initial PullDown Time', '%s:%s'%(ipdm,ipds), '%s:%s'%(ipdLlim_m,ipdLlim_s), '%s:%s'%(ipdMlim_m,ipdMlim_s),'%s'%(ipdverd)],
                 ['3', 'IPD Baseline (Barrel 1) ', '22', '23', '24','25'],
                 ['4', 'IPD Baseline (Barrel 2)', '22', '23', '24','25'],
@@ -1950,7 +2090,7 @@ class StateAnalyzer:
                 ['37', '21', '22', '23', '24','25'],
                 ['38', '21', '22', '23', '24','25'],
                 ['39', '31', '32', '33', '34','35']]
-        
+                '''
         t=Table(data)
         t.setStyle(TableStyle([('BACKGROUND',(-1,1),(-1,1),colors.red)]))
         t.setStyle(TableStyle([('ALIGN',(0,0),(-1,0),'CENTER'),
@@ -1969,19 +2109,39 @@ class StateAnalyzer:
                                ('SPAN',(3,3),(-1,3)),
                                ('SPAN',(0,4),(-1,4)),
                                ('SPAN',(0,5),(1,5)),
-                               ('SPAN',(1,24),(1,27)),
-                               ('SPAN',(1,28),(1,31)),
-                               ('SPAN',(1,32),(1,35)),
-                               ('SPAN',(1,36),(1,39)),
-                               ('SPAN',(1,40),(1,43)),
+                               # ('SPAN',(1,24),(1,27)),
+                               # ('SPAN',(1,28),(1,31)),
+                               # ('SPAN',(1,32),(1,35)),
+                               # ('SPAN',(1,36),(1,39)),
+                               # ('SPAN',(1,40),(1,43)),
                                ('ALIGN',(0,4),(-1,4),'CENTER'),
+                               #('VALIGN',(1,0,),(-1,-1),'MIDDLE'),
                                #('TEXTCOLOR',(0,-1),(-1,-1),colors.green),
                                ('GRID', (0,0), (-1,-1), 0.25, colors.black),#(columnstart,rowstart),(columnend,rowend),thickness
                                ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                                ]))
+
+        colcombine=[tablecombine_columns_ipd,tablecombine_columns_def,tablecombine_columns_ref]
+        for length in range(np.size(colcombine)):
+            for startstop in range(np.size(colcombine[length])):
+                colcombine[length][startstop]+=-1
+        colcombine=[tablecombine_columns_iteration,tablecombine_columns_ipd,tablecombine_columns_def,tablecombine_columns_ref]
+        
+        
+        for length in range(np.size(colcombine)):
+            for startstop in range(np.size(colcombine[length])):
+                t.setStyle(TableStyle([('SPAN',(0,colcombine[length][startstop]-1),(-1,colcombine[length][startstop]-1))]))
+        for length in range(np.size(tablecombine_rows_ref,0)):
+             t.setStyle(TableStyle([('SPAN',(1,tablecombine_rows_ref[length]+1),(1,tablecombine_rows_ref[length]+barr_num))]))
+             #print "Spanning from: %s to %s"%(tablecombine_rows_ref[length]+1,tablecombine_rows_ref[length]+barr_num)
+        t.setStyle(TableStyle([('VALIGN',(1,4,),(1,-1),'TOP')]))
         Story.append(PageBreak())
         Story.append(t) 
-
+       
+        
+        
+        
+        
         '''
         for the report, change the initial data from the output to represent this:
         
