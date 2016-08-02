@@ -1864,7 +1864,7 @@ class StateAnalyzer:
             for iteration in range(self.ipditeration):
                 ipd_Base[i].append([])
                 ipd_Base[i][iteration].append(self.data[self.ipd[0].start_time][14+7*i])
-                
+                ## ADD THE TIME TO IPD ITERATION.
                 
             for iteration in range(self.refreezeiteration[i]):
                 ref_base[i].append([])
