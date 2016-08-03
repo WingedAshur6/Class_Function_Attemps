@@ -383,8 +383,11 @@ class StateAnalyzer:
         ref_SUP={}
         ref_RT={}
         ref_BTR={}
-        
-        
+        ref_time_value={}
+        ref_maxhsp_value={}
+        ref_avgsh_value={}
+        ref_avgdc_value={}
+        ref_minlsp_value={}
         
         def_RFG_hi={}
         def_RFG_lo={}
@@ -393,7 +396,8 @@ class StateAnalyzer:
         def_SUP={}
         def_RT={}
         def_BTR={}
-        
+        def_time_value={}
+        def_baseline_value={}
         
         ipd_RFG_hi={}
         ipd_RFG_lo={}
@@ -402,7 +406,14 @@ class StateAnalyzer:
         ipd_SUP={}
         ipd_RT={}
         ipd_BTR={}
-
+        ipd_time_value={}
+        ipd_baseline_value={}
+        ipd_maxhsp_value={}
+        ipd_minlsp_value={}
+        ipd_minrt_value={}
+        ipd_avgdc_value={}
+        ipd_avgsupr_value={}
+        
         
         
         import time
@@ -416,6 +427,12 @@ class StateAnalyzer:
             ref_SUP[ref_barrel]={}
             ref_RT[ref_barrel]={}
             ref_DC[ref_barrel]={}
+            ref_time_value[ref_barrel]={}
+            ref_maxhsp_value[ref_barrel]={}
+            ref_avgsh_value[ref_barrel]={}
+            ref_avgdc_value[ref_barrel]={}
+            ref_minlsp_value[ref_barrel]={}
+            
             #print self.refreezeiteration[ref_barrel]
             for ref_instance in range((self.refreezeiteration[ref_barrel])):
                 #--------------------------------------------------------------------------- RFG_Low ---------------------------------------------------------------------------------------------------------------------
@@ -475,7 +492,23 @@ class StateAnalyzer:
                 ref_BTR[ref_barrel][ref_instance]=np.delete((self.data[self.refreeze[ref_barrel][ref_instance].start_time:self.refreeze[ref_barrel][ref_instance].end_time]),0,axis=1)
                 ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[0:12+7*ref_barrel],axis=1)
                 ref_BTR[ref_barrel][ref_instance]=np.delete((ref_BTR[ref_barrel][ref_instance]),np.s_[1:],axis=1)    
-
+                
+                
+                
+                
+                ref_time_value[ref_barrel][ref_instance]={}
+                ref_time_value[ref_barrel][ref_instance]=self.refreeze[ref_barrel][ref_instance].length()
+                ref_maxhsp_value[ref_barrel][ref_instance]={}
+                ref_maxhsp_value[ref_barrel][ref_instance]=np.max(ref_RFG_hi[ref_barrel][ref_instance])
+                ref_avgsh_value[ref_barrel][ref_instance]={}
+                ref_avgsh_value[ref_barrel][ref_instance]=np.mean(ref_SUP[ref_barrel][ref_instance])
+                ref_avgdc_value[ref_barrel][ref_instance]={}
+                ref_avgdc_value[ref_barrel][ref_instance]=np.mean(ref_DC[ref_barrel][ref_instance])
+                ref_minlsp_value[ref_barrel][ref_instance]={}
+                ref_minlsp_value[ref_barrel][ref_instance]=np.min(ref_RFG_lo[ref_barrel][ref_instance])
+        
+        
+        
         self.ref_BTR=ref_BTR
         self.ref_RFG_lo=ref_RFG_lo
         self.ref_RFG_hi=ref_RFG_hi
@@ -498,6 +531,8 @@ class StateAnalyzer:
             def_SUP[def_barrel]={}
             def_RT[def_barrel]={}
             def_DC[def_barrel]={}
+            def_time_value[def_barrel]={}
+            def_baseline_value[def_barrel]={}
             #print self.defrostiteration[def_barrel]
             for def_instance in range((self.defrostiteration[def_barrel])):
                 #--------------------------------------------------------------------------- RFG_Low ---------------------------------------------------------------------------------------------------------------------
@@ -558,6 +593,19 @@ class StateAnalyzer:
                 def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[0:12+7*def_barrel],axis=1)
                 def_BTR[def_barrel][def_instance]=np.delete((def_BTR[def_barrel][def_instance]),np.s_[1:],axis=1)   
 
+        
+                def_time_value[def_barrel][def_instance]={}
+                def_time_value[def_barrel][def_instance]=self.defrost[def_barrel][def_instance].length()
+                def_baseline_value[def_barrel][def_instance]={}
+                def_baseline_value[def_barrel][def_instance]=self.data[self.defrost[def_barrel][def_instance].start_time][14+7*def_barrel]
+        
+        
+        
+        
+        
+        
+        
+        
         self.def_BTR=def_BTR
         self.def_RFG_lo=def_RFG_lo
         self.def_RFG_hi=def_RFG_hi
@@ -579,6 +627,16 @@ class StateAnalyzer:
             ipd_SUP[ipd_barrel]={}
             ipd_DC[ipd_barrel]={}
             ipd_RT[ipd_barrel]={}
+            
+            
+            ipd_time_value[ipd_barrel]={}
+            ipd_baseline_value[ipd_barrel]={}
+            ipd_maxhsp_value[ipd_barrel]={}
+            ipd_minlsp_value[ipd_barrel]={}
+            ipd_minrt_value[ipd_barrel]={}
+            ipd_avgdc_value[ipd_barrel]={}
+            ipd_avgsupr_value[ipd_barrel]={}
+
             for ipd_instance in range(self.ipditeration[ipd_barrel]):
             ## gary: dont use magic numbers or "hardcode numbers" so its easier to come back to when 
                 #--------------------------------------------------------------------------- RFG_Low ---------------------------------------------------------------------------------------------------------------------
@@ -639,7 +697,27 @@ class StateAnalyzer:
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[0:12+7*ipd_barrel],axis=1)
                 ipd_BTR[ipd_barrel][ipd_instance]=np.delete((ipd_BTR[ipd_barrel][ipd_instance]),np.s_[1:],axis=1)
 
-
+                ipd_time_value[ipd_barrel][ipd_instance]={}
+                ipd_time_value[ipd_barrel][ipd_instance]=self.ipd[ipd_barrel][ipd_instance].length()
+                ipd_baseline_value[ipd_barrel][ipd_instance]={}
+                ipd_baseline_value[ipd_barrel][ipd_instance]=self.data[self.ipd[ipd_barrel][ipd_instance].start_time][14+7*ipd_barrel]
+                
+                ipd_maxhsp_value[ipd_barrel][ipd_instance]={}
+                ipd_maxhsp_value[ipd_barrel][ipd_instance]=np.max(ipd_RFG_hi[ipd_barrel][ipd_instance])
+                ipd_minlsp_value[ipd_barrel][ipd_instance]={}
+                ipd_minlsp_value[ipd_barrel][ipd_instance]=np.min(ipd_RFG_lo[ipd_barrel][ipd_instance])
+                ipd_minrt_value[ipd_barrel][ipd_instance]={}
+                ipd_minrt_value[ipd_barrel][ipd_instance]=np.min(ipd_RT[ipd_barrel][ipd_instance])
+                
+                ipd_avgdc_value[ipd_barrel][ipd_instance]={}
+                ipd_avgdc_value[ipd_barrel][ipd_instance]=np.mean(ipd_DC[ipd_barrel][ipd_instance])
+                ipd_avgsupr_value[ipd_barrel][ipd_instance]={}
+                ipd_avgsupr_value[ipd_barrel][ipd_instance]=np.mean(ipd_SUP[ipd_barrel][ipd_instance])
+                
+                
+                
+                
+                
         self.ipd_BTR=ipd_BTR
         self.ipd_RFG_lo=ipd_RFG_lo
         self.ipd_RFG_hi=ipd_RFG_hi
@@ -649,11 +727,18 @@ class StateAnalyzer:
         self.ipd_DC=ipd_DC
 
 
-
+        overall_ipdprops_value={}
+        overall_defprops_value={}
+        overall_refprops_value={}
+        
         for barrel in range(num_barr):
             ipdprops[barrel]={}
             defprops[barrel]={}
             refprops[barrel]={}
+            overall_ipdprops_value[barrel]={}
+            overall_refprops_value[barrel]={}
+            overall_defprops_value[barrel]={}
+            
             for instance in range(self.ipditeration[barrel]):
                 ipdprops[barrel][instance]={}
                 ipdprops[barrel][instance]={0:self.ipd_RFG_lo[barrel][instance]}
@@ -663,6 +748,16 @@ class StateAnalyzer:
                 ipdprops[barrel][instance].update({4:self.ipd_SUP[barrel][instance]})
                 ipdprops[barrel][instance].update({5:self.ipd_DC[barrel][instance]})
                 ipdprops[barrel][instance].update({6:self.ipd_BTR[barrel][instance]})
+                
+                
+                overall_ipdprops_value[barrel][instance]={}
+                overall_ipdprops_value[barrel][instance]={0:ipd_time_value[barrel][instance]}
+                overall_ipdprops_value[barrel][instance].update({1:ipd_baseline_value[barrel][instance]})
+                overall_ipdprops_value[barrel][instance].update({2:ipd_maxhsp_value[barrel][instance]})
+                overall_ipdprops_value[barrel][instance].update({3:ipd_minlsp_value[barrel][instance]})
+                overall_ipdprops_value[barrel][instance].update({4:ipd_minrt_value[barrel][instance]})
+                overall_ipdprops_value[barrel][instance].update({5:ipd_avgdc_value[barrel][instance]})
+                overall_ipdprops_value[barrel][instance].update({6:ipd_avgsupr_value[barrel][instance]})
 
             for instance in range(self.refreezeiteration[barrel]):
                 refprops[barrel][instance]={0:self.ref_RFG_lo[barrel][instance]}
@@ -672,6 +767,16 @@ class StateAnalyzer:
                 refprops[barrel][instance].update({4:self.ref_SUP[barrel][instance]})
                 refprops[barrel][instance].update({5:self.ref_DC[barrel][instance]})
                 refprops[barrel][instance].update({6:self.ref_BTR[barrel][instance]})
+                
+                overall_refprops_value[barrel][instance]={}
+                overall_refprops_value[barrel][instance]={0:ref_time_value[barrel][instance]}
+                overall_refprops_value[barrel][instance].update({1:ref_maxhsp_value[barrel][instance]})
+                overall_refprops_value[barrel][instance].update({2:ref_minlsp_value[barrel][instance]})
+                overall_refprops_value[barrel][instance].update({3:ref_avgsh_value[barrel][instance]})
+                overall_refprops_value[barrel][instance].update({4:ref_avgdc_value[barrel][instance]})
+                
+                
+                
         
             for instance in range(self.defrostiteration[barrel]):
                 defprops[barrel][instance]={}
@@ -683,12 +788,17 @@ class StateAnalyzer:
                 defprops[barrel][instance].update({5:self.def_DC[barrel][instance]})
                 defprops[barrel][instance].update({6:self.def_BTR[barrel][instance]})
                 
+                overall_defprops_value[barrel][instance]={}
+                overall_defprops_value[barrel][instance]={0:def_time_value[barrel][instance]}
+                overall_defprops_value[barrel][instance].update({1:def_baseline_value[barrel][instance]})
         
         self.ipdprops=ipdprops
         self.defprops=defprops
         self.refprops=refprops
    
-    
+        self.overall_defprops_value=overall_defprops_value
+        self.overall_ipdprops_value=overall_ipdprops_value
+        self.overall_refprops_value=overall_refprops_value
    
     def initialize_Tolerances(self):
         x=0#--------------------------------------------------------------------------- this is just to establish a variable.
@@ -782,21 +892,20 @@ class StateAnalyzer:
         ipd_min_RT=[25,10]
         ipd_avg_DC=[60,30]
         ipd_avg_SH=[15,5]
-        ipd_pdf_tolerances=[ipd_time,ipd_base,ipd_max_HSP,ipd_min_LSP,ipd_min_RT,ipd_avg_DC,ipd_avg_SH]
-        ipd_verdicts=["Pass","Pass","Pass","Pass","Pass","Pass","Pass"]
+        self.ipd_overall_tolerances=[ipd_time,ipd_base,ipd_max_HSP,ipd_min_LSP,ipd_min_RT,ipd_avg_DC,ipd_avg_SH]
+        
         
         def_time=[5*60,2.5*60]
         def_base=[4200,3500]
-        def_pdf_tolerances=[def_time,def_base]
-        def_verdicts=["Pass","Pass"]
+        self.def_overall_tolerances=[def_time,def_base]
+        
         
         ref_max_HSP=[280,240]
         ref_min_LSP=[50,40]
         ref_time=[5*60,2.5*60]
         ref_avg_SH=[15,5]
         ref_avg_DC=[60,30]
-        ref_pdf_tolerances=[ref_time,ref_max_HSP,ref_min_LSP,ref_avg_SH,ref_avg_DC]
-        ref_verdicts=["Pass","Pass","Pass","Pass","Pass"]
+        self.ref_overall_tolerances=[ref_time,ref_max_HSP,ref_min_LSP,ref_avg_SH,ref_avg_DC]
 
 
         
@@ -970,6 +1079,129 @@ class StateAnalyzer:
         
         
         
+        
+        
+        
+        ##------------------------------------------- OVERALL TOLERANCE TESTING -------------------------------------------------------
+        self.ipd_verdicts=[]
+        self.def_verdicts=[]
+        self.ref_verdicts=[]
+        for barrel in range(num_barr):
+            self.ipd_verdicts.append([])
+            self.ref_verdicts.append([])
+            self.def_verdicts.append([])
+            for instance in range(self.ipditeration[barrel]):
+                self.ipd_verdicts[barrel].append([])
+                for statistic in range(np.size(self.ipd_overall_tolerances,0)):
+                    self.ipd_verdicts[barrel][instance].append("Pass")
+                
+            for instance in range(self.defrostiteration[barrel]):
+                self.def_verdicts[barrel].append([])
+                for statistic in range(np.size(self.def_overall_tolerances,0)):
+                    self.def_verdicts[barrel][instance].append("Pass")
+            for instance in range(self.refreezeiteration[barrel]):
+                self.ref_verdicts[barrel].append([])
+                for statistic in range(np.size(self.ref_overall_tolerances,0)):
+                    self.ref_verdicts[barrel][instance].append("Pass")
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        overall_Toldata={}
+        self.overall_ipdprops={}
+        self.overall_refprops={}
+        self.overall_defprops={}
+        
+        for barrel in range(num_barr):
+            self.overall_ipdprops[barrel]={}
+            self.overall_refprops[barrel]={}
+            self.overall_defprops[barrel]={}
+            for state in ["IPD","Defrost","Refreeze"]:
+                self.overall_ipdprops[barrel][state]={}
+                self.overall_refprops[barrel][state]={}
+                self.overall_defprops[barrel][state]={}
+                if state=="IPD":
+                    for instance in range(self.ipditeration[barrel]):
+                        self.overall_ipdprops[barrel][state][instance]={}
+                        for statistic in range(np.size(["Time","Baseline","Max HSP","Min LSP","Min RT","Avg DC","Avg SUPR"])):
+                            self.overall_ipdprops[barrel][state][instance][statistic]=True
+                if state=="Defrost":
+                    for instance in range(self.defrostiteration[barrel]):
+                        self.overall_defprops[barrel][state][instance]={}
+                        for statistic in range(np.size(["Time","Baseline"])):
+                            self.overall_defprops[barrel][state][instance][statistic]=True
+                if state=="Refreeze":
+                    for instance in range(self.refreezeiteration[barrel]):
+                        self.overall_refprops[barrel][state][instance]={}
+                        for statistic in range(np.size(["Time","Max HSP","Min LSP","Avg DC","Avg SUPR"])):
+                            self.overall_refprops[barrel][state][instance][statistic]=True
+                            
+                            
+        self.overall_props={}
+        self.overall_props[0]=self.overall_ipdprops
+        self.overall_props[1]=self.overall_defprops
+        self.overall_props[2]=self.overall_refprops
+                            
+                            
+                            
+                            
+                            
+                            
+
+        for barrel in range(num_barr):
+            print "     Barrel: %s"%(barrel)
+            for state in ["IPD","Defrost","Refreeze"]:
+                print "         State: %s"%state
+                if state=="IPD":
+                    for instance in range(self.ipditeration[barrel]):
+                        print "             Instance: %s"%instance
+                        for statistic in range(np.size(["Time","Baseline","Max HSP","Min LSP","Min RT","Avg DC","Avg SUPR"])):
+                            print "                 %s Statistic %s"%(state,statistic)
+                            if self.overall_ipdprops_value[barrel][instance][statistic]>self.ipd_overall_tolerances[statistic][0] or self.overall_ipdprops_value[barrel][instance][statistic]<self.ipd_overall_tolerances[statistic][1]:
+                                print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
+                                time.sleep(.001)
+                                self.overall_ipdprops[barrel][state][instance][statistic]=False
+                                self.ipd_verdicts[barrel][instance][statistic]="FAIL"
+                if state=="Defrost":
+                    for instance in range(self.defrostiteration[barrel]):
+                        print "             Instance: %s"%instance
+                        for statistic in range(np.size(["Time","Baseline"])):
+                            print "                 %s Statistic %s"%(state,statistic)
+                            if self.overall_defprops_value[barrel][instance][statistic]>self.def_overall_tolerances[statistic][0] or self.overall_defprops_value[barrel][instance][statistic]<self.def_overall_tolerances[statistic][1]:
+                                print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
+                                time.sleep(.001)
+                                self.overall_defprops[barrel][state][instance][statistic]=False
+                                self.def_verdicts[barrel][instance][statistic]="FAIL"
+                if state=="Refreeze":
+                    for instance in range(self.refreezeiteration[barrel]):
+                        print "             Instance: %s"%instance
+                        for statistic in range(np.size(["Time","Max HSP","Min LSP","Avg DC","Avg SUPR"])):
+                            print "                 %s Statistic %s"%(state,statistic)
+                            if self.overall_refprops_value[barrel][instance][statistic]>self.ref_overall_tolerances[statistic][0] or self.overall_refprops_value[barrel][instance][statistic]<self.ref_overall_tolerances[statistic][1]:
+                                print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
+                                time.sleep(.001)
+                                self.overall_refprops[barrel][state][instance][statistic]=False
+                                self.ref_verdicts[barrel][instance][statistic]="FAIL"
+                                
+
+                                
+                                
+                                
+                                
+            
+        
+        
+        
         statelist=["IPD","Defrost","Refreeze"]
         
 
@@ -981,7 +1213,7 @@ class StateAnalyzer:
         
         
         
-        print Tol_data[0]["IPD"]                
+        #print Tol_data[0]["IPD"]                
         print "Tolerance Check Complete."
        
 
@@ -1004,6 +1236,29 @@ class StateAnalyzer:
                             self.errors[barrel][statelist[state]][instance][Statistics[statistic]]=Tol_data[barrel][statelist[state]][instance][Statistics[statistic]]
                             #print "                        Property: %s   |   Result: %s"%(Statistics[statistic],self.errors[barrel][statelist[state]][instance][Statistics[statistic]])
                         print "                        Property: %s   |   Result: %s"%(Statistics[statistic],Tol_data[barrel][statelist[state]][instance][Statistics[statistic]])
+                        
+                        
+                        
+        for barrel in range(num_barr):
+            print "Barrel: %s"%barrel
+            for state in ["IPD","Defrost","Refreeze"]:
+                print "     State: %s"%state
+                if state=="IPD":
+                    for instance in range(np.size(self.ipd_verdicts[barrel],0)):
+                        print "         Time interval: %s"%instance
+                        for statistic in range(np.size(self.ipd_verdicts[barrel][instance],0)):
+                            print "                 Statistic: %s, VERDICT: %s"%(statistic,self.ipd_verdicts[barrel][instance][statistic])
+                if state=="Defrost":
+                    for instance in range(np.size(self.def_verdicts[barrel],0)):
+                        print "         Time interval: %s"%instance
+                        for statistic in range(np.size(self.def_verdicts[barrel][instance],0)):
+                            print "                 Statistic: %s, VERDICT: %s"%(statistic,self.def_verdicts[barrel][instance][statistic])
+                if state=="Refreeze":
+                    for instance in range(np.size(self.ref_verdicts[barrel],0)):
+                        print "         Time interval: %s"%instance
+                        for statistic in range(np.size(self.ref_verdicts[barrel][instance],0)):
+                            print "                 Statistic: %s, VERDICT: %s"%(statistic,self.ref_verdicts[barrel][instance][statistic])
+                            
         '''  This gives the correct tolerance evaluation.          
         for x in range (np.size(self.IPD4_tolerances)):
             print x,"-------"*10
@@ -2051,46 +2306,6 @@ class StateAnalyzer:
                         
                 break
                 
-            '''    
-                ['2', 'Initial PullDown Time', '%s:%s'%(ipdm,ipds), '%s:%s'%(ipdLlim_m,ipdLlim_s), '%s:%s'%(ipdMlim_m,ipdMlim_s),'%s'%(ipdverd)],
-                ['3', 'IPD Baseline (Barrel 1) ', '22', '23', '24','25'],
-                ['4', 'IPD Baseline (Barrel 2)', '22', '23', '24','25'],
-                ['5', 'IPD Baseline (Barrel 3)', '22', '23', '24','25'],
-                ['6', 'IPD Baseline (Barrel 4)', '22', '23', '24','25'],
-                ['7', 'IPD Max Hiside Pressure', '22', '23', '24','25'],
-                ['8', 'IPD Min Lowside Pressure', '22', '23', '24','25'],
-                ['9', 'IPD Min Return Temp', '22', '23', '24','25'],
-                ['10', 'IPD Average Duty Cycle', '22', '23', '24','25'],
-                ['11', 'IPD Avg. Superheat', '22', '23', '24','25'],
-                ['12', 'Defrost Time (Barrel 1)', '22', '23', '24','25'],
-                ['13', 'Defrost Time (Barrel 2)', '22', '23', '24','25'],
-                ['14', 'Defrost Time (Barrel 3)', '22', '23', '24','25'],
-                ['15', 'Defrost Time (Barrel 4)', '22', '23', '24','25'],
-                ['16', 'Defrost Baseline (Barrel 1)', '22', '23', '24','25'],
-                ['17', 'Defrost Baseline (Barrel 2)', '12', '13', '14','15'],
-                ['18', 'Defrost Baseline (Barrel 3)', '22', '23', '24','25'],
-                ['19', 'Defrost Baseline (Barrel 4)', '22', '23', '24','25'],
-                ['20', 'Refreeze Highside Pressure (Barrels 1-4)', '22', '23', '24','25'],
-                ['21', '21', '22', '23', '24','25'],
-                ['22', '21', '22', '23', '24','25'],
-                ['23', '21', '22', '23', '24','25'],
-                ['24', 'Refreeze LowSide Pressure (Barrels 1-4)', '22', '23', '24','25'],
-                ['25', '21', '22', '23', '24','25'],
-                ['26', '21', '22', '23', '24','25'],
-                ['27', '21', '22', '23', '24','25'],
-                ['28', 'Refreeze Times (Barrels 1-4)', '22', '23', '24','25'],
-                ['29', '21', '22', '23', '24','25'],
-                ['30', '21', '22', '23', '24','25'],
-                ['31', '21', '22', '23', '24','25'],
-                ['32', 'Refreeze SH (Barrels 1-4)', '22', '23', '24','25'],
-                ['33', '21', '22', '23', '24','25'],
-                ['34', '21', '22', '23', '24','25'],
-                ['35', '21', '22', '23', '24','25'],
-                ['36', 'Refreeze Average DC% (Barrels 1-4)', '22', '23', '24','25'],
-                ['37', '21', '22', '23', '24','25'],
-                ['38', '21', '22', '23', '24','25'],
-                ['39', '31', '32', '33', '34','35']]
-                '''
         t=Table(data)
         t.setStyle(TableStyle([('BACKGROUND',(-1,1),(-1,1),colors.red)]))
         t.setStyle(TableStyle([('ALIGN',(0,0),(-1,0),'CENTER'),
@@ -2236,8 +2451,8 @@ s.getdata(num_barr_to_use)
 #print s.ref_BTR[0][1]
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
-pics=s.display_plots_version2(num_barr_to_use,"all",0)
-s.create_pdf(pics)
+#pics=s.display_plots_version2(num_barr_to_use,"all",0)
+#s.create_pdf(pics)
 
 
 # property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
@@ -3180,4 +3395,4 @@ for row in data:
 # np.delete(array,np.s_[0:2],axis=1)
 #the above deletes up to the third arrray from index 0
 # np.delete(array,[(0:1),3],axis=1)
-# above deletes the columns belonging to these indeces.
+# above deletes the columns belonging to these indeces..
