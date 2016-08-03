@@ -2041,78 +2041,11 @@ class StateAnalyzer:
         styles=getSampleStyleSheet()
         styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
         styles.add(ParagraphStyle(name='Center',alignment=TA_CENTER))
-        ptext = '<font size=12>%s</font>' % formatted_time
-        Story.append(Paragraph(ttext,styles["Center"]))
-        Story.append(Spacer(1,16))
-        Story.append(Paragraph(serial,styles["Center"]))
-        Story.append(Spacer(1,8))
-        Story.append(Paragraph(reporttime, styles["Center"]))
-        Story.append(Spacer(1, 8))
-        #Story.append(Paragraph(verdictstatement, styles["Center"]))
-        Story.append(Paragraph(verdict, styles["Center"]))
-        Story.append(Spacer(1, 1))
-        Story.append(Spacer(1, 48))
-
-
         
-        Story.append(Paragraph(seriesname, styles["Normal"]))
-        Story.append(Spacer(1, 1))
-        Story.append(Paragraph(barrels, styles["Normal"]))
-        Story.append(Spacer(1, 1))
-        Story.append(Paragraph(testduration,styles["Normal"]))
-        Story.append(Spacer(1,12))
-        Story.append(Paragraph("<font size=16>Test Information: </font>",styles["Normal"]))
-        Story.append(Spacer(1,48))
-        
-        
-        
-        
-        
-            
-        for i in range(self.number_of_barrels):
-            Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >---------------------------------------------------------------------</font>"%(i+1),styles["Normal"]))
-            if np.size(self.ipd.items())>0:
-                for l in range(self.ipditeration[i]):#-----------debug
-                    Story.append(Paragraph( "<font size=8>     IPD Time Iteration:      %s</font>"%(l+1),styles["Normal"]))
-                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Start:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD End: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Length:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s</font>"%(self.ipd[i][l].start_time,self.ipd[i][l].end_time,self.ipd[i][l].length()),styles["Normal"]) )  
-            if np.size(self.refreezeiteration.items())>2:
-                for j in range(self.refreezeiteration[i]):
-                    Story.append(Paragraph( "<font size=8>     Refreeze Time Iteration: %s</font>"%(j+1),styles["Normal"]))
-                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze Start:&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze End: &nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze Length:&nbsp&nbsp %s</font>"%(self.refreeze[i][j].start_time,self.refreeze[i][j].end_time,self.refreeze[i][j].length()),styles["Normal"]))   
-            if np.size(self.defrostiteration.items())>2:
-                for k in range(self.defrostiteration[i]):
-                    Story.append(Paragraph( "<font size=8>     Defrost Time Iteration: %s</font>"%(k+1),styles["Normal"]))
-                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost Start:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost End: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost Length:&nbsp&nbsp&nbsp&nbsp&nbsp %s</font>"%(self.defrost[i][k].start_time,self.defrost[i][k].end_time,self.defrost[i][k].length()),styles["Normal"]))   
-        
-        Story.append(Spacer(1,48))
-        Story.append(Paragraph("<font size=16>Tolerance Information: </font>",styles["Normal"]))
-        Story.append(Spacer(1,48))
-
-        
-        statelist=["IPD","Defrost","Refreeze"]
-        Barrel_list=["BBL_1","BBL_2","BBL_3","BBL_4"]
-        Statistics=["RFG_lo","RFG_hi","V","RTemp","SUPHT","DUTYCycles","BTR%"]        
-        for barrel in range(barr_num):
-            Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >--------------------------------------------------------------------</font>"%(barrel+1),styles["Normal"]))
-            for state in range(np.size(statelist)):
-                Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp State: %s</font>"%(statelist[state]),styles["Normal"]))
-                for instance in range(np.size(self.states[state][barrel].items(),0)):
-                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Instance:&nbsp&nbsp %s</font>" %(instance+1),styles["Normal"]))
-                    for statistic in range(self.states[state][barrel][instance].__len__()):
-                        if False in self.states[state][barrel][instance][statistic]:
-                            Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Property: &nbsp&nbsp %s   | &nbsp&nbsp  Result:&nbsp&nbsp  FAIL</font>"%(Statistics[statistic]),styles["Normal"]))
-        print np.size(pics)
-        
-        Story.append(PageBreak())
-        Story.append(Paragraph("<font size=16>Test Visualization: </font>",styles["Normal"]))
-        Story.append(Spacer(1,24))
-        for state in range(np.size(pics)):
-            Story.append(Paragraph("<font size=12>%s </font>"%(statelist[state]),styles["Normal"]))
-            for picnum in range(np.size(pics[state])):
-                im = Image(pics[state][picnum], 5*inch, 3*inch)
-                Story.append(im)
-                Story.append(Spacer(1,24))
 ###########################################################################
+        overall_ipdstatnames=["Time","Baseline","Max HSP","Min LSP","Min RT","Avg DC","Avg SUPR"]
+        overall_refstatnames=["Time","Max HSP","Min LSP","Avg DC","Avg SUPR"]
+        overall_defstatnames=["Time","Baseline"]
         ## Creating some calculation data to put into the PDF Table:
         ipdm,ipds=divmod(self.ipd[0][0].length(),60)
         ipdLlim_m,ipdLlim_s=divmod(13*60,60)
@@ -2229,8 +2162,8 @@ class StateAnalyzer:
         state_iterations=[self.ipditeration,self.defrostiteration,self.refreezeiteration]
         
         data= [['UNIT TESTING REPORT (%s)'%(serialno), '-', '-', '-', '-','-'],
-                ['Unit Type', '%s'%(series), 'Date/Time', '%s'%(time.ctime()), 'Result:','%s'%(myverdict)],
-                ['Barrels ', '%s'%(barr_num), '-', '-', '-','-'],
+                ['Type', '%s'%(series), 'Date/Time', '%s'%(time.ctime()), 'Result:','%s'%(myverdict)],
+                ['Sides ', '%s'%(barr_num), '-', '-', '-','-'],
                 ['-', '-', 'Tester', 'Stanford Martinez', '-','-'],
                 ['Summary of Results', '-', '-', '-', '-','-'],
                 ['', '', 'Actual', 'Low', 'High','Result']]
@@ -2245,22 +2178,19 @@ class StateAnalyzer:
                     
                     if state==0:
                         tablecombine_columns_ipd.append(np.size(data,0))
-                        data.append(['%s'%(np.size(data,0)), '%s PullDown Time '%(state_names[state]), '%s'%(ipd_times[barrel][iteration][0]), '23', '24','25'])
-                    
+                        data.append(['%s'%(np.size(data,0)), '%s PullDown Time '%(state_names[state]), '%s:%s'%(divmod(self.overall_ipdprops_value[barrel][iteration][0],60)[0],divmod(self.overall_ipdprops_value[barrel][iteration][0],60)[1]), '%s:%s'%(divmod(self.ipd_overall_tolerances[0][1],60)[0],divmod(self.ipd_overall_tolerances[0][1],60)[1]), '%s:%s'%(divmod(self.ipd_overall_tolerances[0][0],60)[0],divmod(self.ipd_overall_tolerances[0][0],60)[1]),'%s'%self.ipd_verdicts[barrel][iteration][0]])
+                        
                     
                     for barrel in range(barr_num):
                         if state==0:
-                            data.append(['%s'%(np.size(data,0)), '%s Baseline (Barrel %s) '%(state_names[state],barrel+1), '22', '23', '24','25'])
+                            data.append(['%s'%(np.size(data,0)), '%s Baseline (Barrel %s) '%(state_names[state],barrel+1), '%s'%self.overall_ipdprops_value[barrel][iteration][1], '%s'%self.ipd_overall_tolerances[1][1], '%s'%self.ipd_overall_tolerances[1][0],'%s'%self.ipd_verdicts[barrel][iteration][1]])
 
                         
                         
                         
                     if printipd==0:
-                        data.append(['%s'%(np.size(data,0)), '%s Max HiSide Pressure '%(state_names[state]), '%s'%(ipd_max_HSP[barrel][iteration][0]), '%s'%(240), '%s'%(280),'25'])
-                        data.append(['%s'%(np.size(data,0)), '%s Min LoSide Pressure '%(state_names[state]), '%s'%(ipd_min_LSP[barrel][iteration][0]), '%s'%(40), '%s'%(50),'25'])
-                        data.append(['%s'%(np.size(data,0)), '%s Min Return Temp '%(state_names[state]), '%s'%(ipd_min_RT[barrel][iteration][0]), '%s'%(10), '%s'%(25),'25'])
-                        data.append(['%s'%(np.size(data,0)), '%s Avg. Duty Cycle '%(state_names[state]), '%s'%(ipd_avg_DC[barrel][iteration][0]), '%s'%(30), '%s'%(60),'25'])
-                        data.append(['%s'%(np.size(data,0)), '%s Avg. Superheat '%(state_names[state]), '%s'%(ipd_avg_SH[barrel][iteration][0]), '%s'%(5), '%s'%(15),'25'])
+                        for stat in range(np.size(overall_ipdstatnames)-2):
+                            data.append(['%s'%(np.size(data,0)), '%s %s '%(state_names[state],overall_ipdstatnames[stat+2]), '%s'%(self.overall_ipdprops_value[barrel][iteration][stat+2]), '%s'%(self.ipd_overall_tolerances[stat+2][1]), '%s'%(self.ipd_overall_tolerances[stat+2][0]),'%s'%self.ipd_verdicts[barrel][iteration][stat+2]])
                         printipd=1
                         printdef=0
                         
@@ -2268,10 +2198,10 @@ class StateAnalyzer:
                     if printdef==0 and state==1:
                         tablecombine_columns_def.append(np.size(data,0))
                         for barrel in range(barr_num):
-                            data.append(['%s'%(np.size(data,0)), '%s Time (Barrel %s) '%(state_names[state],barrel+1), '%s'%(def_times[barrel][iteration]), '%s'%("Min "), '%s'%("Max "),'25'])
+                            data.append(['%s'%(np.size(data,0)), '%s %s (Barrel %s) '%(state_names[state],overall_defstatnames[0],barrel+1), '%s:%s'%(divmod(self.overall_defprops_value[barrel][iteration][0],60)[0],divmod(self.overall_defprops_value[barrel][iteration][0],60)[1]), '%s:%s'%(divmod(self.def_overall_tolerances[0][1],60)[0],divmod(self.def_overall_tolerances[0][1],60)[1]), '%s:%s'%(divmod(self.def_overall_tolerances[0][0],60)[0],divmod(self.def_overall_tolerances[0][0],60)[1]),'%s'%self.def_verdicts[barrel][iteration][0]])
                         for barrel in range(barr_num):
-                            data.append(['%s'%(np.size(data,0)), '%s Baseline (Barrel %s) '%(state_names[state], barrel+1), '%s'%(def_base[barrel][iteration]), '%s'%(3500), '%s'%(4200),'25'])
-                
+                            data.append(['%s'%(np.size(data,0)), '%s Baseline (Barrel %s) '%(state_names[state],barrel+1), '%s'%self.overall_defprops_value[barrel][iteration][1], '%s'%self.def_overall_tolerances[1][1], '%s'%self.def_overall_tolerances[1][0],'%s'%self.def_verdicts[barrel][iteration][1]])
+                        
                         printdef=1
                         printref=0
                         
@@ -2280,24 +2210,14 @@ class StateAnalyzer:
                         tablecombine_columns_ref.append(np.size(data,0))
                         tablecombine_rows_ref.append(np.size(data,0)-1)
                         for barrel in range(barr_num):
-                            data.append(['%s'%(np.size(data,0)), '%s Time (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_times[barrel][iteration]), '%s'%("Min "), '%s'%("Max "),'25'])
+                            data.append(['%s'%(np.size(data,0)), '%s %s (Barrel %s-%s) '%(state_names[state],overall_refstatnames[0],1,barr_num), '%s:%s'%(divmod(self.overall_refprops_value[barrel][iteration][0],60)[0],divmod(self.overall_refprops_value[barrel][iteration][0],60)[1]), '%s:%s'%(divmod(self.ref_overall_tolerances[0][1],60)[0],divmod(self.ref_overall_tolerances[0][1],60)[1]), '%s:%s'%(divmod(self.ref_overall_tolerances[0][0],60)[0],divmod(self.ref_overall_tolerances[0][0],60)[1]),'%s'%self.ref_verdicts[barrel][iteration][0]])
                         tablecombine_rows_ref.append(np.size(data,0)-1)
                         
-                        for barrel in range(barr_num):
-                            data.append(['%s'%(np.size(data,0)), '%s HiSide Pressure (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_max_HSP[barrel][iteration]), '%s'%(240), '%s'%(280),'25'])
-                        tablecombine_rows_ref.append(np.size(data,0)-1)
-                        
-                        for barrel in range(barr_num):
-                            data.append(['%s'%(np.size(data,0)), '%s LowSide Pressure (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_min_LSP[barrel][iteration]), '%s'%(40), '%s'%(50),'25'])
-                        tablecombine_rows_ref.append(np.size(data,0)-1)
-                        
-                        for barrel in range(barr_num):
-                            data.append(['%s'%(np.size(data,0)), '%s Superheat (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_avg_SUPR[barrel][iteration]), '%s'%(5), '%s'%(15),'25'])
-                        tablecombine_rows_ref.append(np.size(data,0)-1)
-                        
-                        for barrel in range(barr_num):
-                            data.append(['%s'%(np.size(data,0)), '%s Avg. Duty Cycle (Barrel %s-%s) '%(state_names[state],1,barr_num), '%s'%(ref_avg_DC[barrel][iteration]), '%s'%(30), '%s'%(60),'25'])
-                        #tablecombine_rows_ref.append(np.size(data,0)-1)
+                        for stat in range(np.size(overall_refstatnames,0)-1):
+                            for barrel in range(barr_num):
+                                data.append(['%s'%(np.size(data,0)), '%s %s (Barrel %s-%s) '%(state_names[state],overall_refstatnames[stat+1],1,barr_num), '%s'%(self.overall_refprops_value[barrel][iteration][stat+1]), '%s'%(self.ref_overall_tolerances[stat+1][1]), '%s'%(self.ref_overall_tolerances[stat+1][0]),'%s'%self.ref_verdicts[barrel][iteration][stat+1]])
+
+                            tablecombine_rows_ref.append(np.size(data,0)-1)
                         printref=1
                     
 
@@ -2309,11 +2229,11 @@ class StateAnalyzer:
         t=Table(data)
         t.setStyle(TableStyle([('BACKGROUND',(-1,1),(-1,1),colors.red)]))
         t.setStyle(TableStyle([('ALIGN',(0,0),(-1,0),'CENTER'),
-                               ('TEXTCOLOR',(1,1),(-2,-2),colors.red),
+                               #('TEXTCOLOR',(1,1),(-2,-2),colors.red),
                                ('VALIGN',(0,0),(0,-1),'TOP'),
                                ('TEXTCOLOR',(0,0),(0,-1),colors.blue),
-                               ('ALIGN',(0,-1),(-1,-1),'CENTER'),
-                               ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                               #('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                               
                                ('SPAN',(0,0),(-1,0)),
                                ('SPAN',(0,2),(0,3)),
                                ('SPAN',(1,2),(1,3)),
@@ -2324,12 +2244,15 @@ class StateAnalyzer:
                                ('SPAN',(3,3),(-1,3)),
                                ('SPAN',(0,4),(-1,4)),
                                ('SPAN',(0,5),(1,5)),
+                               #('SPAN',(1,-1),(2,-1)),
+                               
                                # ('SPAN',(1,24),(1,27)),
                                # ('SPAN',(1,28),(1,31)),
                                # ('SPAN',(1,32),(1,35)),
                                # ('SPAN',(1,36),(1,39)),
                                # ('SPAN',(1,40),(1,43)),
                                ('ALIGN',(0,4),(-1,4),'CENTER'),
+                               ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
                                #('VALIGN',(1,0,),(-1,-1),'MIDDLE'),
                                #('TEXTCOLOR',(0,-1),(-1,-1),colors.green),
                                ('GRID', (0,0), (-1,-1), 0.25, colors.black),#(columnstart,rowstart),(columnend,rowend),thickness
@@ -2349,10 +2272,89 @@ class StateAnalyzer:
         for length in range(np.size(tablecombine_rows_ref,0)):
              t.setStyle(TableStyle([('SPAN',(1,tablecombine_rows_ref[length]+1),(1,tablecombine_rows_ref[length]+barr_num))]))
              #print "Spanning from: %s to %s"%(tablecombine_rows_ref[length]+1,tablecombine_rows_ref[length]+barr_num)
-        t.setStyle(TableStyle([('VALIGN',(1,4,),(1,-1),'TOP')]))
-        Story.append(PageBreak())
+        for row in range(np.size(data,0)):
+            if data[row][-1]=="FAIL":
+                t.setStyle(TableStyle([(('BACKGROUND',(-1,row),(-1,row),colors.red))]))
+        t.setStyle(TableStyle([('VALIGN',(1,4,),(1,-1),'MIDDLE')]))
         Story.append(t) 
-       
+        Story.append(PageBreak())
+        #### THIS IS THE TABLE THAT WE WILL BE ADDING FIRST. 
+        
+        
+        
+        
+        
+        ptext = '<font size=12>%s</font>' % formatted_time
+        Story.append(Paragraph(ttext,styles["Center"]))
+        Story.append(Spacer(1,16))
+        Story.append(Paragraph(serial,styles["Center"]))
+        Story.append(Spacer(1,8))
+        Story.append(Paragraph(reporttime, styles["Center"]))
+        Story.append(Spacer(1, 8))
+        #Story.append(Paragraph(verdictstatement, styles["Center"]))
+        Story.append(Paragraph(verdict, styles["Center"]))
+        Story.append(Spacer(1, 1))
+        Story.append(Spacer(1, 48))
+
+
+        
+        Story.append(Paragraph(seriesname, styles["Normal"]))
+        Story.append(Spacer(1, 1))
+        Story.append(Paragraph(barrels, styles["Normal"]))
+        Story.append(Spacer(1, 1))
+        Story.append(Paragraph(testduration,styles["Normal"]))
+        Story.append(Spacer(1,12))
+        Story.append(Paragraph("<font size=16>Test Information: </font>",styles["Normal"]))
+        Story.append(Spacer(1,48))
+        
+        
+        
+        
+        
+            
+        for i in range(self.number_of_barrels):
+            Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >---------------------------------------------------------------------</font>"%(i+1),styles["Normal"]))
+            if np.size(self.ipd.items())>0:
+                for l in range(self.ipditeration[i]):#-----------debug
+                    Story.append(Paragraph( "<font size=8>     IPD Time Iteration:      %s</font>"%(l+1),styles["Normal"]))
+                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Start:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD End: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Length:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s</font>"%(self.ipd[i][l].start_time,self.ipd[i][l].end_time,self.ipd[i][l].length()),styles["Normal"]) )  
+            if np.size(self.refreezeiteration.items())>2:
+                for j in range(self.refreezeiteration[i]):
+                    Story.append(Paragraph( "<font size=8>     Refreeze Time Iteration: %s</font>"%(j+1),styles["Normal"]))
+                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze Start:&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze End: &nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze Length:&nbsp&nbsp %s</font>"%(self.refreeze[i][j].start_time,self.refreeze[i][j].end_time,self.refreeze[i][j].length()),styles["Normal"]))   
+            if np.size(self.defrostiteration.items())>2:
+                for k in range(self.defrostiteration[i]):
+                    Story.append(Paragraph( "<font size=8>     Defrost Time Iteration: %s</font>"%(k+1),styles["Normal"]))
+                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost Start:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost End: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost Length:&nbsp&nbsp&nbsp&nbsp&nbsp %s</font>"%(self.defrost[i][k].start_time,self.defrost[i][k].end_time,self.defrost[i][k].length()),styles["Normal"]))   
+        
+        Story.append(Spacer(1,48))
+        Story.append(Paragraph("<font size=16>Tolerance Information: </font>",styles["Normal"]))
+        Story.append(Spacer(1,48))
+
+        
+        statelist=["IPD","Defrost","Refreeze"]
+        Barrel_list=["BBL_1","BBL_2","BBL_3","BBL_4"]
+        Statistics=["RFG_lo","RFG_hi","V","RTemp","SUPHT","DUTYCycles","BTR%"]        
+        for barrel in range(barr_num):
+            Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >--------------------------------------------------------------------</font>"%(barrel+1),styles["Normal"]))
+            for state in range(np.size(statelist)):
+                Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp State: %s</font>"%(statelist[state]),styles["Normal"]))
+                for instance in range(np.size(self.states[state][barrel].items(),0)):
+                    Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Instance:&nbsp&nbsp %s</font>" %(instance+1),styles["Normal"]))
+                    for statistic in range(self.states[state][barrel][instance].__len__()):
+                        if False in self.states[state][barrel][instance][statistic]:
+                            Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Property: &nbsp&nbsp %s   | &nbsp&nbsp  Result:&nbsp&nbsp  FAIL</font>"%(Statistics[statistic]),styles["Normal"]))
+        print np.size(pics)
+        
+        Story.append(PageBreak())
+        Story.append(Paragraph("<font size=16>Test Visualization: </font>",styles["Normal"]))
+        Story.append(Spacer(1,24))
+        for state in range(np.size(pics)):
+            Story.append(Paragraph("<font size=12>%s </font>"%(statelist[state]),styles["Normal"]))
+            for picnum in range(np.size(pics[state])):
+                im = Image(pics[state][picnum], 5*inch, 3*inch)
+                Story.append(im)
+                Story.append(Spacer(1,24))
         
         
         
@@ -2451,9 +2453,9 @@ s.getdata(num_barr_to_use)
 #print s.ref_BTR[0][1]
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
-#pics=s.display_plots_version2(num_barr_to_use,"all",0)
-#s.create_pdf(pics)
-
+pics=s.display_plots_version2(num_barr_to_use,"all",0)
+s.create_pdf(pics)
+print s.overall_refprops_value[3][0]
 
 # property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
 #print s.ipdprops[0][0][0]
