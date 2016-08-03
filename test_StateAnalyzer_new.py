@@ -1593,17 +1593,17 @@ class StateAnalyzer:
                             #BTRfig=plt.figure()
                             lower=[]
                             upper=[]
-                            for iteration in range(self.stateiters[state]):
+                            for iteration in range(self.stateiters[state][barrel]):
                                 x=[]
                                 y=[]
-                                BTRx=range(self.statelengths[state][iteration].length())
+                                BTRx=range(self.statelengths[state][barrel][iteration].length())
                                 BTRy_hold=self.stateprops[state][barrel][iteration][6]
                                 BTRy=BTRy_hold[:]
                                 zip(BTRx,BTRy)
                                 plotarray=[]
                                 #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
                                 
-                                for timer in range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time):
+                                for timer in range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time):
                                     
                                     uppertol=(np.polyval(self.IPD3_tolerances[6],timer))*self.hightol
                                     lowertol=(np.polyval(self.IPD3_tolerances[6],timer))*self.lowtol
@@ -1623,12 +1623,7 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
-                        if state==0:
-                            ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
-                        if state==1:
-                            defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
-                        if state==2:
-                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum)) 
+                        ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
                         if shonosho==1:
                             plt.show()
                         
@@ -1644,17 +1639,17 @@ class StateAnalyzer:
                         for barrel in range(np.size(Barrels)):
                             lower=[]
                             upper=[]
-                            for iteration in range(self.stateiters[state]):
+                            for iteration in range(self.stateiters[state][barrel]):
                                 x=[]
                                 y=[]
-                                BTRx=range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time)# self.statelengths[state][iteration].length()  <----------- used to be that. may include with another file for monitoring.
+                                BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)# self.statelengths[state][iteration].length()  <----------- used to be that. may include with another file for monitoring.
                                 BTRy_hold=self.stateprops[state][barrel][iteration][statistic2]
                                 BTRy=BTRy_hold[:]
                                 zip(BTRx,BTRy)
                                 plotarray=[]
                                 
                                 
-                                for timer in range(self.statelengths[state][iteration].start_time,self.statelengths[state][iteration].end_time):
+                                for timer in range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time):
                                     
                                     uppertol=(np.polyval(self.IPD3_tolerances[statistic2],timer))*self.hightol
                                     lowertol=(np.polyval(self.IPD3_tolerances[statistic2],timer))*self.lowtol
@@ -1680,12 +1675,7 @@ class StateAnalyzer:
                     plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                     imnum+=1
                     plt.savefig("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))#filename_state_barrel_statistic_image_number
-                    if state==0:
-                        ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
-                    if state==1:
-                        defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
-                    if state==2:
-                        refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum)) 
+                    ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
                     if shonosho==1:
                         plt.show()
                     #imnum+=1   
@@ -1745,8 +1735,8 @@ class StateAnalyzer:
                                 BTRfig.add_subplot(1,2,2)
                                 for timer in range(longest):
                                     
-                                    uppertol=(np.polyval(self.tols3[state][6],timer))*self.hightol
-                                    lowertol=(np.polyval(self.tols3[state][6],timer))*self.lowtol
+                                    uppertol=(np.polyval(self.tols4[state][6],timer))*self.hightol
+                                    lowertol=(np.polyval(self.tols4[state][6],timer))*self.lowtol
                                     
                                     upper.append(uppertol)
                                     lower.append(lowertol)                            
@@ -1767,12 +1757,10 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
-                        if state==0:
-                            ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
                         if state==1:
                             defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                         if state==2:
-                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum)) 
+                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                         if shonosho==1:
                             plt.show()
                         
@@ -1817,8 +1805,8 @@ class StateAnalyzer:
                                
                                 for timer in range(longest):
                                     
-                                    uppertol=(np.polyval(self.tols3[state][statistic2],timer))*self.hightol
-                                    lowertol=(np.polyval(self.tols3[state][statistic2],timer))*self.lowtol
+                                    uppertol=(np.polyval(self.tols4[state][statistic2],timer))*self.hightol
+                                    lowertol=(np.polyval(self.tols4[state][statistic2],timer))*self.lowtol
                                     
                                     upper.append(uppertol)
                                     lower.append(lowertol)   
@@ -1838,12 +1826,10 @@ class StateAnalyzer:
                         plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
                         imnum+=1
                         plt.savefig("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
-                        if state==0:
-                            ipdpics.append("%s_%s_%s.jpeg"%(__file__,"IPD",imnum))
                         if state==1:
                             defpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                         if state==2:
-                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum)) 
+                            refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                         if shonosho==1:
                             plt.show()
                     
@@ -2175,26 +2161,27 @@ class StateAnalyzer:
                 for iteration in range(state_iterations[state][barrel]):
                     data.append(['Time Interval: %s'%(iteration), '-','-','-','-','-'])
                     tablecombine_columns_iteration.append(np.size(data,0))
-                    
+                    #######----------------------------------------------------------- PDFGEN: SHOWING THE IPD PULDOWN TIME ---------------------------------------------------
                     if state==0:
                         tablecombine_columns_ipd.append(np.size(data,0))
                         data.append(['%s'%(np.size(data,0)), '%s PullDown Time '%(state_names[state]), '%s:%s'%(divmod(self.overall_ipdprops_value[barrel][iteration][0],60)[0],divmod(self.overall_ipdprops_value[barrel][iteration][0],60)[1]), '%s:%s'%(divmod(self.ipd_overall_tolerances[0][1],60)[0],divmod(self.ipd_overall_tolerances[0][1],60)[1]), '%s:%s'%(divmod(self.ipd_overall_tolerances[0][0],60)[0],divmod(self.ipd_overall_tolerances[0][0],60)[1]),'%s'%self.ipd_verdicts[barrel][iteration][0]])
                         
-                    
+                        
+                    #######----------------------------------------------------------- PDFGEN: SHOWING THE BASELINE ---------------------------------------------------
                     for barrel in range(barr_num):
                         if state==0:
                             data.append(['%s'%(np.size(data,0)), '%s Baseline (Barrel %s) '%(state_names[state],barrel+1), '%s'%self.overall_ipdprops_value[barrel][iteration][1], '%s'%self.ipd_overall_tolerances[1][1], '%s'%self.ipd_overall_tolerances[1][0],'%s'%self.ipd_verdicts[barrel][iteration][1]])
 
                         
                         
-                        
+                     #######----------------------------------------------------------- PDFGEN: SHOWING THE REMAINING IP DPROPERTIES ---------------------------------------------------
                     if printipd==0:
                         for stat in range(np.size(overall_ipdstatnames)-2):
                             data.append(['%s'%(np.size(data,0)), '%s %s '%(state_names[state],overall_ipdstatnames[stat+2]), '%s'%(self.overall_ipdprops_value[barrel][iteration][stat+2]), '%s'%(self.ipd_overall_tolerances[stat+2][1]), '%s'%(self.ipd_overall_tolerances[stat+2][0]),'%s'%self.ipd_verdicts[barrel][iteration][stat+2]])
                         printipd=1
                         printdef=0
                         
-                        
+                    #######----------------------------------------------------------- PDFGEN: SHOWING THE DEFROST TIMES AND THE BASELINES ---------------------------------------------------
                     if printdef==0 and state==1:
                         tablecombine_columns_def.append(np.size(data,0))
                         for barrel in range(barr_num):
@@ -2205,7 +2192,7 @@ class StateAnalyzer:
                         printdef=1
                         printref=0
                         
-                        
+                    #######----------------------------------------------------------- PDFGEN: SHOWING THE REFREEZE TIMES ---------------------------------------------------
                     if printref==0 and state==2:
                         tablecombine_columns_ref.append(np.size(data,0))
                         tablecombine_rows_ref.append(np.size(data,0)-1)
@@ -2213,6 +2200,7 @@ class StateAnalyzer:
                             data.append(['%s'%(np.size(data,0)), '%s %s (Barrel %s-%s) '%(state_names[state],overall_refstatnames[0],1,barr_num), '%s:%s'%(divmod(self.overall_refprops_value[barrel][iteration][0],60)[0],divmod(self.overall_refprops_value[barrel][iteration][0],60)[1]), '%s:%s'%(divmod(self.ref_overall_tolerances[0][1],60)[0],divmod(self.ref_overall_tolerances[0][1],60)[1]), '%s:%s'%(divmod(self.ref_overall_tolerances[0][0],60)[0],divmod(self.ref_overall_tolerances[0][0],60)[1]),'%s'%self.ref_verdicts[barrel][iteration][0]])
                         tablecombine_rows_ref.append(np.size(data,0)-1)
                         
+                    #######----------------------------------------------------------- PDFGEN: SHOWING THE REMAINING REFREEZE PROPERTIES  ---------------------------------------------------
                         for stat in range(np.size(overall_refstatnames,0)-1):
                             for barrel in range(barr_num):
                                 data.append(['%s'%(np.size(data,0)), '%s %s (Barrel %s-%s) '%(state_names[state],overall_refstatnames[stat+1],1,barr_num), '%s'%(self.overall_refprops_value[barrel][iteration][stat+1]), '%s'%(self.ref_overall_tolerances[stat+1][1]), '%s'%(self.ref_overall_tolerances[stat+1][0]),'%s'%self.ref_verdicts[barrel][iteration][stat+1]])
@@ -2273,8 +2261,9 @@ class StateAnalyzer:
              t.setStyle(TableStyle([('SPAN',(1,tablecombine_rows_ref[length]+1),(1,tablecombine_rows_ref[length]+barr_num))]))
              #print "Spanning from: %s to %s"%(tablecombine_rows_ref[length]+1,tablecombine_rows_ref[length]+barr_num)
         for row in range(np.size(data,0)):
-            if data[row][-1]=="FAIL":
+            if data[row][-1]=="FAIL"and row>4:
                 t.setStyle(TableStyle([(('BACKGROUND',(-1,row),(-1,row),colors.red))]))
+                t.setStyle(TableStyle([(('TEXTCOLOR',(2,row),(2,row),colors.red))]))
         t.setStyle(TableStyle([('VALIGN',(1,4,),(1,-1),'MIDDLE')]))
         Story.append(t) 
         Story.append(PageBreak())
@@ -2433,11 +2422,11 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('774LABTEST.log')#('773logtest2_TEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('773logtest2_TEST.log')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
 # print num_barr   
 num_barr=4
-num_barr_to_use=4 #------------------------------------------------------------------------ returns an error sometimes if the barrels used in anlysis dont match with barrels actually working.
+num_barr_to_use=3 #------------------------------------------------------------------------ returns an error sometimes if the barrels used in anlysis dont match with barrels actually working.
 s.StatePopulator(num_barr_to_use)#_to_use)
 
 
