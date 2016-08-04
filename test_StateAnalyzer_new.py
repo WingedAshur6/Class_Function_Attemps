@@ -1691,7 +1691,7 @@ class StateAnalyzer:
 
     def statecleaner(self,num_barr):
         self.newstate=State(None,None,None,None)
-        
+        import time
         for i in range(num_barr):
             print "------------------------------------------< Barrel Number: ",i,">------------------------------------------"
             if np.size(self.ipd.items())>0:
@@ -1710,38 +1710,114 @@ class StateAnalyzer:
         
         
         
-        
+
         #---------------------------- REFREEZE CLENAUP --------------------------------------
-        self.errors_ref={}
-        for i in range(num_barr):
-            test_for_overlap=0
-            dictkey=0
-            print "statecleanup"
-            self.errors_ref[i]={}
-            if np.size(self.refreezeiteration.items())>2:
-                for j in range(self.refreezeiteration[i]):
-                    self.errors_ref[i][j]={}
+        self.clean_ref={}
+        clean_ref_iteration={}
+        self.clean_def={}
+        clean_def_iteration={}
+        self.clean_ipd={}
+        clean_ipd_iteration={}
+        for barrel in range(num_barr):
+        
+            self.clean_ref[barrel]={}
+            clean_ref_iteration[barrel]=0
+            self.clean_ref[barrel][clean_ref_iteration[barrel]]={}
+            
+            self.clean_def[barrel]={}
+            clean_def_iteration[barrel]=0
+            self.clean_def[barrel][clean_def_iteration[barrel]]={}
+            
+            self.clean_ipd[barrel]={}
+            clean_ipd_iteration[barrel]=0
+            self.clean_ipd[barrel][clean_ipd_iteration[barrel]]={}
+            
+            #time.sleep(3)
+        if np.size(self.refreezeiteration.items())>2:#------------------------ Test to see if there is even a refreeze
+            for barrel in range(num_barr):
+                print "Barrel: %s"%barrel
+                ##time.sleep(1)
+                
+                
+                
+                
+                
+                for IPDiteration in range(self.ipditeration[barrel]):#-------- for every ipditeration per barrel to check for an overlap
+                    print "     IPD Iteration: %s"%IPDiteration
+                   
+                    ##------------------------------------------------------------- IPD CLEANING --------------------------------------------------------------------------------------
+                    if self.ipd[barrel][IPDiteration].length()<30:
+                        print "                     ITERATION FAILED. SHORT DURATION PRESENT: Barrel: %s  IPD Iteration: %s Time Duration: %s"%(barrel,IPDiteration,self.ipd[barrel][IPDiteration].length())
+                        #time.sleep(1)
+                        #break
+                    else:
+                        self.clean_ipd[barrel][clean_ipd_iteration[barrel]]=self.ipd[barrel][IPDiteration]
+                        clean_ipd_iteration[barrel]+=1
+                        print "                     Iteration passed. Barrel: %s IPD iteration: %s Shift Clean Iteration %s--->%s"%(barrel,IPDiteration,clean_ipd_iteration[barrel]-1,clean_ipd_iteration[barrel])
+
+
+
+
+
+
+               #time.sleep(1)
+                ##------------------------------------------------------------- REFREEZE CLEANING --------------------------------------------------------------------------------------
+                for iteration in range(self.refreezeiteration[barrel]) or range(np.size(self.refreezeiteration[barrel])):#---------- for every refreeze iteration per barrel
+                    print "         Refreeze Iteration: %s"%iteration
+                    #time.sleep(1)
                     test_for_overlap=0
-                    for k in range(self.ipditeration[i]):
-                        if  self.refreeze[i][j].end_time <= self.ipd[i][k].end_time or self.refreeze[i][j].start_time>=self.ipd[i][k].start_time and self.refreeze[i][j].start_time<=self.ipd[i][k].end_time or self.refreeze[i][j].length()<30:
-                            test_for_overlap=1
-                            print "TEST FAILED."
-                            self.errors_ref[dictkey][j]=self.refreeze[i][j]
-                            dictkey+=1
-                            if self.refreezeiteration[i+1]:
-                                self.refreeze[i][j]=self.refreeze[i][j+1]
-                                del(self.refreeze[i][j+1])
-                                self.refreezeiteration[i]+=-1
-                                print "Barrel: %s, iteration reduced from: %s to: %s"%(i,self.refreezeiteration[i]+1,self.refreezeiteration[i])
-                                print self.refreeze[i][j].start_time
-                                break
-                            break
-                        break
-                    break
+                    for IPDiteration in range(self.ipditeration[barrel]):
+                        #test_for_overlap=1
+                        if self.refreeze[barrel][iteration].end_time <= self.ipd[barrel][IPDiteration].end_time and self.refreeze[barrel][iteration].start_time >= self.ipd[barrel][IPDiteration].start_time or self.refreeze[barrel][iteration].start_time <=self.ipd[barrel][IPDiteration].end_time and self.refreeze[barrel][iteration].end_time>=self.ipd[barrel][IPDiteration].start_time: 
                             
-                    if test_for_overlap==0:
-                        self.errors_ref[i]=self.refreeze[i]
-                        print "test passed."
+                            test_for_overlap=1
+                            print "                     ITERATION FAILED. OVERLAP PRESENT:        Barrel: %s Refreze Iteration: %s  Time overlap: %s [%s-%s] %s"%(barrel,iteration,self.ipd[barrel][IPDiteration].start_time,self.refreeze[barrel][iteration].start_time,self.refreeze[barrel][iteration].end_time,self.ipd[barrel][IPDiteration].end_time)
+                            #time.sleep(1)
+                         #   break
+                    for IPDiteration in range(self.ipditeration[barrel]):
+                        if self.refreeze[barrel][iteration].length()<30:
+                            print "                     ITERATION FAILED. SHORT DURATION PRESENT: Barrel: %s  Refreeze Iteration: %s Time Duration: %s"%(barrel,iteration,self.refreeze[barrel][iteration].length())
+                            test_for_overlap=1
+                            #time.sleep(1)
+                            #break
+                        
+                    if test_for_overlap==0 and self.refreeze[barrel][iteration].end_time > self.ipd[barrel][IPDiteration].end_time and self.refreeze[barrel][iteration].start_time > self.ipd[barrel][IPDiteration].start_time or self.refreeze[barrel][iteration].start_time <self.ipd[barrel][IPDiteration].end_time and self.refreeze[barrel][iteration].end_time<self.ipd[barrel][IPDiteration].end_time and self.refreeze[barrel][iteration].length()<30 and test_for_overlap==0: 
+                        self.clean_ref[barrel][clean_ref_iteration[barrel]]=self.refreeze[barrel][iteration]
+                        clean_ref_iteration[barrel]+=1
+                        print "                     Iteration passed. Barrel: %s Refreeze iteration: %s Shift Clean Iteration %s--->%s"%(barrel,iteration,clean_ref_iteration[barrel]-1,clean_ref_iteration[barrel])
+                        #time.sleep(1)
+    
+    
+                ##------------------------------------------------------------- DEFROST CLEANING --------------------------------------------------------------------------------------
+                for iteration in range(self.defrostiteration[barrel]) or range(np.size(self.defrostiteration[barrel])):#---------- for every defrost iteration per barrel
+                    for IPDiteration in range(self.ipditeration[barrel]):
+                        print "         Refreeze Iteration: %s"%iteration
+                        #time.sleep(1)
+                        if self.defrost[barrel][iteration].end_time <= self.ipd[barrel][IPDiteration].end_time or self.defrost[barrel][iteration].start_time >= self.ipd[barrel][IPDiteration].start_time and self.defrost[barrel][iteration].start_time <=self.ipd[barrel][IPDiteration].end_time: 
+                            
+                            test_for_overlap=1
+                            print "                     ITERATION FAILED. OVERLAP PRESENT:        Barrel: %s Refreze Iteration: %s  Time overlap: %s [%s-%s] %s"%(barrel,iteration,self.ipd[barrel][IPDiteration].start_time,self.defrost[barrel][iteration].start_time,self.defrost[barrel][iteration].end_time,self.ipd[barrel][IPDiteration].end_time)
+                            #time.sleep(1)
+                         #   break
+                            
+                        if self.defrost[barrel][iteration].length()<30:
+                            print "                     ITERATION FAILED. SHORT DURATION PRESENT: Barrel: %s  Refreeze Iteration: %s Time Duration: %s"%(barrel,iteration,self.defrost[barrel][iteration].length())
+                            #time.sleep(1)
+                            #break
+                        elif self.defrost[barrel][iteration].end_time > self.ipd[barrel][IPDiteration].end_time and self.defrost[barrel][iteration].start_time > self.ipd[barrel][IPDiteration].start_time or self.defrost[barrel][iteration].start_time <self.ipd[barrel][IPDiteration].end_time and self.defrost[barrel][iteration].end_time<self.ipd[barrel][IPDiteration].end_time and self.defrost[barrel][iteration].length()<30: 
+                            self.clean_def[barrel][clean_def_iteration[barrel]]=self.defrost[barrel][iteration]
+                            clean_def_iteration[barrel]+=1
+                            print "                     Iteration passed. Barrel: %s Refreeze iteration: %s Shift Clean Iteration %s--->%s"%(barrel,iteration,clean_def_iteration[barrel]-1,clean_def_iteration[barrel])
+                            # #time.sleep(1)        
+        
+        
+        
+        
+        self.ipd=self.clean_ipd
+        self.defrost=self.clean_def
+        self.ipditeration=clean_ipd_iteration
+        self.defrostiteration=clean_def_iteration
+
                         
                         
         print "\n\n\n\n\n\n"    
@@ -1751,17 +1827,18 @@ class StateAnalyzer:
                 for l in range(self.ipditeration[i]):#-----------debug
                     print "     IPD Time Iteration:      ",l
                     print "                                    IPD Start:      ",self.ipd[i][l].start_time,"\n                                    IPD End:        ",self.ipd[i][l].end_time,"\n                                    IPD Length:     ",self.ipd[i][l].length()   
-            if np.size(self.refreezeiteration.items())>2:
-                for j in range(self.refreezeiteration[i]):
+            if np.size(clean_ref_iteration.items())>2:
+                for j in range(clean_ref_iteration[i]):
                     print "     Refreeze Time Iteration: ",j
-                    print "                                    Refreeze Start: ",self.refreeze[i][j].start_time,"\n                                    Refreeze End:   ",self.refreeze[i][j].end_time,"\n                                    Refreeze Length:",self.refreeze[i][j].length()   
+                    print "                                    Refreeze Start: ",self.clean_ref[i][j].start_time,"\n                                    Refreeze End:   ",self.clean_ref[i][j].end_time,"\n                                    Refreeze Length:",self.clean_ref[i][j].length()   
             if np.size(self.defrostiteration.items())>2:
                 for k in range((self.defrostiteration[i])):
                     print "     Defrost Time Iteration:  ",k
                     print "                                    Defrost Start:  ",self.defrost[i][k].start_time,"\n                                    Defrost End:    ",self.defrost[i][k].end_time,"\n                                    Defrost Length: ",self.defrost[i][k].length()   
                 print"\n"                
 
-        
+        self.refreeze=self.clean_ref
+        self.refreezeiteration=clean_ref_iteration
     def create_pdf(self,pics,num_barr):# ------------------------------- will be using "self" for now. next iteration will be: STATES,ERRORS,PLOTS_GEN)
         import time
         from reportlab.lib.enums import TA_JUSTIFY
@@ -2223,7 +2300,7 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('774DOUBLE.LOG')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('774labtest')#('774DOUBLE.LOG')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
 # print num_barr   
 #num_barr=4
