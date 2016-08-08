@@ -1058,7 +1058,7 @@ class StateAnalyzer:
         ipd4_rt=[0.000000000000000097260347078284 ,- 0.000000000000241731002795525000 , 0.00000000001198123703942840 , 0.00000032031829803074 ,- 0.0001377269120588430 ,- 0.1080063010927350 , 77.8986790450428]
         ipd4_sup=[0.000000000000001516325614899410 ,- 0.000000000006656995733620930000 , 0.0000000113658051679730 ,- 0.00000947870686179508 , 0.00395539242335789 ,- 0.7440931725646520 , 53.833304436568700]
         ipd4_duty=[-0.000000000000001001447917092700 , 0.000000000005037361204350060000 ,- 0.00000000935658280286464 , 0.00000796017591734055 ,- 0.002978503986445920 , 0.292399262081752 , 57.0746540017013000]
-        ipd4_btr=[-.000000455209746625025,.00058001105282991,-.218669245066337,1050.00000000005]
+        ipd4_btr=[-2.798*10**-9,.0000069897,-.0061088,2.2767,725.49]
         
         def4_rfg_lo=[0.000000000000169630234525366000 ,- 0.0000000002645599403197590 , 0.00000015274102242817700 ,- 0.00004026681066231800 , 0.0051276058117068500 ,- 0.320480089558662000 , 58.0495600670625]
         def4_rfg_hi=[-0.000000000000111489654494239000 , 0.0000000001548563880677550 ,- 0.000000075844192432823600 , 0.00001444959089391550000 ,- 0.000061098402065685600 ,- 0.2937899531360970000 , 166.039483813293000]
@@ -1649,7 +1649,7 @@ class StateAnalyzer:
                                 longer=max(long)
                             if longer>longest:
                                 longest=longer
-                            BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#range(self.statelengths[state][barrel][iteration].length())
+                            BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#range(self.statelengths[state][barrel][iteration].length())#
                             print "Iteration %s Size of BTRx: %s"%(iteration,np.size(BTRx))
                             #time.sleep(5)
                             BTRy_hold=self.stateprops[state][barrel][iteration][6]
@@ -2270,6 +2270,7 @@ class StateAnalyzer:
                 im.hAlign='CENTER'
                 Story.append(im)
                 Story.append(Spacer(1,24))
+                #os.remove(pics[state][picnum])
             Story.append(PageBreak())
         Story.append(PageBreak())
         
