@@ -1192,6 +1192,7 @@ class StateAnalyzer:
     
     
     def analyze_tolerances(self,num_barr):
+        self.have_I_Failed=0
         hightol=1.000025
         lowtol=1.00000000075
         import time
@@ -1454,6 +1455,7 @@ class StateAnalyzer:
                                 time.sleep(.001)
                                 self.overall_ipdprops[barrel][state][instance][statistic]=False
                                 self.ipd_verdicts[barrel][instance][statistic]="FAIL"
+                                self.have_I_Failed=1
                 if state=="Defrost":
                     for instance in range(self.defrostiteration[barrel]):
                         print "             Instance: %s"%instance
@@ -1464,6 +1466,7 @@ class StateAnalyzer:
                                 time.sleep(.001)
                                 self.overall_defprops[barrel][state][instance][statistic]=False
                                 self.def_verdicts[barrel][instance][statistic]="FAIL"
+                                self.have_I_Failed=1
                 if state=="Refreeze":
                     for instance in range(self.refreezeiteration[barrel]):
                         print "             Instance: %s"%instance
@@ -1474,6 +1477,7 @@ class StateAnalyzer:
                                 time.sleep(.001)
                                 self.overall_refprops[barrel][state][instance][statistic]=False
                                 self.ref_verdicts[barrel][instance][statistic]="FAIL"
+                                self.have_I_Failed=1
                                 
 
                                 
@@ -1569,6 +1573,7 @@ class StateAnalyzer:
         import datetime
         from datetime import timedelta
         import time
+        import matplotlib.ticker as mtick
         
         '''
         # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
@@ -1644,7 +1649,7 @@ class StateAnalyzer:
                                 longer=max(long)
                             if longer>longest:
                                 longest=longer
-                            BTRx=range(self.statelengths[state][barrel][iteration].length())
+                            BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#range(self.statelengths[state][barrel][iteration].length())
                             print "Iteration %s Size of BTRx: %s"%(iteration,np.size(BTRx))
                             #time.sleep(5)
                             BTRy_hold=self.stateprops[state][barrel][iteration][6]
@@ -1652,6 +1657,17 @@ class StateAnalyzer:
                             zip(BTRx,BTRy)
                             plotarray=[]
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
+                            
+
+                            #plt.xticks(BTRx,timeplot)
+                            plt.locator_params(axis='x',nbins=7)
+                            times=self.data[self.statelengths[state][barrel][iteration].start_time:self.statelengths[state][barrel][iteration].end_time][1]
+                            plt.gca().xaxis.set_major_formatter(
+                                mtick.FuncFormatter(lambda pos,_: time.strftime("%M:%S",time.localtime(pos)))
+                                )
+                            
+                            
+                            
                             
                             for timer in range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time):
                                 
@@ -1706,6 +1722,7 @@ class StateAnalyzer:
                             zip(BTRx,BTRy)
                             plotarray=[]
                             
+
                             
                             for timer in range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time):
                                 
@@ -1718,6 +1735,12 @@ class StateAnalyzer:
                             
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
                             fig.add_subplot(numrows,numcols,statistic2+1)
+                            times=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)
+                            #print times
+                            
+                            plt.gca().xaxis.set_major_formatter(
+                                mtick.FuncFormatter(lambda pos,_: time.strftime("%M:%S",time.localtime(pos)))
+                                )
                             plt.subplots_adjust(hspace=.55)
                             plt.subplots_adjust(wspace=.55)
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
@@ -1791,10 +1814,7 @@ class StateAnalyzer:
                                 lower=[]
                                 upper=[]
                                 BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#.length())
-                                timeplot=[]
-                                m,s=divmod(self.statelengths[state][barrel][iteration].start_time,60)
-                                timeplot=[datetime.timedelta(0)+datetime.timedelta(seconds=i) for i in range(np.size(BTRx))]
-                                
+
                                 
                                 
                                 
@@ -1811,9 +1831,22 @@ class StateAnalyzer:
                                 plt.grid(True)
                                 print "Adding title."
                                 plt.title("%s (%s), Chronologic"%(stats[6],self.plotting_UOM[6]))
-                                plt.xlabel('time (s)')
+                                plt.xlabel('time (h:m:s)')
                                 plt.ylabel('%s'%self.plotting_UOM[6])
                                 plt.xticks(rotation=45)
+                                
+                                
+                                times=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].start_time+longest)
+                                #print times
+                                
+                                plt.gca().xaxis.set_major_formatter(
+                                    mtick.FuncFormatter(lambda pos,_: time.strftime("%H:%M:%S",time.localtime(pos)))
+                                    )
+                                
+                                
+                                
+                                
+                                
                                 BTRx=range(self.statelengths[state][barrel][iteration].length())#.length())
                                 BTRy_hold=self.stateprops[state][barrel][iteration][6]
                                 BTRy=BTRy_hold[:]
@@ -1823,6 +1856,7 @@ class StateAnalyzer:
                                 BTRfig.add_subplot(1,2,2)
                                 plt.subplots_adjust(hspace=1)
                                 plt.subplot(1,2,2)
+                                plt.subplots_adjust(wspace=.25)
                                 for timer in range(longest):
                                     
                                     uppertol=(np.polyval(othertols[state][6],timer))*self.hightol
@@ -1831,9 +1865,21 @@ class StateAnalyzer:
                                     upper.append(uppertol)
                                     lower.append(lowertol)                            
                                 plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
+                                
+                                
+                                times=range(0,longest)
+                                #print times
+                                
+                                plt.gca().xaxis.set_major_formatter(
+                                    mtick.FuncFormatter(lambda pos,_: time.strftime("%M:%S",time.localtime(pos)))
+                                    )
+                                
+                                
+                                
+                                
                                 plt.hold(True)
                                 plt.title("%s (%s), Overlay"%(stats[6],self.plotting_UOM[6]))
-                                plt.xlabel('time (s)')
+                                plt.xlabel('time (m:s)')
                                 plt.xticks(rotation=45)
                     #plt.subplot(1,2,2)
                     #print range(longest),np.size(upper)
@@ -1898,9 +1944,18 @@ class StateAnalyzer:
                                 #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
                                 fig.add_subplot(1,2,1)
                                 plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
+                                
+                                times=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].start_time+longest)
+                                #print times
+                                
+                                plt.gca().xaxis.set_major_formatter(
+                                    mtick.FuncFormatter(lambda pos,_: time.strftime("%H:%M:%S",time.localtime(pos)))
+                                    )
+                                
+                                
                                 plt.hold(True)
                                 plt.grid(True)
-                                plt.xlabel('time (s)')
+                                plt.xlabel('time (h:m:s)')
                                 plt.ylabel('%s'%self.plotting_UOM[statistic2])
                                 plt.title("%s (%s), Chronologic"%(stats[statistic2],self.plotting_UOM[statistic2]))
                                 plt.xticks(rotation=45)
@@ -1909,7 +1964,7 @@ class StateAnalyzer:
                                 BTRy=BTRy_hold[:]
                                 zip(BTRx,BTRy)  
                                 fig.add_subplot(1,2,2)
-                                plt.subplots_adjust(hspace=1)
+                                plt.subplots_adjust(wspace=.25)
                                 print "Longest: %s"%longest
                                 for timer in range(longest):
                                     
@@ -1919,10 +1974,20 @@ class StateAnalyzer:
                                     upper.append(uppertol)
                                     lower.append(lowertol)   
                                 plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
+                                
+                                times=range(0,longest)
+                                #print times
+                                
+                                plt.gca().xaxis.set_major_formatter(
+                                    mtick.FuncFormatter(lambda pos,_: time.strftime("%M:%S",time.localtime(pos)))
+                                    )
+                                    
+                                    
+                                    
                                 plt.hold(True)
                                 plt.grid(True)
                                 plt.title("%s (%s), Overlay"%(stats[statistic2],self.plotting_UOM[statistic2]))
-                                plt.xlabel('time (s)')
+                                plt.xlabel('time (m:s)')
                                 plt.xticks(rotation=45)
                     if self.stateiters[state][barrel]==0:
                         pass
@@ -1964,6 +2029,7 @@ class StateAnalyzer:
         from reportlab.lib.units import inch
         from reportlab.lib import colors       
         import datetime
+        import calendar
         import os
         absFilePath = os.path.abspath(__file__)
         os.chdir( os.path.dirname(absFilePath) )
@@ -1984,11 +2050,20 @@ class StateAnalyzer:
         title="FBD QUALITY TEST REPORT" 
         formatted_time = time.ctime()
         serialno=self.data[0][0]
-        testlength=self.data[-1][1]-self.data[0][1]
+        testtime=self.data[-1][1]-self.data[0][1]
+        m,s=divmod(testtime,60)
+        h,m=divmod(m,60)
+        testlength=datetime.time(h,m,s).strftime("%H:%M:%S")
+        t=time.ctime()
+        f=datetime.datetime.strptime(t, '%a %b %d %H:%M:%S %Y')
         
+        current_time=f.strftime("%m/%d/%Y %H:%M:%S")
         series="77x"
         barr_num=num_barr
         myverdict="PASS"#<----------------------------------------------- THIS NEEDS TO BE CHANGED TO AN ACTUAL THING.
+
+        if self.have_I_Failed==1:
+            myverdict="FAIL"
         if myverdict.upper()=="PASS":
             verdictcolor=colors.limegreen
         if myverdict.upper()=="FAIL":
@@ -2039,8 +2114,8 @@ class StateAnalyzer:
         state_iterrecs=[self.ipditerrec,self.defrostiterrec,self.refreezeiterrec]
         
         data= [['UNIT TESTING REPORT (%s)'%(serialno), '-', '-', '-', '-','-'],
-                ['Type', '%s'%(series), 'Date', '%s'%(time.ctime()), 'Result:','%s'%(myverdict)],
-                ['Sides ', '%s'%(barr_num), '-', '-', '-','-'],
+                ['Type', '%s'%(series), 'Date', '%s'%(current_time), 'Result:','%s'%(myverdict)],
+                ['Sides ', '%s'%(barr_num), 'Test Duration', '%s'%(testlength), '-','-'],
                 ['-', '-', 'Tester', 'S. Martinez', '-','-'],
                 ['Summary of Results', '-', '-', '-', '-','-'],
                 ['', '', 'Actual', 'Low', 'High','Result']]
@@ -2129,17 +2204,19 @@ class StateAnalyzer:
                                ('SPAN',(0,0),(-1,0)),
                                ('SPAN',(0,2),(0,3)),
                                ('SPAN',(1,2),(1,3)),
-                               ('SPAN',(2,1),(2,2)),
-                               ('SPAN',(3,1),(3,2)),
+                               #('SPAN',(2,1),(2,2)),
+                               #('SPAN',(3,1),(3,2)),
                                ('SPAN',(4,1),(4,2)),
                                ('SPAN',(5,1),(5,2)),
                                ('SPAN',(3,3),(-1,3)),
                                ('SPAN',(0,4),(-1,4)),
                                ('SPAN',(0,5),(1,5)),
                                
-                              
+                               ('ALIGN',(3,3),(3,3),'CENTER'),
                                ('ALIGN',(0,4),(-1,4),'CENTER'),
                                ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                               ('VALIGN',(2,1),(3,1),'MIDDLE'),
+                               ('VALIGN',(2,0),(3,0),'MIDDLE'),
                                #('VALIGN',(1,0,),(-1,-1),'MIDDLE'),
                                #('TEXTCOLOR',(0,-1),(-1,-1),colors.green),
                                ('GRID', (0,0), (-1,-1), 0.25, colors.black),#(columnstart,rowstart),(columnend,rowend),thickness
