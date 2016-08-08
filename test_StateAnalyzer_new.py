@@ -1058,7 +1058,7 @@ class StateAnalyzer:
         ipd4_rt=[0.000000000000000097260347078284 ,- 0.000000000000241731002795525000 , 0.00000000001198123703942840 , 0.00000032031829803074 ,- 0.0001377269120588430 ,- 0.1080063010927350 , 77.8986790450428]
         ipd4_sup=[0.000000000000001516325614899410 ,- 0.000000000006656995733620930000 , 0.0000000113658051679730 ,- 0.00000947870686179508 , 0.00395539242335789 ,- 0.7440931725646520 , 53.833304436568700]
         ipd4_duty=[-0.000000000000001001447917092700 , 0.000000000005037361204350060000 ,- 0.00000000935658280286464 , 0.00000796017591734055 ,- 0.002978503986445920 , 0.292399262081752 , 57.0746540017013000]
-        ipd4_btr=[-0.000000000000006293026564938570 , 0.0000000000222989697384448 ,- 0.0000000298977027546899 , 0.0000187322649963680 ,- 0.005572228919906410 , 0.7222945639582930 , 970.4022320831530]
+        ipd4_btr=[-.000000455209746625025,.00058001105282991,-.218669245066337,1050.00000000005]
         
         def4_rfg_lo=[0.000000000000169630234525366000 ,- 0.0000000002645599403197590 , 0.00000015274102242817700 ,- 0.00004026681066231800 , 0.0051276058117068500 ,- 0.320480089558662000 , 58.0495600670625]
         def4_rfg_hi=[-0.000000000000111489654494239000 , 0.0000000001548563880677550 ,- 0.000000075844192432823600 , 0.00001444959089391550000 ,- 0.000061098402065685600 ,- 0.2937899531360970000 , 166.039483813293000]
@@ -1192,8 +1192,8 @@ class StateAnalyzer:
     
     
     def analyze_tolerances(self,num_barr):
-        hightol=1.25
-        lowtol=.75
+        hightol=1.000025
+        lowtol=1.00000000075
         import time
         Tol_data={}
         self.states=[self.ipdprops,self.defprops,self.refprops]
@@ -1555,7 +1555,7 @@ class StateAnalyzer:
     
     
     
-    def display_plots_version2(self,num_barr,state,shonosho):#--------------------------- IPD PLOTS WILL LOOK SIMILAR BECAUSE THEY ALL OCCUR AT THE SAME TIME AND THE STATISTICS EXCEPT FOR THE BTR% ARE COMMON.
+    def display_plots_version2(self,num_barr,state,plottols,shonosho):#--------------------------- IPD PLOTS WILL LOOK SIMILAR BECAUSE THEY ALL OCCUR AT THE SAME TIME AND THE STATISTICS EXCEPT FOR THE BTR% ARE COMMON.
         '''
         # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
         # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
@@ -1566,8 +1566,10 @@ class StateAnalyzer:
         import matplotlib
         from matplotlib.backends.backend_pdf import PdfPages
         from datetime import datetime as dt
+        import datetime
         from datetime import timedelta
         import time
+        
         '''
         # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
         # ##-------------------------------------------------------------------------- CLASS IMPORT ---------------------------------------------------------------------------
@@ -1663,11 +1665,12 @@ class StateAnalyzer:
                             plt.xlabel('time (s)')
                             plt.ylabel('%s'%self.plotting_UOM[6])
                     print np.shape(BTRx),np.shape(upper)
-                    plt.plot(BTRx,upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
-                    plt.hold(True)
-                    plt.plot(BTRx,lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
-                    plt.hold(True)
-                    plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)
+                    if plottols==1:
+                        plt.plot(BTRx,upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                        plt.hold(True)
+                        plt.plot(BTRx,lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                        plt.hold(True)
+                        plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)
                     plt.hold(False)
                     plt.title("%s: %s (%s)"%(States[state],stats[6],self.plotting_UOM[6]))
                     plt.xlabel('time (s)')
@@ -1716,17 +1719,22 @@ class StateAnalyzer:
                             #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
                             fig.add_subplot(numrows,numcols,statistic2+1)
                             plt.subplots_adjust(hspace=.55)
-                            plt.subplots_adjust(wspace=.5)
+                            plt.subplots_adjust(wspace=.55)
                             plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                             plt.title("%s (%s)"%(stats[statistic2],self.plotting_UOM[statistic2]))
                             plt.hold(True)
                             plt.xlabel('time (s)')
                             plt.ylabel('%s'%self.plotting_UOM[statistic2])
-                    plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
-                    plt.hold(True)
-                    plt.plot(np.transpose(BTRx),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
-                    plt.hold(True)
-                    plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)
+                            plt.grid(True)
+                            plt.locator_params(axis='x',nbins=4)
+                            plt.locator_params(axis='y',nbins=6)
+                            plt.xticks(rotation=45)
+                    if plottols==1:
+                        plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                        plt.hold(True)
+                        plt.plot(np.transpose(BTRx),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                        plt.hold(True)
+                        plt.fill_between(BTRx,upper,lower,facecolor="black",alpha=0.125,interpolate=True)
                     
                 plt.hold(False)
                 plt.suptitle("%s"%(States[state]))
@@ -1783,6 +1791,13 @@ class StateAnalyzer:
                                 lower=[]
                                 upper=[]
                                 BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#.length())
+                                timeplot=[]
+                                m,s=divmod(self.statelengths[state][barrel][iteration].start_time,60)
+                                timeplot=[datetime.timedelta(0)+datetime.timedelta(seconds=i) for i in range(np.size(BTRx))]
+                                
+                                
+                                
+                                
                                 BTRy_hold=self.stateprops[state][barrel][iteration][6]
                                 BTRy=BTRy_hold[:]
                                 zip(BTRx,BTRy)
@@ -1798,6 +1813,7 @@ class StateAnalyzer:
                                 plt.title("%s (%s), Chronologic"%(stats[6],self.plotting_UOM[6]))
                                 plt.xlabel('time (s)')
                                 plt.ylabel('%s'%self.plotting_UOM[6])
+                                plt.xticks(rotation=45)
                                 BTRx=range(self.statelengths[state][barrel][iteration].length())#.length())
                                 BTRy_hold=self.stateprops[state][barrel][iteration][6]
                                 BTRy=BTRy_hold[:]
@@ -1818,19 +1834,20 @@ class StateAnalyzer:
                                 plt.hold(True)
                                 plt.title("%s (%s), Overlay"%(stats[6],self.plotting_UOM[6]))
                                 plt.xlabel('time (s)')
-
+                                plt.xticks(rotation=45)
                     #plt.subplot(1,2,2)
                     #print range(longest),np.size(upper)
                     if self.stateiters[state][barrel]==0:
                         pass
-                    else:  
-                        if longest<np.size(upper):
-                            longest=np.size(upper)
-                        plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
-                        plt.hold(True)
-                        plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
-                        plt.hold(True)
-                        plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
+                    else:
+                        if plottols==1:
+                            if longest<np.size(upper):
+                                longest=np.size(upper)
+                            plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                            plt.hold(True)
+                            plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                            plt.hold(True)
+                            plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
                                 
                                 
                         plt.suptitle("%s"%(States[state]))        
@@ -1886,6 +1903,7 @@ class StateAnalyzer:
                                 plt.xlabel('time (s)')
                                 plt.ylabel('%s'%self.plotting_UOM[statistic2])
                                 plt.title("%s (%s), Chronologic"%(stats[statistic2],self.plotting_UOM[statistic2]))
+                                plt.xticks(rotation=45)
                                 BTRx=range(self.statelengths[state][barrel][iteration].length())
                                 BTRy_hold=self.stateprops[state][barrel][iteration][statistic2]
                                 BTRy=BTRy_hold[:]
@@ -1905,19 +1923,20 @@ class StateAnalyzer:
                                 plt.grid(True)
                                 plt.title("%s (%s), Overlay"%(stats[statistic2],self.plotting_UOM[statistic2]))
                                 plt.xlabel('time (s)')
-
+                                plt.xticks(rotation=45)
                     if self.stateiters[state][barrel]==0:
                         pass
-                    else:                                
-                        plt.subplot(1,2,2)
+                    else:
+                        if plottols==1:
+                            plt.subplot(1,2,2)
                         
-                        if longest<np.size(upper):
-                            longest=np.size(upper)
-                        plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
-                        plt.hold(True)
-                        plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
-                        plt.hold(True)
-                        plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
+                            if longest<np.size(upper):
+                                longest=np.size(upper)
+                            plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                            plt.hold(True)
+                            plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                            plt.hold(True)
+                            plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)                            
                                 
                         plt.suptitle("%s"%(States[state]))        
                         plt.hold(False)
@@ -1930,64 +1949,11 @@ class StateAnalyzer:
                             refpics.append("%s_%s_%s.jpeg"%(__file__,States[state],imnum))
                         if shonosho==1:
                             plt.show()
-                
-                        # #return
-                    # plt.hold(True)
-                    # plots=zip(x,y)
-                    # axs={}
-                    # for idx,plot in enumerate(plots):
-                        # #print idx,plot
-                        # #print numrows,numcols
-                        # axs[idx]=fig.add_subplot(numrows,numcols,idx+1)
-                        # axs[idx].plot(plot[0],plot[1],color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
-                        # plt.title(["%s" % (stats[idx])])
-                        # plt.hold(True)
-                    # print np.shape(x)
-                    # plt.hold(False)
-                    # ########################################plt.show()
-       
-                
-                
-                
-        '''        
-            else:
-                num_statistics=np.size(States)
-                # print "\n Number of %s Iterations: %s"%(States[state],self.stateiters[state])
-                # print "\n Number of Statistics: %s \nDisplaying: \n\n","-----"*15,"\n  ",stats,"\n","-----"*15
-                # print "\n\nBTR% will be plotted seperately. thus, new statistics plots will have:"
-                numcols=(num_statistics-1)/2
-                numrows=(num_statistics-1)/3
-                print numcols," columns, and ",numrows," rows."
-                for statistic in range(1):#range(np.size(stats)):
-                    BTRfig=plt.figure()
-                    for barrel in range(np.size(Barrels)):
-                        #BTRfig=plt.figure()
-                        for iteration in range(self.stateiters[state][barrel]):
-                            x=[]
-                            y=[]
-                            BTRx=range(self.statelengths[state][barrel][iteration].length())
-                            BTRy_hold=self.stateprops[state][barrel][iteration][6]
-                            BTRy=BTRy_hold[:]
-                            zip(BTRx,BTRy)
-                            plotarray=[]
-                            #plotarray.append(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration])
-                            plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
-                            plt.hold(True)
-                    plt.hold(False)
-                    plt.title("%s: %s"%(States[state],stats[6]))
-                    legend=plt.legend(bbox_to_anchor=(1,1),loc=1,borderaxespad=0.)
-                    plt.grid(True)
-                    ########################################plt.show()
 
-            '''
 
         savedpics=[ipdpics,defpics,refpics]        
         return savedpics
-    
-    
-    
-    
-    
+        
     def create_pdf(self,pics,num_barr):# ------------------------------- will be using "self" for now. next iteration will be: STATES,ERRORS,PLOTS_GEN)
         import time
         from reportlab.lib.enums import TA_JUSTIFY
@@ -2011,19 +1977,12 @@ class StateAnalyzer:
                                 rightMargin=72,leftMargin=72,
                                 topMargin=72,bottomMargin=18)
         Story=[]
-        logo = "attempt2.py_Refreeze_5.jpeg"
-        magName = "Pythonista"
-        issueNum = 12
-        subPrice = "99.00"
-        limitedDate = "03/05/2010"
-        freeGift = "tin foil hat"
+
         
         ########################################################################################################################################################################## This will be the data to be entered in the beginning of the report. NOT THE TABLES, AND NOT THE TEST STATISTICS.
         ####################################################################### REPORT INTRODUCTORY INFORMATION ##################################################################
         title="FBD QUALITY TEST REPORT" 
         formatted_time = time.ctime()
-        full_name = "Mike Driscoll"
-        address_parts = ["411 State St.", "Marshalltown, IA 50158"]
         serialno=self.data[0][0]
         testlength=self.data[-1][1]-self.data[0][1]
         
@@ -2059,102 +2018,6 @@ class StateAnalyzer:
         overall_statnames=[overall_ipdstatnames,overall_defstatnames,overall_refstatnames]
         deg=u'\N{DEGREE SIGN}'
         tolerance_UOM=["MM:SS","","Psi","Psi","%sF"%deg,"%","%sF"%deg,"V","V"]
-        ## Creating some calculation data to put into the PDF Table:
-        ipdm,ipds=divmod(self.ipd[0][0].length(),60)
-        ipdLlim_m,ipdLlim_s=divmod(13*60,60)
-        ipdMlim_m,ipdMlim_s=divmod(18*60,60)
-        if self.ipd[0][0].length()>18*60 or self.ipd[0][0].length()<13*60:
-            ipdverd="Fail"
-        else:
-            ipdverd="Pass"
-        ipd_max_HSP=[[],[],[],[]]#np.max(self.data[self.ipd[0][0].start_time:self.ipd[0][0].end_time][6])#--------------------------self.ipd[barrel][iteration]
-        ipd_min_LSP=[[],[],[],[]]#np.min(self.data[self.ipd[0].start_time:self.ipd[0].end_time][5])
-        ipd_Base=[[],[],[],[]]
-        ipd_times=[[],[],[],[]]
-        ipd_min_RT=[[],[],[],[]]
-        ipd_avg_DC=[[],[],[],[]]
-        ipd_avg_SH=[[],[],[],[]]
-        
-        def_base=[[],[],[],[]]
-        def_times=[[],[],[],[]]
-        
-        
-        ref_base=[[],[],[],[]]
-        ref_max_HSP=[[],[],[],[]]
-        ref_min_LSP=[[],[],[],[]]
-        ref_times=[[],[],[],[]]
-        ref_avg_SUPR=[[],[],[],[]]
-        ref_avg_DC=[[],[],[],[]]
-        
-        
-        
-        
-        
-        
-        for i in range(barr_num):# ----------------------------------------------------------------------------IPD  HSP,LSP,Durations,SH, DC
-            
-            for iteration in range(self.ipditeration[i]):
-                ipd_Base[i].append([])
-                ipd_Base[i][iteration].append(self.data[self.ipd[i][0].start_time][14+7*i])
-                
-                ipd_max_HSP[i].append([])
-                ipd_max_HSP[i][iteration].append(np.round(np.max(self.ipdprops[i][iteration][1][0:-1])))
-                
-                ipd_min_LSP[i].append([])
-                ipd_min_LSP[i][iteration].append(np.round(np.min(self.ipdprops[i][iteration][0][0:-1])))
-                
-                ipdm,ipds=divmod(self.ipd[i][iteration].length(),60)
-                ipd_times[i].append([])
-                ipd_times[i][iteration].append('%s:%s'%(ipdm,ipds))
-                
-                ipd_min_RT[i].append([])
-                ipd_min_RT[i][iteration].append(np.min(self.ipdprops[i][iteration][3][0:-1]))
-                
-                ipd_avg_DC[i].append([])
-                ipd_avg_DC[i][iteration].append(np.round(np.mean(self.ipdprops[i][iteration][5][0:-1])))
-                
-                ipd_avg_SH[i].append([])
-                ipd_avg_SH[i][iteration].append(np.round(np.mean(self.ipdprops[i][iteration][4][0:-1])))
-                
-            for iteration in range(self.refreezeiteration[i]):
-                ref_base[i].append([])
-                ref_base[i][iteration].append(self.data[self.refreeze[i][iteration].start_time][14+7*i])
-                
-                ref_min_LSP[i].append([])
-                ref_min_LSP[i][iteration].append(np.min(self.refprops[i][iteration][0][0:-1]))
-                
-                ref_max_HSP[i].append([])
-                ref_max_HSP[i][iteration].append(np.max(self.refprops[i][iteration][1][0:-1]))
-                
-                refm,refs=divmod(self.refreeze[i][iteration].length(),60)
-                ref_times[i].append([])
-                ref_times[i][iteration].append('%s:%s'%(refm,refs))
-                
-                ref_avg_SUPR[i].append([])
-                ref_avg_SUPR[i][iteration].append(np.round(np.mean(self.refprops[i][iteration][4][0:-1])))
-                
-                ref_avg_DC[i].append([])
-                ref_avg_DC[i][iteration].append(np.round(np.mean(self.refprops[i][iteration][5][0:-1])))
-                
-                
-            for iteration in range(self.defrostiteration[i]):
-                def_base[i].append([])
-                def_base[i][iteration].append(self.data[self.defrost[i][iteration].start_time][14+7*i])
-                
-                defm,defs=divmod(self.defrost[i][iteration].length(),60)
-                def_times[i].append([])
-                def_times[i][iteration].append('%s:%s'%(defm,defs))
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-        ## Calculation data to be put up into the the PDF table above
 ###########################################################################    
         State_names_full=["I.P.D.","Defrost","Refreeze"]
         state_names=["IPD","Def.","Ref."]
@@ -2176,7 +2039,7 @@ class StateAnalyzer:
         state_iterrecs=[self.ipditerrec,self.defrostiterrec,self.refreezeiterrec]
         
         data= [['UNIT TESTING REPORT (%s)'%(serialno), '-', '-', '-', '-','-'],
-                ['Type', '%s'%(series), 'Date/Duration', '%s'%(time.ctime()), 'Result:','%s'%(myverdict)],
+                ['Type', '%s'%(series), 'Date', '%s'%(time.ctime()), 'Result:','%s'%(myverdict)],
                 ['Sides ', '%s'%(barr_num), '-', '-', '-','-'],
                 ['-', '-', 'Tester', 'S. Martinez', '-','-'],
                 ['Summary of Results', '-', '-', '-', '-','-'],
@@ -2311,149 +2174,33 @@ class StateAnalyzer:
         statelist=["IPD","Defrost","Refreeze"]
         Barrel_list=["BBL_1","BBL_2","BBL_3","BBL_4"]
         Statistics=["RFG_lo","RFG_hi","V","RTemp","SUPHT","DUTYCycles","BTR%"]
-        Story.append(Paragraph("<font size=16>Test Visualization: </font>",styles["Normal"]))
+        Story.append(Paragraph("<font size=16>--------------- VISUALIZED TEST (LOGGED DATA) ---------------</font>",styles["Center"]))
         Story.append(Spacer(1,24))
         for state in range(np.size(pics)):
+            
             amiexistent=0##--------------the check if we should add a state's section if it doesnt exist.
             
             for barrel in range(barr_num):
                 if self.stateiters[state][barrel]==0:
                     amiexistent+=1
             if amiexistent>=barr_num:
-                Story.append(Paragraph("<font size=12>%s %s </font>"%(statelist[state] ,"- NONEXISTENT IN THIS TEST"),styles["Center"]))
+                Story.append(Paragraph("<font size=12>%s\n ----------- %s -----------</font>"%(statelist[state] ,"- NONEXISTENT IN THIS TEST"),styles["Center"]))
             else:
-                Story.append(Paragraph("<font size=12>%s </font>"%(statelist[state]),styles["Normal"]))
+                Story.append(Paragraph("<font size=16>Test Visualization: %s</font>"%statelist[state],styles["Center"]))
+                Story.append(Spacer(1,48))
             for picnum in range(np.size(pics[state])):
                 im = Image(pics[state][picnum], 5*inch, 3*inch)
+                im.hAlign='CENTER'
                 Story.append(im)
                 Story.append(Spacer(1,24))
+            Story.append(PageBreak())
         Story.append(PageBreak())
         
         ##---------------------- This will add the pictures.
         
-        
-        
-        
-        
-        
-        
-        # ptext = '<font size=12>%s</font>' % formatted_time
-        # Story.append(Paragraph(ttext,styles["Center"]))
-        # Story.append(Spacer(1,16))
-        # Story.append(Paragraph(serial,styles["Center"]))
-        # Story.append(Spacer(1,8))
-        # Story.append(Paragraph(reporttime, styles["Center"]))
-        # Story.append(Spacer(1, 8))
-        # #Story.append(Paragraph(verdictstatement, styles["Center"]))
-        # Story.append(Paragraph(verdict, styles["Center"]))
-        # Story.append(Spacer(1, 1))
-        # Story.append(Spacer(1, 48))
-
 
         
-        # Story.append(Paragraph(seriesname, styles["Normal"]))
-        # Story.append(Spacer(1, 1))
-        # Story.append(Paragraph(barrels, styles["Normal"]))
-        # Story.append(Spacer(1, 1))
-        # Story.append(Paragraph(testduration,styles["Normal"]))
-        # Story.append(Spacer(1,12))
-        # Story.append(Paragraph("<font size=16>Test Information: </font>",styles["Normal"]))
-        # Story.append(Spacer(1,48))
-        
-        
-
-        
-        
-        
-            
-        # for i in range(barr_num):
-            # Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >---------------------------------------------------------------------</font>"%(i+1),styles["Normal"]))
-            # if np.size(self.ipd.items())>0:
-                # for l in range(self.ipditeration[i]):#-----------debug
-                    # Story.append(Paragraph( "<font size=8>     IPD Duration Iteration:      %s</font>"%(l+1),styles["Normal"]))
-                    # Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Start:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD End: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp IPD Length:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s</font>"%(self.ipd[i][l].start_time,self.ipd[i][l].end_time,self.ipd[i][l].length()),styles["Normal"]) )  
-            # if np.size(self.refreezeiteration.items())>2:
-                # for j in range(self.refreezeiteration[i]):
-                    # Story.append(Paragraph( "<font size=8>     Refreeze Duration Iteration: %s</font>"%(j+1),styles["Normal"]))
-                    # Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze Start:&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze End: &nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Refreeze Length:&nbsp&nbsp %s</font>"%(self.refreeze[i][j].start_time,self.refreeze[i][j].end_time,self.refreeze[i][j].length()),styles["Normal"]))   
-            # if np.size(self.defrostiteration.items())>2:
-                # for k in range(self.defrostiteration[i]):
-                    # Story.append(Paragraph( "<font size=8>     Defrost Duration Iteration: %s</font>"%(k+1),styles["Normal"]))
-                    # Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost Start:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost End: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp %s<br />&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Defrost Length:&nbsp&nbsp&nbsp&nbsp&nbsp %s</font>"%(self.defrost[i][k].start_time,self.defrost[i][k].end_time,self.defrost[i][k].length()),styles["Normal"]))   
-        
-        # Story.append(Spacer(1,48))
-        # Story.append(Paragraph("<font size=16>Tolerance Information: </font>",styles["Normal"]))
-        # Story.append(Spacer(1,48))
-
-        
-        
-        # for barrel in range(barr_num):
-            # Story.append(Paragraph( "<font size=8>-----------------------------------------------------------------------< Barrel Number: %s >--------------------------------------------------------------------</font>"%(barrel+1),styles["Normal"]))
-            # for state in range(np.size(statelist)):
-                # Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp State: %s</font>"%(statelist[state]),styles["Normal"]))
-                # for instance in range(np.size(self.states[state][barrel].items(),0)):
-                    # Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Instance:&nbsp&nbsp %s</font>" %(instance+1),styles["Normal"]))
-                    # for statistic in range(self.states[state][barrel][instance].__len__()):
-                        # if False in self.states[state][barrel][instance][statistic]:
-                            # Story.append(Paragraph( "<font size=8>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Property: &nbsp&nbsp %s   | &nbsp&nbsp  Result:&nbsp&nbsp  FAIL</font>"%(Statistics[statistic]),styles["Normal"]))
-        # print np.size(pics)
-        
-        
-
-        
-        
-        
-        '''
-        for the report, change the initial data from the output to represent this:
-        
-        
-        UNIT TESTING REPORT ( << unit serial number >>)
-        Unit Type:                      Date
-        Software:                       Duration of Test (Unix, self.data[0][0])        RESULT: PASS/FAIL
-         SUmmary of REsults:
-         
-                                        Actual          low             high        Result
-         
-         Initial Pulldown Duration
-         IPD Baseline (BBL1)
-         2
-         3
-         4
-         IPD Max Hiside Pres
-         IPD Min Lowside Pres
-         IPD min retun temp
-         IPD Avg Duty
-         IPD Avg Superheat
-         Defrost Duration (BBL1)
-         2
-         3
-         4
-         Defrost Baseline(BBL1)
-         2
-         3
-         4
-         Refreeze HSP (BBL1-4)
-         #
-         #
-         #
-         Refreeze LSP (BBL1-4)
-         #
-         #
-         #
-         Refreeze Durations (BBL1-4)
-         #
-         #
-         #
-         Refreeze SUPR(BBL1-4)
-         #
-         #
-         #
-         Refreeze Avg DC(1-4)
-         #
-         #
-         #
-         '''
-        
+       
         
         
         doc.build(Story)
@@ -2497,7 +2244,7 @@ s.getdata(num_barr_to_use)
 #print s.ref_BTR[0][1]
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
-pics=s.display_plots_version2(num_barr_to_use,"all",0)
+pics=s.display_plots_version2(num_barr_to_use,"all",0,0)
 s.create_pdf(pics,num_barr_to_use)
 # property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
 #print s.ipdprops[0][0][0]
