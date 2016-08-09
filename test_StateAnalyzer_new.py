@@ -79,7 +79,12 @@ class StateAnalyzer:
                 print "BARREL %s IS NON-EXISTENT. REDUCING NUMBER OF BARRELS BY 1."%(barrel+1)
                 #time.sleep(5)
                 lack_data+=1
-        return self.number_of_barrels-lack_data
+                print self.number_of_barrels-lack_data
+                #time.sleep(5)
+                self.number_of_barrels+=-1
+                print self.number_of_barrels
+                #time.sleep(5)
+        return self.number_of_barrels
     
     
     
@@ -88,7 +93,7 @@ class StateAnalyzer:
     
     def StatePopulator(self,num_barr):
         self.number_of_data=7 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- this is the number of columns of data per barrel.
-        self.number_of_barrels=4#--------------------------------------------------------------- CRITICAL HARDCODE VALUE. DO NOT CHANGE . -------------------------------------------------------------------------------------------------------- this is a CRITICAL HARDCODED VALUE. 
+        #self.number_of_barrels=4#--------------------------------------------------------------- CRITICAL HARDCODE VALUE. DO NOT CHANGE . -------------------------------------------------------------------------------------------------------- this is a CRITICAL HARDCODED VALUE. 
         
         self.state_data=self.data
         #self.state_data=np.append(self.state_data,self.time)
@@ -1438,9 +1443,12 @@ class StateAnalyzer:
                             
                             
                             
-                            
-                            
-
+        passme=0
+        bigtols=[]                    
+        if passme==1:
+            bigtols=[100,.001]
+        else:
+            bigtols=[1,1]
         for barrel in range(num_barr):
             print "     Barrel: %s"%(barrel)
             for state in ["IPD","Defrost","Refreeze"]:
@@ -1450,34 +1458,40 @@ class StateAnalyzer:
                         print "             Instance: %s"%instance
                         for statistic in range(np.size(["Duration","Baseline","Max HSP","Min LSP","Min RT","Avg DC","Avg SUPR","Max Volt.","Min Volt."])):
                             print "                 %s Statistic %s"%(state,statistic)
-                            if self.overall_ipdprops_value[barrel][instance][statistic]>self.ipd_overall_tolerances[statistic][0] or self.overall_ipdprops_value[barrel][instance][statistic]<self.ipd_overall_tolerances[statistic][1]:
+                            if self.overall_ipdprops_value[barrel][instance][statistic]>self.ipd_overall_tolerances[statistic][0]*bigtols[0] or self.overall_ipdprops_value[barrel][instance][statistic]<self.ipd_overall_tolerances[statistic][1]*bigtols[1]:
                                 print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
                                 #time.sleep(.001)
                                 self.overall_ipdprops[barrel][state][instance][statistic]=False
                                 self.ipd_verdicts[barrel][instance][statistic]="FAIL"
                                 self.have_I_Failed=1
+                            else:
+                                self.have_I_Failed=0
                 if state=="Defrost":
                     for instance in range(self.defrostiteration[barrel]):
                         print "             Instance: %s"%instance
                         for statistic in range(np.size(["Duration","Baseline","Max HSP","Min LSP","Min RT","Avg DC","Avg SUPR","Max Volt.","Min Volt."])):
                             print "                 %s Statistic %s"%(state,statistic)
-                            if self.overall_defprops_value[barrel][instance][statistic]>self.def_overall_tolerances[statistic][0] or self.overall_defprops_value[barrel][instance][statistic]<self.def_overall_tolerances[statistic][1]:
+                            if self.overall_defprops_value[barrel][instance][statistic]>self.def_overall_tolerances[statistic][0]*bigtols[0] or self.overall_defprops_value[barrel][instance][statistic]<self.def_overall_tolerances[statistic][1]*bigtols[1]:
                                 print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
                                 #time.sleep(.001)
                                 self.overall_defprops[barrel][state][instance][statistic]=False
                                 self.def_verdicts[barrel][instance][statistic]="FAIL"
                                 self.have_I_Failed=1
+                            else:
+                                self.have_I_Failed=0
                 if state=="Refreeze":
                     for instance in range(self.refreezeiteration[barrel]):
                         print "             Instance: %s"%instance
                         for statistic in range(np.size(["Duration","Baseline","Max HSP","Min LSP","Min RT","Avg DC","Avg SUPR","Max Volt.","Min Volt."])):
                             print "                 %s Statistic %s"%(state,statistic)
-                            if self.overall_refprops_value[barrel][instance][statistic]>self.ref_overall_tolerances[statistic][0] or self.overall_refprops_value[barrel][instance][statistic]<self.ref_overall_tolerances[statistic][1]:
+                            if self.overall_refprops_value[barrel][instance][statistic]>self.ref_overall_tolerances[statistic][0]*bigtols[0] or self.overall_refprops_value[barrel][instance][statistic]<self.ref_overall_tolerances[statistic][1]*bigtols[1]:
                                 print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
                                 #time.sleep(.001)
                                 self.overall_refprops[barrel][state][instance][statistic]=False
                                 self.ref_verdicts[barrel][instance][statistic]="FAIL"
                                 self.have_I_Failed=1
+                            else:
+                                self.have_I_Failed=0
                                 
 
                                 
@@ -1582,8 +1596,8 @@ class StateAnalyzer:
         self.stateprops=[self.ipdprops,self.defprops,self.refprops]#---------------------------------------- to go through the states in iteration
         self.statelengths=[self.ipd,self.defrost,self.refreeze]
         self.stateiters=[self.ipditeration,self.defrostiteration,self.refreezeiteration]
-        tolerance_plot_equations_4=[self.IPD4_tolerances,self.DEF4_tolerances,self.REF4_tolerances]
-        tolerance_plot_equations_3=[self.IPD3_tolerances,self.DEF3_tolerances,self.REF3_tolerances]
+        tolerance_plot_equations_4=[self.ipd_overall_tolerances,self.def_overall_tolerances,self.ref_overall_tolerances]
+        tolerance_plot_equations_3=[self.ipd_overall_tolerances,self.def_overall_tolerances,self.ref_overall_tolerances]
         
         
         
@@ -1618,11 +1632,14 @@ class StateAnalyzer:
         numcols=fixnum/2
         numrows=fixnum/3
         ipdtol=0        
+        tol_equations=0
         for state in range(np.size(self.stateprops)):
             if num_barr==4:
+                tol_equations=tolerance_plot_equations_4
                 ipdtol=self.IPD4_tolerances
                 othertols=self.tols4
             if num_barr==3:
+                tol_equations=tolerance_plot_equations_3
                 ipdtol=self.IPD3_tolerances
                 othertols=self.tols3
             if state==0:
@@ -1673,8 +1690,7 @@ class StateAnalyzer:
                                 )
                             
                             
-                            
-                            
+
                             for timer in range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time):
                                 
                                 uppertol=(np.polyval(ipdtol[6],timer))*self.hightol
@@ -1686,6 +1702,21 @@ class StateAnalyzer:
                             plt.hold(True)
                             plt.xlabel('time (s)')
                             plt.ylabel('%s'%self.plotting_UOM[6])
+                            
+                    y_min,y_max=plt.gca().get_ylim()
+                    # plt.axvline(self.ipd_overall_tolerances[0][0]+self.statelengths[state][barrel][iteration].start_time,color='r',linestyle='-.',label="Latest Completion")
+                    # plt.axvline(self.ipd_overall_tolerances[0][1]+self.statelengths[state][barrel][iteration].start_time,color='k',linestyle='-.',label="Earliest Completion")
+                    
+                    # fartime=self.data[tol_equations[state][0][0]][1]+self.statelengths[state][barrel][iteration].start_time
+                    # neartime=self.data[tol_equations[state][0][1]][1]+self.statelengths[state][barrel][iteration].start_time
+                    
+                    # far_time_tolerance=time.strftime("%M:%S",time.localtime(fartime))
+                    # near_time_tolerance=time.strftime("%M:%S",time.localtime(neartime))
+                    # print far_time_tolerance,near_time_tolerance,fartime,neartime
+                    
+                    # plt.text(self.ipd_overall_tolerances[0][0]+10+self.statelengths[state][barrel][iteration].start_time, y_min+5, r'(%s)'%(far_time_tolerance))
+                    # plt.text(self.ipd_overall_tolerances[0][1]+10+self.statelengths[state][barrel][iteration].start_time, y_min+5, r'(%s)'%(near_time_tolerance))
+                    
                     print np.shape(BTRx),np.shape(upper)
                     if plottols==1:
                         plt.plot(BTRx,upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
@@ -1758,6 +1789,24 @@ class StateAnalyzer:
                             plt.locator_params(axis='x',nbins=4)
                             plt.locator_params(axis='y',nbins=6)
                             plt.xticks(rotation=45)
+                            
+                            
+                            
+                    # y_min,y_max=plt.gca().get_ylim()
+                    # plt.axvline(self.ipd_overall_tolerances[0][0]+self.statelengths[state][barrel][iteration].start_time,color='r',linestyle='-.',label="Latest Completion")
+                    # plt.axvline(self.ipd_overall_tolerances[0][1]+self.statelengths[state][barrel][iteration].start_time,color='k',linestyle='-.',label="Earliest Completion")
+                    
+                    # fartime=self.data[tol_equations[state][0][0]][1]+self.statelengths[state][barrel][iteration].start_time
+                    # neartime=self.data[tol_equations[state][0][1]][1]+self.statelengths[state][barrel][iteration].start_time
+                    
+                    # far_time_tolerance=time.strftime("%M:%S",time.localtime(fartime))
+                    # near_time_tolerance=time.strftime("%M:%S",time.localtime(neartime))
+                    # print far_time_tolerance,near_time_tolerance,fartime,neartime
+                    
+                    # plt.text(self.ipd_overall_tolerances[0][0]+10+self.statelengths[state][barrel][iteration].start_time, y_min+5, r'(%s)'%(far_time_tolerance))
+                    # plt.text(self.ipd_overall_tolerances[0][1]+10+self.statelengths[state][barrel][iteration].start_time, y_min+5, r'(%s)'%(near_time_tolerance))
+                    
+                    
                     if plottols==1:
                         plt.plot(np.transpose(BTRx),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
                         plt.hold(True)
@@ -1889,6 +1938,25 @@ class StateAnalyzer:
                                 plt.xticks(rotation=45)
                     #plt.subplot(1,2,2)
                     #print range(longest),np.size(upper)
+                    
+                                                
+                    # y_min,y_max=plt.gca().get_ylim()
+                    # plt.axvline(tol_equations[state][0][0],color='r',linestyle='-.',label="Latest Completion")
+                    # plt.axvline(tol_equations[state][0][1],color='k',linestyle='-.',label="Earliest Completion")
+                    
+                    # fartime=self.data[tol_equations[state][0][0]][1]+self.statelengths[state][barrel][iteration].start_time
+                    # neartime=self.data[tol_equations[state][0][1]][1]+self.statelengths[state][barrel][iteration].start_time
+                    
+                    # far_time_tolerance=time.strftime("%M:%S",time.localtime(fartime))
+                    # near_time_tolerance=time.strftime("%M:%S",time.localtime(neartime))
+                    # print far_time_tolerance,near_time_tolerance,fartime,neartime
+                    
+                    # plt.text(tol_equations[state][0][0]+10, y_min+5, r'(%s)'%(far_time_tolerance))
+                    # plt.text(tol_equations[state][0][1]+10, y_min+5, r'(%s)'%(near_time_tolerance))
+                    
+                    
+                    
+                    
                     if self.stateiters[state][barrel]==0:
                         pass
                     else:
@@ -1995,6 +2063,22 @@ class StateAnalyzer:
                                 plt.title("%s (%s), Overlay"%(stats[statistic2],self.plotting_UOM[statistic2]))
                                 plt.xlabel('time (m:s)')
                                 plt.xticks(rotation=45)
+                    
+                    
+                    # y_min,y_max=plt.gca().get_ylim()
+                    # plt.axvline(tol_equations[state][0][0],color='r',linestyle='-.',label="Latest Completion")
+                    # plt.axvline(tol_equations[state][0][1],color='k',linestyle='-.',label="Earliest Completion")
+                    
+                    # fartime=self.data[tol_equations[state][0][0]][1]
+                    # neartime=self.data[tol_equations[state][0][1]][1]
+                    
+                    # far_time_tolerance=time.strftime("%M:%S",time.localtime(fartime))
+                    # near_time_tolerance=time.strftime("%M:%S",time.localtime(neartime))
+                    # print far_time_tolerance,near_time_tolerance,fartime,neartime
+                    
+                    # plt.text(tol_equations[state][0][0]+10, y_min+5, r'(%s)'%(far_time_tolerance))
+                    # plt.text(tol_equations[state][0][1]+10, y_min+5, r'(%s)'%(near_time_tolerance))
+                    
                     if self.stateiters[state][barrel]==0:
                         pass
                     else:
@@ -2070,6 +2154,8 @@ class StateAnalyzer:
 
         if self.have_I_Failed==1:
             myverdict="FAIL"
+        else:
+            myverdict="PASS"
         if myverdict.upper()=="PASS":
             verdictcolor=colors.limegreen
         if myverdict.upper()=="FAIL":
@@ -2114,6 +2200,8 @@ class StateAnalyzer:
         overall_verdicts=[self.ipd_verdicts,self.def_verdicts,self.ref_verdicts]
         overall_stateprops=[self.overall_ipdprops_value,self.overall_defprops_value,self.overall_refprops_value]
         
+        table_grids_start=[]
+        table_grids_end=[]
                 ## Calculation data to be put up into the the PDF table above
 ###########################################################################
         state_iterations=[self.ipditeration,self.defrostiteration,self.refreezeiteration]
@@ -2160,6 +2248,8 @@ class StateAnalyzer:
                 tablecombine_columns_ipd.append(np.size(data,0))
                 #data.append(['Barrel: %s'%(barrel+1)])
                 for stat in range(np.size(overall_ipdstatnames,0)):
+                    if state!=0:
+                        table_grids_start.append(np.size(data,0))
                     for barrel in range(num_barr):
                         if state==0:
                             if overall_stateprops[state][barrel].__len__()>0:
@@ -2183,9 +2273,11 @@ class StateAnalyzer:
                                     
                         
                         if state !=0:
+                            
                             if overall_stateprops[state][barrel].__len__()>0:
+                                
                                 if stat==0:
-
+                                    
                                     data.append(['%s'%(np.size(data,0)),'Barrel - %s %s (%s)'%(barrel+1,overall_statnames[state][stat],tolerance_UOM[stat]),
                                     '%s'%(datetime.time(0,(divmod(overall_stateprops[state][barrel][iteration][stat],60)[0]),(divmod(overall_stateprops[state][barrel][iteration][stat],60)[1])).strftime("%M:%S")),
                                     '%s'%(datetime.time(0,int(divmod(overall_tolerances[state][stat][1],60)[0]),int(divmod(overall_tolerances[state][stat][1],60)[1])).strftime("%M:%S")),
@@ -2194,9 +2286,12 @@ class StateAnalyzer:
 
                                 else:
                                     data.append(['%s'%(np.size(data,0)),'Barrel - %s %s (%s)'%(barrel+1,overall_statnames[state][stat],tolerance_UOM[stat]),'%.1f'%overall_stateprops[state][barrel][iteration][stat],'%s'%overall_tolerances[state][stat][1],'%s'%overall_tolerances[state][stat][0],'%s'%overall_verdicts[state][barrel][iteration][stat]])
+                                #table_grids_start.append(np.size(data,0))
                             else:
                                 data.append(['%s'%(np.size(data,0)),'No Record','No Record','No Record','No Record','No Record'])
                                 break
+                    if state!=0:
+                        table_grids_end.append(np.size(data,0))
 
         t=Table(data)
         t.setStyle(TableStyle([('BACKGROUND',(-1,1),(-1,1),verdictcolor)]))
@@ -2248,6 +2343,20 @@ class StateAnalyzer:
                 t.setStyle(TableStyle([(('BACKGROUND',(-1,row),(-1,row),colors.red))]))
                 t.setStyle(TableStyle([(('TEXTCOLOR',(2,row),(2,row),colors.red))]))
         t.setStyle(TableStyle([('VALIGN',(1,4,),(1,-1),'MIDDLE')]))
+        print table_grids_start
+        print "\n\n",table_grids_end
+        
+        
+        
+        del table_grids_start[0]
+        del table_grids_end[-1]
+        
+        for length in range(np.size(table_grids_start)):
+            linesize=2.5
+            t.setStyle(TableStyle([('LINEBELOW', (1,table_grids_end[length]-1),(1,table_grids_end[length]-1), linesize, colors.grey)]))
+            #t.setStyle(TableStyle([('LINEBELOW', (0,table_grids_end[length]-1),(-1,table_grids_end[length]-1), linesize, colors.grey)]))
+        
+        
         
         Story.append(t) 
         Story.append(PageBreak())
@@ -2267,7 +2376,7 @@ class StateAnalyzer:
                 if self.stateiters[state][barrel]==0:
                     amiexistent+=1
             if amiexistent>=barr_num:
-                Story.append(Paragraph("<font size=12>%s\n ----------- %s -----------</font>"%(statelist[state] ,"- NONEXISTENT IN THIS TEST"),styles["Center"]))
+                Story.append(Paragraph("<font size=12>----------- %s NONEXISTENT IN THIS TEST-----------</font>"%(statelist[state].upper()),styles["Center"]))
             else:
                 Story.append(Paragraph("<font size=16>Test Visualization: %s</font>"%statelist[state],styles["Center"]))
                 Story.append(Spacer(1,48))
@@ -2317,7 +2426,7 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('774labtest.log')#('774DOUBLE.LOG')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('773logtest2_test')#('774DOUBLE.LOG')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
 num_barr=s.bar_counter() 
 # print num_barr   
 #num_barr=4
