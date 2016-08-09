@@ -1080,7 +1080,7 @@ class StateAnalyzer:
         ipd4_rt=[0.000000000000000097260347078284 ,- 0.000000000000241731002795525000 , 0.00000000001198123703942840 , 0.00000032031829803074 ,- 0.0001377269120588430 ,- 0.1080063010927350 , 77.8986790450428]
         ipd4_sup=[0.000000000000001516325614899410 ,- 0.000000000006656995733620930000 , 0.0000000113658051679730 ,- 0.00000947870686179508 , 0.00395539242335789 ,- 0.7440931725646520 , 53.833304436568700]
         ipd4_duty=[-0.000000000000001001447917092700 , 0.000000000005037361204350060000 ,- 0.00000000935658280286464 , 0.00000796017591734055 ,- 0.002978503986445920 , 0.292399262081752 , 57.0746540017013000]
-        ipd4_btr=[-2.798*10**-9,.0000069897,-.0061088,2.2767,725.49]
+        ipd4_btr=[-4.901*10**-9,.00001381,-.01381,5.8656,160.19]
         
         def4_rfg_lo=[0.000000000000169630234525366000 ,- 0.0000000002645599403197590 , 0.00000015274102242817700 ,- 0.00004026681066231800 , 0.0051276058117068500 ,- 0.320480089558662000 , 58.0495600670625]
         def4_rfg_hi=[-0.000000000000111489654494239000 , 0.0000000001548563880677550 ,- 0.000000075844192432823600 , 0.00001444959089391550000 ,- 0.000061098402065685600 ,- 0.2937899531360970000 , 166.039483813293000]
@@ -1220,8 +1220,8 @@ class StateAnalyzer:
         e_code_1="Tolerance Out-of-bounds: %s State, Barrel %s, Interval %s, %s"
         
         
-        hightol=1.000025
-        lowtol=1.00000000075
+        hightol=1.25
+        lowtol=.75
         import time
         Tol_data={}
         self.states=[self.ipdprops,self.defprops,self.refprops]
@@ -1716,6 +1716,7 @@ class StateAnalyzer:
                                     longer=max(long)
                                 if longer>longest:
                                     longest=longer
+                                    
                                 BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#range(self.statelengths[state][barrel][iteration].length())#
                                 print "Iteration %s Size of BTRx: %s"%(iteration,np.size(BTRx))
                                 ###time.sleep(5)
@@ -2493,7 +2494,7 @@ class StateAnalyzer:
         Story.append(Paragraph("<font size=24>--------------- END OF REPORT ---------------</font>",styles["Center"]))
         doc.build(Story)
         openpage=subprocess.Popen(['%s.pdf'%(__file__)],shell=True)
-        if "delete" in deletepics.lower():
+        if "d" in deletepics.lower():
             print " -------------------- DELETING CACHED PICTURES --------------------"
             for state in range(np.size(pics)):
                 for picnum in range(np.size(pics[state])):
@@ -2521,7 +2522,15 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('774_nodef_all.log')#('774DOUBLE.LOG')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('774labtest.log')#('774DOUBLE.LOG')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+#774DOUBLE
+#774labtest
+#774_nodef_all
+#774_nodef_noref
+#774_nodef_bb1
+#774_fabricated_test
+
+
 num_barr=s.bar_counter() 
 # print num_barr   
 #num_barr=4
@@ -2542,7 +2551,7 @@ s.getdata(num_barr_to_use)
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
 pics=s.display_plots_version2(num_barr_to_use,"all",0,0)
-s.create_pdf(pics,num_barr_to_use,"delete")
+s.create_pdf(pics,num_barr_to_use,"")
 # property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
 #print s.ipdprops[0][0][0]
 
