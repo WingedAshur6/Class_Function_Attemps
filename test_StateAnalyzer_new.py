@@ -1452,7 +1452,7 @@ class StateAnalyzer:
                             print "                 %s Statistic %s"%(state,statistic)
                             if self.overall_ipdprops_value[barrel][instance][statistic]>self.ipd_overall_tolerances[statistic][0] or self.overall_ipdprops_value[barrel][instance][statistic]<self.ipd_overall_tolerances[statistic][1]:
                                 print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
-                                time.sleep(.001)
+                                #time.sleep(.001)
                                 self.overall_ipdprops[barrel][state][instance][statistic]=False
                                 self.ipd_verdicts[barrel][instance][statistic]="FAIL"
                                 self.have_I_Failed=1
@@ -1463,7 +1463,7 @@ class StateAnalyzer:
                             print "                 %s Statistic %s"%(state,statistic)
                             if self.overall_defprops_value[barrel][instance][statistic]>self.def_overall_tolerances[statistic][0] or self.overall_defprops_value[barrel][instance][statistic]<self.def_overall_tolerances[statistic][1]:
                                 print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
-                                time.sleep(.001)
+                                #time.sleep(.001)
                                 self.overall_defprops[barrel][state][instance][statistic]=False
                                 self.def_verdicts[barrel][instance][statistic]="FAIL"
                                 self.have_I_Failed=1
@@ -1474,7 +1474,7 @@ class StateAnalyzer:
                             print "                 %s Statistic %s"%(state,statistic)
                             if self.overall_refprops_value[barrel][instance][statistic]>self.ref_overall_tolerances[statistic][0] or self.overall_refprops_value[barrel][instance][statistic]<self.ref_overall_tolerances[statistic][1]:
                                 print "                 OVERALL %s STATISTIC FAILED."%(str(state).upper())
-                                time.sleep(.001)
+                                #time.sleep(.001)
                                 self.overall_refprops[barrel][state][instance][statistic]=False
                                 self.ref_verdicts[barrel][instance][statistic]="FAIL"
                                 self.have_I_Failed=1
@@ -1582,6 +1582,12 @@ class StateAnalyzer:
         self.stateprops=[self.ipdprops,self.defprops,self.refprops]#---------------------------------------- to go through the states in iteration
         self.statelengths=[self.ipd,self.defrost,self.refreeze]
         self.stateiters=[self.ipditeration,self.defrostiteration,self.refreezeiteration]
+        tolerance_plot_equations_4=[self.IPD4_tolerances,self.DEF4_tolerances,self.REF4_tolerances]
+        tolerance_plot_equations_3=[self.IPD3_tolerances,self.DEF3_tolerances,self.REF3_tolerances]
+        
+        
+        
+        
         self.plotting_linestyles=['-' , '-.' , ':' , '--' , 'steps']#----------------------------------- to seperate the instances from one another
         self.plotting_marker=[ '+' , '.' , 'd' , '8' , 's' , 'p' , '*']#-------------------------------- to seperate the instances from one another again if needed
         self.plotting_barrelcolor=['b','m','c','y']#--------------------------------------------------------- to seperate the barrels from one another
@@ -2019,7 +2025,7 @@ class StateAnalyzer:
         savedpics=[ipdpics,defpics,refpics]        
         return savedpics
         
-    def create_pdf(self,pics,num_barr):# ------------------------------- will be using "self" for now. next iteration will be: STATES,ERRORS,PLOTS_GEN)
+    def create_pdf(self,pics,num_barr,deletepics):# ------------------------------- will be using "self" for now. next iteration will be: STATES,ERRORS,PLOTS_GEN)
         import time
         from reportlab.lib.enums import TA_JUSTIFY
         from reportlab.lib.enums import TA_CENTER
@@ -2270,9 +2276,9 @@ class StateAnalyzer:
                 im.hAlign='CENTER'
                 Story.append(im)
                 Story.append(Spacer(1,24))
-                #os.remove(pics[state][picnum])
+                
             Story.append(PageBreak())
-        Story.append(PageBreak())
+        
         
         ##---------------------- This will add the pictures.
         
@@ -2280,10 +2286,19 @@ class StateAnalyzer:
         
        
         
-        
+        Story.append(Paragraph("<font size=24>--------------- END OF REPORT ---------------</font>",styles["Center"]))
         doc.build(Story)
         openpage=subprocess.Popen(['%s.pdf'%(__file__)],shell=True)
-        time.sleep(10)
+        if "delete" in deletepics.lower():
+            print " -------------------- DELETING CACHED PICTURES --------------------"
+            for state in range(np.size(pics)):
+                for picnum in range(np.size(pics[state])):
+                    os.remove('%s'%(pics[state][picnum]))
+                    print "Picture: %s ------->>>>>>>>>>>>>>> REMOVED"%pics[state][picnum]
+                    
+        print "\n\n------------ PROGRAM COMPLETE. EXITING. -----------"
+
+            #time.sleep(10)
         
 
         
@@ -2323,7 +2338,7 @@ s.getdata(num_barr_to_use)
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
 pics=s.display_plots_version2(num_barr_to_use,"all",0,0)
-s.create_pdf(pics,num_barr_to_use)
+s.create_pdf(pics,num_barr_to_use,"delete")
 # property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
 #print s.ipdprops[0][0][0]
 
