@@ -1080,7 +1080,7 @@ class StateAnalyzer:
         ipd4_rt=[0.000000000000000097260347078284 ,- 0.000000000000241731002795525000 , 0.00000000001198123703942840 , 0.00000032031829803074 ,- 0.0001377269120588430 ,- 0.1080063010927350 , 77.8986790450428]
         ipd4_sup=[0.000000000000001516325614899410 ,- 0.000000000006656995733620930000 , 0.0000000113658051679730 ,- 0.00000947870686179508 , 0.00395539242335789 ,- 0.7440931725646520 , 53.833304436568700]
         ipd4_duty=[-0.000000000000001001447917092700 , 0.000000000005037361204350060000 ,- 0.00000000935658280286464 , 0.00000796017591734055 ,- 0.002978503986445920 , 0.292399262081752 , 57.0746540017013000]
-        ipd4_btr=[-4.901*10**-9,.00001381,-.01381,5.8656,160.19]
+        ipd4_btr=[-0.000000000000006293026564938570 , 0.0000000000222989697384448 ,- 0.0000000298977027546899 , 0.0000187322649963680 ,- 0.005572228919906410 , 0.7222945639582930 , 970.4022320831530]
         
         def4_rfg_lo=[0.000000000000169630234525366000 ,- 0.0000000002645599403197590 , 0.00000015274102242817700 ,- 0.00004026681066231800 , 0.0051276058117068500 ,- 0.320480089558662000 , 58.0495600670625]
         def4_rfg_hi=[-0.000000000000111489654494239000 , 0.0000000001548563880677550 ,- 0.000000075844192432823600 , 0.00001444959089391550000 ,- 0.000061098402065685600 ,- 0.2937899531360970000 , 166.039483813293000]
@@ -1116,6 +1116,7 @@ class StateAnalyzer:
 
 
 
+
         ipd3_rfg_lo=[-0.000000000000014350287034385800 , 0.0000000000418624705020636 ,- 0.00000004785638657790590 , 0.000026590545362421900 ,- 0.007099730424577330000 , 0.700448582478128000 , 51.66330704820280]
         ipd3_rfg_hi=[-0.000000000000048655126930162100 , 0.00000000012232276551327400 ,- 0.00000011861655534460600 , 0.00005532568308944710 ,- 0.01260123087912370 , 1.28316608139096000 , 212.95088669029900]
         ipd3_v=[.000000000000005,-.000000000002,.000000002,-.000001,.0004,-.0416,235.37]
@@ -1139,7 +1140,7 @@ class StateAnalyzer:
         ref3_sup=[ 0.000000000000014239014552723800 ,- 0.0000000000389410504068270 , 0.0000000423143348853191 ,- 0.0000231033472511573000 , 0.00655407782331355000000 ,- 0.881969831334810000000 , 49.93161423110800]
         ref3_duty=[-0.000000000000065920212740646100 , 0.00000000016924471474124500 ,- 0.0000001688090043616940000 , 0.00008147615733434430000 ,- 0.0189769610258361000 , 1.7078452925536500000 , 22.6475677042086000]
         ref3_btr=[-0.000000000000017145635305073900 , 0.0000000000170986424145307000 ,- 0.00000000121795492191857 ,- 0.00000440528697447917000 , 0.001548200798966900 ,- 0.148158340185274000 , 1000.20768955970        ]
-                
+        
         # ipd3_lo=[ipd3_rfg_lo,ipd3_rfd_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]*.985
         # ipd3_hi=[ipd3_rfg_lo,ipd3_rfd_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]*1.15
         ipd3=[ipd3_rfg_lo,ipd3_rfg_hi,ipd3_v,ipd3_rt,ipd3_sup,ipd3_duty,ipd3_btr]
@@ -1208,7 +1209,7 @@ class StateAnalyzer:
         ref_max_voltage=[242,239]
         ref_min_voltage=[232,230]
         self.ref_overall_tolerances=[ref_time,ref_base,ref_max_HSP,ref_min_LSP,ref_min_RT,ref_avg_DC,ref_avg_SH,ref_max_voltage,ref_min_voltage]
-    
+        '''
         stateprops=[self.ipdprops,self.defprops,self.refprops]#---------------------------------------- to go through the states in iteration
         statelengths=[self.ipd,self.defrost,self.refreeze]
         stateiters=[self.ipditeration,self.defrostiteration,self.refreezeiteration]
@@ -1265,7 +1266,7 @@ class StateAnalyzer:
         self.low_tolerance_model=lower_tolerance
         self.shortest_times=shortest_times
         #print self.low_tolerance_model.viewkeys(),self.number_of_barrels
-    
+        '''
     
     
     
@@ -1811,7 +1812,7 @@ class StateAnalyzer:
                                 if longer>longest:
                                     longest=longer
                                     
-                                BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#range(self.statelengths[state][barrel][iteration].length())#
+                                BTRx=range(self.statelengths[state][barrel][iteration].length())#range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#
                                 print "Iteration %s Size of BTRx: %s"%(iteration,np.size(BTRx))
                                 ###time.sleep(5)
                                 BTRy_hold=self.stateprops[state][barrel][iteration][6]
@@ -1831,7 +1832,7 @@ class StateAnalyzer:
                                 
                                 
 
-                                for timer in (times):
+                                for timer in range(longest):
                                     
                                     uppertol=(np.polyval(ipdtol[6],timer))*self.hightol
                                     lowertol=(np.polyval(ipdtol[6],timer))*self.lowtol
@@ -1864,11 +1865,11 @@ class StateAnalyzer:
                             # print np.shape(self.low_tolerance_model[state][iteration][statistic])
                             # print self.high_tolerance_model[state][iteration][6]
                             # print self.low_tolerance_model[state][iteration][6]
-                            plt.plot(range(self.shortest_times[state][iteration])+self.statelengths[state][barrel][iteration].start_time,self.high_tolerance_model[state][iteration][6],color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                            plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
                             plt.hold(True)
-                            plt.plot(range(self.shortest_times[state][iteration])+self.statelengths[state][barrel][iteration].start_time,self.low_tolerance_model[state][iteration][6],color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                            plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
                             plt.hold(True)
-                            plt.fill_between(range(self.shortest_times[state][iteration])+self.statelengths[state][barrel][iteration].start_time,self.high_tolerance_model[state][iteration][6],self.low_tolerance_model[state][iteration][6],facecolor="black",alpha=0.125,interpolate=True)
+                            plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)
                         plt.hold(False)
                         plt.title("%s: %s (%s)"%(States[state],stats[6],self.plotting_UOM[6]))
                         plt.xlabel('time (s)')
@@ -1916,7 +1917,7 @@ class StateAnalyzer:
                                 y=[]
                                 lower=[]
                                 upper=[]
-                                BTRx=range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)# self.statelengths[state][iteration].length()  <----------- used to be that. may include with another file for monitoring.
+                                BTRx= range(self.statelengths[state][barrel][iteration].length())#range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time)#  <----------- used to be that. may include with another file for monitoring.
                                 BTRy_hold=self.stateprops[state][barrel][iteration][statistic2]
                                 BTRy=BTRy_hold[:]
                                 zip(BTRx,BTRy)
@@ -1924,7 +1925,7 @@ class StateAnalyzer:
                                 
 
                                 
-                                for timer in range(self.statelengths[state][barrel][iteration].start_time,self.statelengths[state][barrel][iteration].end_time):
+                                for timer in range(self.statelengths[state][barrel][iteration].start_time,(self.statelengths[state][barrel][iteration].start_time+longest)):
                                     
                                     uppertol=(np.polyval(ipdtol[statistic2],timer))*self.hightol
                                     lowertol=(np.polyval(ipdtol[statistic2],timer))*self.lowtol
@@ -1941,17 +1942,19 @@ class StateAnalyzer:
                                 plt.gca().xaxis.set_major_formatter(
                                     mtick.FuncFormatter(lambda pos,_: time.strftime("%M:%S",time.localtime(pos)))
                                     )
+                                    
                                 plt.subplots_adjust(hspace=.55)
                                 plt.subplots_adjust(wspace=.55)
+                                plt.locator_params(axis='x',nbins=4)
+                                plt.locator_params(axis='y',nbins=6)
+                                plt.xticks(rotation=45)
                                 plt.plot(np.transpose(BTRx),BTRy,color=self.plotting_barrelcolor[barrel],linestyle=self.plotting_linestyles[iteration],label="BBL%s, Iter:%s"%(barrel+1,iteration+1))
                                 plt.title("%s (%s)"%(stats[statistic2],self.plotting_UOM[statistic2]))
                                 plt.hold(True)
                                 plt.xlabel('time (s)')
                                 plt.ylabel('%s'%self.plotting_UOM[statistic2])
                                 plt.grid(True)
-                                plt.locator_params(axis='x',nbins=4)
-                                plt.locator_params(axis='y',nbins=6)
-                                plt.xticks(rotation=45)
+
                                 if statistic2==2:
                                     plt.ylim((lowest,highest))
                                 
@@ -1972,11 +1975,11 @@ class StateAnalyzer:
                         
                         
                         if plottols==1:
-                            plt.plot(range(self.shortest_times[state][iteration])+self.statelengths[state][barrel][iteration].start_time,self.high_tolerance_model[state][iteration][statistic2],color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                            plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
                             plt.hold(True)
-                            plt.plot(range(self.shortest_times[state][iteration])+self.statelengths[state][barrel][iteration].start_time,self.low_tolerance_model[state][iteration][statistic2],color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                            plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
                             plt.hold(True)
-                            plt.fill_between(range(self.shortest_times[state][iteration])+self.statelengths[state][barrel][iteration].start_time,self.high_tolerance_model[state][iteration][statistic2],self.low_tolerance_model[state][iteration][statistic2],facecolor="black",alpha=0.125,interpolate=True)
+                            plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)
                        
                         
                     plt.hold(False)
@@ -2119,7 +2122,7 @@ class StateAnalyzer:
                                 plt.title("%s (%s), Overlay"%(stats[6],self.plotting_UOM[6]))
                                 plt.xlabel('time (m:s)')
                                 plt.xticks(rotation=45)
-                                plt.ylim((lowest,highest))
+                                #plt.ylim((lowest,highest))
                     #plt.subplot(1,2,2)
                     #print range(longest),np.size(upper)
                     
@@ -2145,11 +2148,11 @@ class StateAnalyzer:
                         pass
                     else:
                         if plottols==1:
-                            plt.plot(range(self.shortest_times[state][iteration]),self.high_tolerance_model[state][iteration][6],color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                            plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
                             plt.hold(True)
-                            plt.plot(range(self.shortest_times[state][iteration]),self.low_tolerance_model[state][iteration][6],color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                            plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
                             plt.hold(True)
-                            plt.fill_between(range(self.shortest_times[state][iteration]),self.high_tolerance_model[state][iteration][6],self.low_tolerance_model[state][iteration][6],facecolor="black",alpha=0.125,interpolate=True)
+                            plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)
                                                    
                                 
                                 
@@ -2289,11 +2292,11 @@ class StateAnalyzer:
                         if plottols==1:
                             plt.subplot(1,2,2)
                             
-                            plt.plot(range(self.shortest_times[state][iteration]),self.high_tolerance_model[state][iteration][statistic2],color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
+                            plt.plot(range(longest),upper,color='r',alpha=0.125,linestyle="--",label="Upper Tolerance")
                             plt.hold(True)
-                            plt.plot(range(self.shortest_times[state][iteration]),self.low_tolerance_model[state][iteration][statistic2],color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
+                            plt.plot(range(longest),lower,color='g',alpha=0.125,linestyle="--",label="Lower Tolerance")
                             plt.hold(True)
-                            plt.fill_between(range(self.shortest_times[state][iteration]),self.high_tolerance_model[state][iteration][statistic2],self.low_tolerance_model[state][iteration][statistic2],facecolor="black",alpha=0.125,interpolate=True)
+                            plt.fill_between(range(longest),upper,lower,facecolor="black",alpha=0.125,interpolate=True)
                                                    
                                 
                         plt.suptitle("%s"%(States[state]))        
@@ -2685,7 +2688,7 @@ class StateAnalyzer:
 ##------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.  
 ##-------------------------------------------------------------------------------- CODE TEST INITIALIZATION  -------------------------------------------------------------------------------------------------------------------------------- These are everything needed to currently run the code.           
             
-s=StateAnalyzer('774labtest.log')#('774DOUBLE.LOG')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
+s=StateAnalyzer('774_nodef_bb1.log')#('774DOUBLE.LOG')#('773TESTQUAD.log')#('773logtest2_TEST.log')#'774LABTEST.log')        
 #774DOUBLE
 #774labtest
 #774_nodef_all
@@ -2713,7 +2716,7 @@ s.getdata(num_barr_to_use)
 #print s.ref_BTR[0][1]
 s.initialize_Tolerances()
 s.analyze_tolerances(num_barr_to_use)
-pics=s.display_plots_version2(num_barr_to_use,0,0)
+pics=s.display_plots_version2(num_barr_to_use,1,0)
 s.create_pdf(pics,num_barr_to_use,"del")
 # property legend:  obect.ipdprops/refprops/defprops[barrel][instance][KEY TO PROPERTY:  0=RFGLOW  1=RFGHIGH 2=V  3=RTemp  4=SUPRHT  5=DUTYCycles  6=BTR]
 #print s.ipdprops[0][0][0]
